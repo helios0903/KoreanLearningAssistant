@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Neuroscience 学习中心</title>
+<style>
+  :root {
+    --bg: #0f0f13;
+    --card: #1a1a24;
+    --card2: #22222f;
+    --border: #2e2e3f;
+    --text: #e8e8f0;
+    --muted: #8888a8;
+    --sapolsky: #7c6af7;
+    --sapolsky-dim: #3d2f8a;
+    --mit: #26c6a8;
+    --mit-dim: #0d4a3f;
+    --huberman: #f77c6a;
+    --huberman-dim: #5a2418;
+    --neuro: #6ac8f7;
+    --neuro-dim: #10394f;
+    --accent: #a78bfa;
+    --done: #34d399;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* ── Header ─────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, #1a0a3a 0%, #0a2040 50%, #0f1a2e 100%);
+    padding: 32px 20px 24px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-icon { font-size: 40px; margin-bottom: 8px; }
+  .hero h1 { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .hero p { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .progress-bar-wrap {
+    margin: 16px auto 0;
+    max-width: 300px;
+    background: var(--border);
+    border-radius: 99px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sapolsky), var(--accent));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+  .progress-label { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  /* ── Tabs ────────────────────────────────── */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+    border-bottom: 1px solid var(--border);
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab.active-s { border-color: var(--sapolsky); background: var(--sapolsky-dim); color: var(--sapolsky); }
+  .tab.active-m { border-color: var(--mit); background: var(--mit-dim); color: var(--mit); }
+  .tab.active-h { border-color: var(--huberman); background: var(--huberman-dim); color: var(--huberman); }
+  .tab.active-n { border-color: var(--neuro); background: var(--neuro-dim); color: var(--neuro); }
+  .tab.active-r { border-color: var(--accent); background: #2e1f5a; color: var(--accent); }
+
+  /* ── Sections ───────────────────────────── */
+  .section { display: none; padding: 16px; }
+  .section.visible { display: block; }
+
+  /* ── Section header ─────────────────────── */
+  .section-header {
+    margin-bottom: 16px;
+    padding: 16px;
+    border-radius: 14px;
+    border-left: 4px solid;
+  }
+  .section-header.s { background: var(--sapolsky-dim); border-color: var(--sapolsky); }
+  .section-header.m { background: var(--mit-dim); border-color: var(--mit); }
+  .section-header.h { background: var(--huberman-dim); border-color: var(--huberman); }
+  .section-header.n { background: var(--neuro-dim); border-color: var(--neuro); }
+  .section-header h2 { font-size: 16px; font-weight: 700; color: #fff; }
+  .section-header p { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+  .section-header .playlist-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    background: rgba(167,139,250,0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(167,139,250,0.3);
+  }
+
+  /* ── Lecture card ───────────────────────── */
+  .lecture-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: transform 0.15s, border-color 0.15s;
+  }
+  .lecture-card.done {
+    border-color: var(--done);
+    opacity: 0.75;
+  }
+  .lecture-card-top {
+    display: flex;
+    align-items: flex-start;
+    padding: 14px;
+    gap: 12px;
+  }
+  .lecture-num {
+    min-width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .num-s { background: var(--sapolsky-dim); color: var(--sapolsky); }
+  .num-m { background: var(--mit-dim); color: var(--mit); }
+  .num-h { background: var(--huberman-dim); color: var(--huberman); }
+  .num-n { background: var(--neuro-dim); color: var(--neuro); }
+  .lecture-info { flex: 1; min-width: 0; }
+  .lecture-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .lecture-subtitle {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .done-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .done-check.checked {
+    background: var(--done);
+    border-color: var(--done);
+    color: #000;
+  }
+  .lecture-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 14px 14px;
+  }
+  .btn-play {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4f3faa, #7c6af7);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-play.m { background: linear-gradient(135deg, #0a3a30, var(--mit)); }
+  .btn-play.h { background: linear-gradient(135deg, #4a1810, var(--huberman)); }
+  .btn-play.n { background: linear-gradient(135deg, #0a2f3f, var(--neuro)); }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0 14px 12px;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--card2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  /* ── Roadmap section ────────────────────── */
+  .roadmap-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .roadmap-phase {
+    padding: 14px;
+    border-left: 3px solid;
+  }
+  .roadmap-phase.p1 { border-color: var(--sapolsky); }
+  .roadmap-phase.p2 { border-color: var(--mit); }
+  .roadmap-phase.p3 { border-color: var(--neuro); }
+  .roadmap-phase.p4 { border-color: var(--huberman); }
+  .phase-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .phase-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .phase-desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+  .phase-items {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .phase-item {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .phase-item::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+
+  .qa-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .qa-q { font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 6px; }
+  .qa-a { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .qa-a code {
+    background: var(--card2);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--text);
+  }
+
+  /* ── Dividers ───────────────────────────── */
+  .group-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin: 16px 0 8px;
+    padding: 0 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-icon">🧠</div>
+  <h1>Neuroscience 学习中心</h1>
+  <p>Sapolsky · MIT · Huberman · Neuromatch</p>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progBar" style="width:0%"></div>
+  </div>
+  <div class="progress-label" id="progLabel">已完成 0 / 50 讲</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active-s" onclick="showTab('s',this)">🧬 Sapolsky</button>
+  <button class="tab" onclick="showTab('m',this)">🔬 MIT 认知</button>
+  <button class="tab" onclick="showTab('h',this)">💡 Huberman</button>
+  <button class="tab" onclick="showTab('n',this)">💻 计算神经</button>
+  <button class="tab" onclick="showTab('r',this)">🗺️ 学习路径</button>
+</div>
+
+<!-- ═══════ SAPOLSKY ═══════ -->
+<div id="tab-s" class="section visible">
+  <div class="section-header s">
+    <h2>Robert Sapolsky — Human Behavioral Biology</h2>
+    <p>Stanford 传奇课程。从进化、遗传、内分泌到神经科学，用生物学解析人类所有复杂行为。共 25 讲，约 30+ 小时。</p>
+    <a href="https://www.youtube.com/playlist?list=PL848F2368C90DDC3D" target="_blank" class="playlist-link">▶ 打开完整播放列表</a>
+  </div>
+
+  <div class="group-label">第一模块：进化与遗传学基础</div>
+
+  <div class="lecture-card" id="lc-s1">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">01</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Introduction to Human Behavioral Biology</div>
+        <div class="lecture-subtitle">课程概述：还原论 vs. 涌现性，多学科融合分析行为</div>
+      </div>
+      <div class="done-check" id="chk-s1" onclick="toggle('s1')"></div>
+    </div>
+    <div class="tags"><span class="tag">还原论</span><span class="tag">涌现性</span><span class="tag">课程框架</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=NNnIGh9g6fA" target="_blank" class="btn-play">▶ 播放（1h35m）</a>
+      <a href="sapolsky-l01-deep-dive.html" class="btn-play" style="background:rgba(124,106,247,0.15);color:#a78bfa;border:1px solid rgba(124,106,247,0.3)">🌳 深度拆解</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s2">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">02</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Behavioral Evolution I</div>
+        <div class="lecture-subtitle">自然选择、适应度、包容适应度与亲缘选择</div>
+      </div>
+      <div class="done-check" id="chk-s2" onclick="toggle('s2')"></div>
+    </div>
+    <div class="tags"><span class="tag">自然选择</span><span class="tag">适应度</span><span class="tag">亲缘选择</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=Y0Oa4Lp5fLE" target="_blank" class="btn-play">▶ 播放（1h28m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s3">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">03</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Behavioral Evolution II</div>
+        <div class="lecture-subtitle">博弈论、囚徒困境、互利利他与欺骗进化</div>
+      </div>
+      <div class="done-check" id="chk-s3" onclick="toggle('s3')"></div>
+    </div>
+    <div class="tags"><span class="tag">博弈论</span><span class="tag">互利利他</span><span class="tag">ESS</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=oKNAzl-XN4I" target="_blank" class="btn-play">▶ 播放（1h26m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s4">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">04</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Molecular Genetics I</div>
+        <div class="lecture-subtitle">DNA结构、蛋白质合成、点突变与表观遗传</div>
+      </div>
+      <div class="done-check" id="chk-s4" onclick="toggle('s4')"></div>
+    </div>
+    <div class="tags"><span class="tag">DNA</span><span class="tag">蛋白质合成</span><span class="tag">表观遗传</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=_dRXA1_e30o" target="_blank" class="btn-play">▶ 播放（1h27m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s5">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">05</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Molecular Genetics II</div>
+        <div class="lecture-subtitle">基因调控、选择性剪接、基因与环境交互</div>
+      </div>
+      <div class="done-check" id="chk-s5" onclick="toggle('s5')"></div>
+    </div>
+    <div class="tags"><span class="tag">基因调控</span><span class="tag">GxE交互</span><span class="tag">选择性剪接</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=dFILgg9_hrU" target="_blank" class="btn-play">▶ 播放（1h25m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s6">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">06</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Behavioral Genetics I</div>
+        <div class="lecture-subtitle">双胞胎研究、领养研究、遗传率的正确解读</div>
+      </div>
+      <div class="done-check" id="chk-s6" onclick="toggle('s6')"></div>
+    </div>
+    <div class="tags"><span class="tag">双胞胎研究</span><span class="tag">遗传率</span><span class="tag">行为遗传学</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=e0WZx7lUOrY" target="_blank" class="btn-play">▶ 播放（1h26m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s7">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">07</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Behavioral Genetics II</div>
+        <div class="lecture-subtitle">分子行为遗传学、GWAS、基因与特定行为</div>
+      </div>
+      <div class="done-check" id="chk-s7" onclick="toggle('s7')"></div>
+    </div>
+    <div class="tags"><span class="tag">GWAS</span><span class="tag">分子遗传学</span><span class="tag">行为基因</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=RG5fN6KrDJE" target="_blank" class="btn-play">▶ 播放（1h30m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s8">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">08</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Recognizing Relatives</div>
+        <div class="lecture-subtitle">亲属识别机制：嗅觉、印记、汉密尔顿法则应用</div>
+      </div>
+      <div class="done-check" id="chk-s8" onclick="toggle('s8')"></div>
+    </div>
+    <div class="tags"><span class="tag">亲属识别</span><span class="tag">嗅觉标记</span><span class="tag">印记</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=P388gUPSq_I" target="_blank" class="btn-play">▶ 播放（1h22m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s9">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">09</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Ethology</div>
+        <div class="lecture-subtitle">动物行为学：固定动作模式、本能、关键期</div>
+      </div>
+      <div class="done-check" id="chk-s9" onclick="toggle('s9')"></div>
+    </div>
+    <div class="tags"><span class="tag">固定动作模式</span><span class="tag">本能</span><span class="tag">关键期</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=ISVaoLlW104" target="_blank" class="btn-play">▶ 播放（1h29m）</a>
+    </div>
+  </div>
+
+  <div class="group-label">第二模块：神经科学与内分泌学</div>
+
+  <div class="lecture-card" id="lc-s10">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">10</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Introduction to Neuroscience I</div>
+        <div class="lecture-subtitle">⭐ 神经元、突触、动作电位、神经递质</div>
+      </div>
+      <div class="done-check" id="chk-s10" onclick="toggle('s10')"></div>
+    </div>
+    <div class="tags"><span class="tag">神经元</span><span class="tag">突触</span><span class="tag">动作电位</span><span class="tag">多巴胺</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=5031rWXgdYo" target="_blank" class="btn-play">▶ 播放（1h34m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s11">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">11</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Introduction to Neuroscience II</div>
+        <div class="lecture-subtitle">⭐ 大脑结构：皮层、基底节、脑干、小脑</div>
+      </div>
+      <div class="done-check" id="chk-s11" onclick="toggle('s11')"></div>
+    </div>
+    <div class="tags"><span class="tag">大脑解剖</span><span class="tag">皮层</span><span class="tag">基底节</span><span class="tag">神经回路</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=uqU9lmFztOU" target="_blank" class="btn-play">▶ 播放（1h31m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s12">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">12</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Endocrinology I</div>
+        <div class="lecture-subtitle">激素系统：HPA轴、皮质醇、压力反应机制</div>
+      </div>
+      <div class="done-check" id="chk-s12" onclick="toggle('s12')"></div>
+    </div>
+    <div class="tags"><span class="tag">HPA轴</span><span class="tag">皮质醇</span><span class="tag">压力</span><span class="tag">激素</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=yETVsV4zfFw" target="_blank" class="btn-play">▶ 播放（1h28m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s13">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">13</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Endocrinology II — Testosterone & Oxytocin</div>
+        <div class="lecture-subtitle">睾酮与攻击性，催产素与社会联结，激素的社会影响</div>
+      </div>
+      <div class="done-check" id="chk-s13" onclick="toggle('s13')"></div>
+    </div>
+    <div class="tags"><span class="tag">睾酮</span><span class="tag">催产素</span><span class="tag">社会联结</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=kAfz0yAcOyQ" target="_blank" class="btn-play">▶ 播放（1h30m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s14">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">14</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Limbic System</div>
+        <div class="lecture-subtitle">⭐ 杏仁核与恐惧、海马与记忆、情绪神经回路</div>
+      </div>
+      <div class="done-check" id="chk-s14" onclick="toggle('s14')"></div>
+    </div>
+    <div class="tags"><span class="tag">杏仁核</span><span class="tag">海马</span><span class="tag">恐惧记忆</span><span class="tag">边缘系统</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=CAOnSbDSaOw" target="_blank" class="btn-play">▶ 播放（1h33m）</a>
+    </div>
+  </div>
+
+  <div class="group-label">第三模块：社会行为的生物学基础</div>
+
+  <div class="lecture-card" id="lc-s15">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">15</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Human Sexual Behavior I</div>
+        <div class="lecture-subtitle">性别差异的生物学，性激素与发育，性选择</div>
+      </div>
+      <div class="done-check" id="chk-s15" onclick="toggle('s15')"></div>
+    </div>
+    <div class="tags"><span class="tag">性别差异</span><span class="tag">性激素</span><span class="tag">性选择</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=LOY3QH_jOtE" target="_blank" class="btn-play">▶ 播放（1h28m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s16">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">16</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Human Sexual Behavior II</div>
+        <div class="lecture-subtitle">性取向的神经生物学，性别认同，跨文化视角</div>
+      </div>
+      <div class="done-check" id="chk-s16" onclick="toggle('s16')"></div>
+    </div>
+    <div class="tags"><span class="tag">性取向</span><span class="tag">神经生物学</span><span class="tag">性别认同</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/playlist?list=PL848F2368C90DDC3D" target="_blank" class="btn-play">▶ 从播放列表第16集</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s17">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">17</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Aggression I</div>
+        <div class="lecture-subtitle">攻击性的神经生物学，前额叶皮质与冲动控制</div>
+      </div>
+      <div class="done-check" id="chk-s17" onclick="toggle('s17')"></div>
+    </div>
+    <div class="tags"><span class="tag">攻击性</span><span class="tag">前额叶</span><span class="tag">冲动控制</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=4s-WlqZnUvQ" target="_blank" class="btn-play">▶ 播放（1h31m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s18">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">18</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Aggression II</div>
+        <div class="lecture-subtitle">激素与攻击性，睾酮的去神话化，环境触发因素</div>
+      </div>
+      <div class="done-check" id="chk-s18" onclick="toggle('s18')"></div>
+    </div>
+    <div class="tags"><span class="tag">睾酮</span><span class="tag">攻击性</span><span class="tag">环境因素</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=ux6Qe7ErzIQ" target="_blank" class="btn-play">▶ 播放（1h30m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s19">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">19</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Aggression III — Empathy & Competition</div>
+        <div class="lecture-subtitle">共情的神经科学，内外群体效应，竞争与合作</div>
+      </div>
+      <div class="done-check" id="chk-s19" onclick="toggle('s19')"></div>
+    </div>
+    <div class="tags"><span class="tag">共情</span><span class="tag">内外群体</span><span class="tag">竞争合作</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/playlist?list=PL848F2368C90DDC3D" target="_blank" class="btn-play">▶ 从播放列表第19集</a>
+    </div>
+  </div>
+
+  <div class="group-label">第四模块：复杂性、语言与精神疾病</div>
+
+  <div class="lecture-card" id="lc-s20">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">20</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Chaos and Reductionism</div>
+        <div class="lecture-subtitle">混沌理论在生物学中的应用，蝴蝶效应与预测性</div>
+      </div>
+      <div class="done-check" id="chk-s20" onclick="toggle('s20')"></div>
+    </div>
+    <div class="tags"><span class="tag">混沌理论</span><span class="tag">还原论</span><span class="tag">非线性</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=BqP4_4kr7-0" target="_blank" class="btn-play">▶ 播放（1h29m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s21">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">21</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Emergence and Complexity</div>
+        <div class="lecture-subtitle">涌现现象：整体大于部分之和，复杂系统与大脑</div>
+      </div>
+      <div class="done-check" id="chk-s21" onclick="toggle('s21')"></div>
+    </div>
+    <div class="tags"><span class="tag">涌现性</span><span class="tag">复杂系统</span><span class="tag">自组织</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=_njf8jwEGRo" target="_blank" class="btn-play">▶ 播放（1h26m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s22">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">22</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Emergence and Complexity II</div>
+        <div class="lecture-subtitle">群体行为的涌现，蚁群智能，意识与大脑复杂性</div>
+      </div>
+      <div class="done-check" id="chk-s22" onclick="toggle('s22')"></div>
+    </div>
+    <div class="tags"><span class="tag">群体智能</span><span class="tag">意识</span><span class="tag">复杂性</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=o_ZuWbX-CyE" target="_blank" class="btn-play">▶ 播放（1h28m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s23">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">23</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Language</div>
+        <div class="lecture-subtitle">语言的进化起源，Broca/Wernicke区，动物语言能力</div>
+      </div>
+      <div class="done-check" id="chk-s23" onclick="toggle('s23')"></div>
+    </div>
+    <div class="tags"><span class="tag">语言进化</span><span class="tag">Broca区</span><span class="tag">Wernicke区</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=SIOQgY1tqrU" target="_blank" class="btn-play">▶ 播放（1h32m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s24">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">24</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Schizophrenia</div>
+        <div class="lecture-subtitle">精神分裂症的神经生物学、遗传学与环境因素</div>
+      </div>
+      <div class="done-check" id="chk-s24" onclick="toggle('s24')"></div>
+    </div>
+    <div class="tags"><span class="tag">精神分裂</span><span class="tag">多巴胺假说</span><span class="tag">神经发育</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=nEnklxGAmak" target="_blank" class="btn-play">▶ 播放（1h30m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-s25">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-s">25</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Individual Differences</div>
+        <div class="lecture-subtitle">⭐ 个体差异的生物学根源，课程综合总结</div>
+      </div>
+      <div class="done-check" id="chk-s25" onclick="toggle('s25')"></div>
+    </div>
+    <div class="tags"><span class="tag">个体差异</span><span class="tag">人格</span><span class="tag">课程总结</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=nEnklxGAmak" target="_blank" class="btn-play">▶ 从播放列表第25集</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ MIT ═══════ -->
+<div id="tab-m" class="section">
+  <div class="section-header m">
+    <h2>MIT 9.13 — The Human Brain</h2>
+    <p>Nancy Kanwisher 主讲。关注大脑如何实现感知、语言、记忆、注意、面孔识别等高级认知功能，配套 fMRI 研究。</p>
+    <a href="https://www.youtube.com/playlist?list=PLUl4u3cNGP60IKRN_pFptIBxeiMc0MCJP" target="_blank" class="playlist-link">▶ 打开完整播放列表</a>
+  </div>
+
+  <div class="lecture-card" id="lc-m1">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-m">01</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Introduction to the Human Brain</div>
+        <div class="lecture-subtitle">认知神经科学问题框架：大脑如何产生心智？</div>
+      </div>
+      <div class="done-check" id="chk-m1" onclick="toggle('m1')"></div>
+    </div>
+    <div class="tags"><span class="tag">课程导入</span><span class="tag">认知神经科学</span><span class="tag">心脑关系</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=ba-HMvDn_vU" target="_blank" class="btn-play m">▶ 播放（1h18m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-m2">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-m">02</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Neuroanatomy</div>
+        <div class="lecture-subtitle">大脑解剖：脑叶、主要功能区、视觉通路</div>
+      </div>
+      <div class="done-check" id="chk-m2" onclick="toggle('m2')"></div>
+    </div>
+    <div class="tags"><span class="tag">神经解剖</span><span class="tag">脑叶</span><span class="tag">视觉皮层</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=bAkuNXtgrLA" target="_blank" class="btn-play m">▶ 播放（1h15m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-m3">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-m">04</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Cognitive Neuroscience Methods I</div>
+        <div class="lecture-subtitle">fMRI 原理、BOLD信号、神经影像学方法论</div>
+      </div>
+      <div class="done-check" id="chk-m3" onclick="toggle('m3')"></div>
+    </div>
+    <div class="tags"><span class="tag">fMRI</span><span class="tag">BOLD信号</span><span class="tag">研究方法</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=vFZY--lgmHs" target="_blank" class="btn-play m">▶ 播放（1h20m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-m4">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-m">05</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Cognitive Neuroscience Methods II</div>
+        <div class="lecture-subtitle">MVPA多体素模式分析、EEG/MEG、双侧损伤研究</div>
+      </div>
+      <div class="done-check" id="chk-m4" onclick="toggle('m4')"></div>
+    </div>
+    <div class="tags"><span class="tag">MVPA</span><span class="tag">解码神经信号</span><span class="tag">EEG</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=YD7QG4G7WVg" target="_blank" class="btn-play m">▶ 播放（1h19m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-m5">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-m">06</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Category Selectivity — Faces & Places</div>
+        <div class="lecture-subtitle">⭐ FFA面孔区、PPA场景区：大脑的专用模块性</div>
+      </div>
+      <div class="done-check" id="chk-m5" onclick="toggle('m5')"></div>
+    </div>
+    <div class="tags"><span class="tag">FFA面孔区</span><span class="tag">PPA场景区</span><span class="tag">模块性</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=Nk0H3o-hRMA" target="_blank" class="btn-play m">▶ 播放（1h18m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-m6">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-m">18</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Language I</div>
+        <div class="lecture-subtitle">语言网络：Broca区、Wernicke区与句法处理</div>
+      </div>
+      <div class="done-check" id="chk-m6" onclick="toggle('m6')"></div>
+    </div>
+    <div class="tags"><span class="tag">语言网络</span><span class="tag">句法</span><span class="tag">Broca/Wernicke</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=XRdJ5mXBo8A" target="_blank" class="btn-play m">▶ 播放（1h20m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-m7">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-m">OCW</div>
+      <div class="lecture-info">
+        <div class="lecture-title">MIT OCW 课程主页</div>
+        <div class="lecture-subtitle">含全部讲义、论文阅读清单、考题（用于 NotebookLM）</div>
+      </div>
+      <div class="done-check" id="chk-m7" onclick="toggle('m7')"></div>
+    </div>
+    <div class="tags"><span class="tag">讲义</span><span class="tag">论文清单</span><span class="tag">完整资源</span></div>
+    <div class="lecture-actions">
+      <a href="https://ocw.mit.edu/courses/9-13-the-human-brain-spring-2019/" target="_blank" class="btn-play m">▶ 打开 MIT OCW</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ HUBERMAN ═══════ -->
+<div id="tab-h" class="section">
+  <div class="section-header h">
+    <h2>Huberman Lab — Andrew Huberman</h2>
+    <p>Stanford 神经科学教授。将神经科学转化为可操作的健康与表现工具：睡眠、专注、多巴胺、神经可塑性、压力管理。</p>
+    <a href="https://www.youtube.com/@hubermanlab" target="_blank" class="playlist-link">▶ 打开 YouTube 频道</a>
+  </div>
+
+  <div class="group-label">神经可塑性与学习</div>
+
+  <div class="lecture-card" id="lc-h1">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-h">⭐</div>
+      <div class="lecture-info">
+        <div class="lecture-title">How to Focus to Change Your Brain</div>
+        <div class="lecture-subtitle">神经可塑性机制，专注力如何重塑大脑回路（完整版）</div>
+      </div>
+      <div class="done-check" id="chk-h1" onclick="toggle('h1')"></div>
+    </div>
+    <div class="tags"><span class="tag">神经可塑性</span><span class="tag">专注力</span><span class="tag">大脑重塑</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=LG53Vxum0as" target="_blank" class="btn-play h">▶ 播放（1h36m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-h2">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-h">ES</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Essentials: How to Focus (短版)</div>
+        <div class="lecture-subtitle">上集精华压缩版，适合复习</div>
+      </div>
+      <div class="done-check" id="chk-h2" onclick="toggle('h2')"></div>
+    </div>
+    <div class="tags"><span class="tag">精华版</span><span class="tag">神经可塑性</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=4AwyVTHEU3s" target="_blank" class="btn-play h">▶ 播放（约30min）</a>
+    </div>
+  </div>
+
+  <div class="group-label">多巴胺系统</div>
+
+  <div class="lecture-card" id="lc-h3">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-h">⭐</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Controlling Your Dopamine for Motivation</div>
+        <div class="lecture-subtitle">多巴胺系统完整解析：基线/峰值、动机、奖赏回路</div>
+      </div>
+      <div class="done-check" id="chk-h3" onclick="toggle('h3')"></div>
+    </div>
+    <div class="tags"><span class="tag">多巴胺</span><span class="tag">动机</span><span class="tag">奖赏回路</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=QmOF0crdyRU" target="_blank" class="btn-play h">▶ 播放（2h08m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-h4">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-h">DA</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Leverage Dopamine to Overcome Procrastination</div>
+        <div class="lecture-subtitle">多巴胺动态学：如何用多巴胺克服拖延，优化努力感</div>
+      </div>
+      <div class="done-check" id="chk-h4" onclick="toggle('h4')"></div>
+    </div>
+    <div class="tags"><span class="tag">拖延</span><span class="tag">努力感</span><span class="tag">多巴胺动态</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=K-TW2Chpz4k" target="_blank" class="btn-play h">▶ 播放（1h54m）</a>
+    </div>
+  </div>
+
+  <div class="group-label">睡眠与压力</div>
+
+  <div class="lecture-card" id="lc-h5">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-h">⭐</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Using Science to Optimize Sleep & Learning</div>
+        <div class="lecture-subtitle">睡眠、学习与记忆巩固的神经科学（Essentials精华版）</div>
+      </div>
+      <div class="done-check" id="chk-h5" onclick="toggle('h5')"></div>
+    </div>
+    <div class="tags"><span class="tag">睡眠</span><span class="tag">记忆巩固</span><span class="tag">昼夜节律</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=q-H_A_dQUxQ" target="_blank" class="btn-play h">▶ 播放（约35min）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-h6">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-h">ST</div>
+      <div class="lecture-info">
+        <div class="lecture-title">The Science of Stress, Calm and Sleep</div>
+        <div class="lecture-subtitle">压力反应神经回路，自主神经系统，冷静状态的神经机制</div>
+      </div>
+      <div class="done-check" id="chk-h6" onclick="toggle('h6')"></div>
+    </div>
+    <div class="tags"><span class="tag">压力</span><span class="tag">自主神经系统</span><span class="tag">HRV</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=Ft9N2-CEPzc" target="_blank" class="btn-play h">▶ 播放（1h12m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-h7">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-h">PL</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Neuroplasticity & Behavior Change 系列播放列表</div>
+        <div class="lecture-subtitle">Huberman Lab 神经可塑性专题合集，多个深度集</div>
+      </div>
+      <div class="done-check" id="chk-h7" onclick="toggle('h7')"></div>
+    </div>
+    <div class="tags"><span class="tag">播放列表</span><span class="tag">行为改变</span><span class="tag">神经可塑性</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/playlist?list=PLPNW_gerXa4NKRk-x4U-Cuza8FPV8dx5x" target="_blank" class="btn-play h">▶ 打开专题列表</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-h8">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-h">WB</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Huberman Lab 官网（含文字笔记）</div>
+        <div class="lecture-subtitle">每集完整文字版摘要、引用论文列表，适合加入 NotebookLM</div>
+      </div>
+      <div class="done-check" id="chk-h8" onclick="toggle('h8')"></div>
+    </div>
+    <div class="tags"><span class="tag">文字版</span><span class="tag">论文引用</span><span class="tag">NotebookLM来源</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.hubermanlab.com/all-episodes" target="_blank" class="btn-play h">▶ 打开网站</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ NEUROMATCH ═══════ -->
+<div id="tab-n" class="section">
+  <div class="section-header n">
+    <h2>计算神经科学资源</h2>
+    <p>Neuromatch Academy 计算神经科学课程 + 补充资源。涵盖神经数据分析、动力学系统建模、强化学习与大脑。</p>
+    <a href="https://www.youtube.com/channel/UC4LoD4yNBuLKQwDOV6t-KPw" target="_blank" class="playlist-link">▶ Neuromatch YouTube 频道</a>
+  </div>
+
+  <div class="group-label">入门资源</div>
+
+  <div class="lecture-card" id="lc-n1">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-n">CN</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Neuromatch Academy CN 课程介绍</div>
+        <div class="lecture-subtitle">计算神经科学是什么？课程结构、学习路径概述</div>
+      </div>
+      <div class="done-check" id="chk-n1" onclick="toggle('n1')"></div>
+    </div>
+    <div class="tags"><span class="tag">计算神经科学</span><span class="tag">课程介绍</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=FMZ_vwd5jIw" target="_blank" class="btn-play n">▶ 播放</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-n2">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-n">EB</div>
+      <div class="lecture-info">
+        <div class="lecture-title">NMA 在线教材（compneuro.neuromatch.io）</div>
+        <div class="lecture-subtitle">完整课程电子书：编码模型、解码、动力学系统、强化学习</div>
+      </div>
+      <div class="done-check" id="chk-n2" onclick="toggle('n2')"></div>
+    </div>
+    <div class="tags"><span class="tag">在线教材</span><span class="tag">Python教程</span><span class="tag">完整课程</span></div>
+    <div class="lecture-actions">
+      <a href="https://compneuro.neuromatch.io/" target="_blank" class="btn-play n">▶ 打开教材</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-n3">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-n">GH</div>
+      <div class="lecture-info">
+        <div class="lecture-title">NMA GitHub — 课程代码 & Notebooks</div>
+        <div class="lecture-subtitle">所有教学用 Python 代码，适合实践计算神经科学</div>
+      </div>
+      <div class="done-check" id="chk-n3" onclick="toggle('n3')"></div>
+    </div>
+    <div class="tags"><span class="tag">Python</span><span class="tag">Jupyter</span><span class="tag">实战代码</span></div>
+    <div class="lecture-actions">
+      <a href="https://github.com/NeuromatchAcademy/course-content" target="_blank" class="btn-play n">▶ 打开 GitHub</a>
+    </div>
+  </div>
+
+  <div class="group-label">Sapolsky 精华讲座</div>
+
+  <div class="lecture-card" id="lc-n4">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-n">⭐</div>
+      <div class="lecture-info">
+        <div class="lecture-title">The Biology of Humans at Our Best and Worst</div>
+        <div class="lecture-subtitle">Sapolsky 关于人类行为生物学的精华演讲，适合入门概览</div>
+      </div>
+      <div class="done-check" id="chk-n4" onclick="toggle('n4')"></div>
+    </div>
+    <div class="tags"><span class="tag">精华演讲</span><span class="tag">行为生物学</span><span class="tag">入门推荐</span></div>
+    <div class="lecture-actions">
+      <a href="https://www.youtube.com/watch?v=GRYcSuyLiJk" target="_blank" class="btn-play n">▶ 播放（1h30m）</a>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lc-n5">
+    <div class="lecture-card-top">
+      <div class="lecture-num num-n">NM</div>
+      <div class="lecture-info">
+        <div class="lecture-title">Neuromatch Academy 报名入口</div>
+        <div class="lecture-subtitle">每年7月开设，可申请参与完整课程，含 TA 指导和项目</div>
+      </div>
+      <div class="done-check" id="chk-n5" onclick="toggle('n5')"></div>
+    </div>
+    <div class="tags"><span class="tag">完整课程</span><span class="tag">7月</span><span class="tag">项目实践</span></div>
+    <div class="lecture-actions">
+      <a href="https://neuromatch.io/computational-neuroscience-course/" target="_blank" class="btn-play n">▶ 查看课程信息</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ ROADMAP ═══════ -->
+<div id="tab-r" class="section">
+  <div style="margin-bottom:16px;">
+    <div class="roadmap-card">
+      <div class="roadmap-phase p1">
+        <div class="phase-label" style="color:var(--sapolsky)">阶段一 · 1-3 周</div>
+        <div class="phase-title">建立生物学与进化框架</div>
+        <div class="phase-desc">理解"为什么行为存在"，打好进化和遗传学基础，形成多因素思维方式。</div>
+        <div class="phase-items">
+          <div class="phase-item">Sapolsky Lecture 1: Introduction（课程方法论）</div>
+          <div class="phase-item">Sapolsky Lecture 2-3: Behavioral Evolution I&II</div>
+          <div class="phase-item">Sapolsky Lecture 4-7: Genetics I-IV</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap-card">
+      <div class="roadmap-phase p2">
+        <div class="phase-label" style="color:var(--mit)">阶段二 · 2-4 周</div>
+        <div class="phase-title">神经科学与认知基础</div>
+        <div class="phase-desc">理解大脑如何工作：神经元、突触、脑结构，以及认知功能的神经实现。</div>
+        <div class="phase-items">
+          <div class="phase-item">Sapolsky Lecture 10-11: Neuroscience I&II（基础）</div>
+          <div class="phase-item">Sapolsky Lecture 12-14: Endocrinology + Limbic System</div>
+          <div class="phase-item">MIT Lecture 1-2: Intro + Neuroanatomy</div>
+          <div class="phase-item">MIT Lecture 4-6: fMRI方法 + 面孔/场景区</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap-card">
+      <div class="roadmap-phase p3">
+        <div class="phase-label" style="color:var(--neuro)">阶段三 · 2-3 周</div>
+        <div class="phase-title">社会行为与复杂性</div>
+        <div class="phase-desc">将神经科学应用于社会行为，理解攻击性、语言、精神疾病和个体差异。</div>
+        <div class="phase-items">
+          <div class="phase-item">Sapolsky Lecture 15-19: 性行为与攻击性</div>
+          <div class="phase-item">Sapolsky Lecture 20-25: 复杂性、语言、精神分裂</div>
+          <div class="phase-item">MIT Lecture 18: Language I</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap-card">
+      <div class="roadmap-phase p4">
+        <div class="phase-label" style="color:var(--huberman)">阶段四 · 持续进行</div>
+        <div class="phase-title">应用神经科学与计算视角</div>
+        <div class="phase-desc">将知识转化为可操作的日常工具，同时探索计算神经科学的数学建模视角。</div>
+        <div class="phase-items">
+          <div class="phase-item">Huberman: 多巴胺 + 神经可塑性 + 睡眠系列</div>
+          <div class="phase-item">Neuromatch Academy: 入门教材 + 实践代码</div>
+          <div class="phase-item">Sapolsky TED: Biology at Our Best and Worst</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group-label">NotebookLM 推荐问题</div>
+
+  <div class="qa-card">
+    <div class="qa-q">🧬 跨课对比</div>
+    <div class="qa-a">「Sapolsky 和 Huberman 对多巴胺的描述有什么异同？Sapolsky 更强调<code>进化功能</code>，Huberman 更强调<code>可操控的机制</code>。」</div>
+  </div>
+  <div class="qa-card">
+    <div class="qa-q">🔬 深度追问</div>
+    <div class="qa-a">「杏仁核在恐惧、攻击性和社会行为中分别扮演什么角色？结合 Sapolsky Lecture 14 和 17。」</div>
+  </div>
+  <div class="qa-card">
+    <div class="qa-q">💡 应用提问</div>
+    <div class="qa-a">「根据神经可塑性的机制（Huberman + MIT），最有效的学习策略是什么？」</div>
+  </div>
+  <div class="qa-card">
+    <div class="qa-q">📖 理解测试</div>
+    <div class="qa-a">「什么是 HPA 轴？皮质醇如何影响海马？慢性压力对大脑结构有什么影响？」</div>
+  </div>
+</div>
+
+<script>
+  const TOTAL = 50;
+
+  function toggle(id) {
+    const saved = JSON.parse(localStorage.getItem('ns_progress') || '{}');
+    saved[id] = !saved[id];
+    localStorage.setItem('ns_progress', JSON.stringify(saved));
+    renderProgress(saved);
+  }
+
+  function renderProgress(saved) {
+    let done = 0;
+    Object.values(saved).forEach(v => { if(v) done++; });
+    const pct = Math.round(done / TOTAL * 100);
+    document.getElementById('progBar').style.width = pct + '%';
+    document.getElementById('progLabel').textContent = `已完成 ${done} / ${TOTAL} 讲`;
+
+    Object.keys(saved).forEach(id => {
+      const chk = document.getElementById('chk-' + id);
+      const card = document.getElementById('lc-' + id);
+      if(chk) {
+        chk.textContent = saved[id] ? '✓' : '';
+        if(saved[id]) chk.classList.add('checked'); else chk.classList.remove('checked');
+      }
+      if(card) {
+        if(saved[id]) card.classList.add('done'); else card.classList.remove('done');
+      }
+    });
+  }
+
+  function showTab(t, el) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+    document.querySelectorAll('.tab').forEach(b => b.className = 'tab');
+    document.getElementById('tab-' + t).classList.add('visible');
+    el.classList.add('active-' + t);
+  }
+
+  // Init on load
+  const saved = JSON.parse(localStorage.getItem('ns_progress') || '{}');
+  renderProgress(saved);
+</script>
+</body>
+</html>
