@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L13 内分泌学 II — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(52,211,153,0.1);border-left:3px solid var(--teal);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+.highlight.purple{background:rgba(167,139,250,0.1);border-left-color:var(--accent)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Testosterone myth buster */
+.myth-grid{display:grid;grid-template-columns:1fr;gap:8px;margin:10px 0}
+.myth-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;transition:all .2s}
+.myth-card:hover{border-color:var(--accent)}
+.myth-card.revealed{border-color:rgba(52,211,153,0.4)}
+.myth-q{font-size:.85rem;font-weight:600;display:flex;align-items:start;gap:8px}
+.myth-icon{font-size:1.1rem;flex-shrink:0}
+.myth-answer{display:none;margin-top:8px;font-size:.82rem;color:var(--muted);padding-top:8px;border-top:1px solid var(--border)}
+.myth-card.revealed .myth-answer{display:block}
+/* Oxytocin dial */
+.oxy-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.oxy-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.oxy-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.79rem;cursor:pointer;transition:all .2s}
+.oxy-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(38,198,168,0.1)}
+.oxy-result{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.82rem;min-height:70px}
+/* Compare table */
+.compare-table{width:100%;border-collapse:collapse;font-size:.8rem;margin:10px 0}
+.compare-table th{background:var(--card2);padding:8px 10px;text-align:left;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border)}
+.compare-table td{padding:8px 10px;border-bottom:1px solid rgba(46,46,63,0.5);vertical-align:top}
+.compare-table tr:last-child td{border-bottom:none}
+/* Case study */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(38,198,168,0.15);color:var(--teal)">L13</span>
+  <span class="badge" style="background:rgba(38,198,168,0.15);color:var(--teal)">内分泌学</span>
+  <h1>内分泌学 II：睾酮与催产素</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L13 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      睾酮不制造攻击性——它放大已有的攻击性。催产素不是「爱的激素」——它增强对内群体的信任，同时增强对外群体的敌意。激素从来都不是单向的善或恶。
+    </div>
+    <p>Sapolsky 称这一讲是对「流行科学最危险简化」的纠正。杂志标题「睾酮使男性更暴力」和「催产素让人更有爱心」——两者都是半真半假的谎言，而这正是为什么理解机制如此重要。</p>
+    <div class="highlight yellow">
+      <strong>Sapolsky 的激素法则：</strong>激素不是原因，而是<em>放大器</em>。它们放大情境塑造的已有倾向。「睾酮导致攻击性」就如同说「汽油导致汽车移动」——忽略了需要引擎（情境）和司机（个体历史）。
+    </div>
+  </div>
+</div>
+
+<!-- 睾酮神话破解 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">💉</span>
+    <span class="sec-title">互动：睾酮五大神话破解</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:10px">点击每个命题，查看真实证据</p>
+    <div class="myth-grid">
+      <div class="myth-card" onclick="revealMyth(this)">
+        <div class="myth-q"><span class="myth-icon">❓</span>「睾酮越高，攻击性越强」</div>
+        <div class="myth-answer"><strong style="color:var(--red)">错误（过度简化）。</strong> Mazur & Booth(1998)元分析：睾酮与攻击性的相关性仅在<em>受到挑战时</em>出现，安静状态下几乎无相关。关键：攻击行为→睾酮升高（反因果！）。在地位挑战情景中，睾酮放大已有的支配倾向，而非无中生有创造攻击性。阉割实验表明：睾酮去除后，攻击行为降低幅度取决于原有社会经验——无攻击历史者降低更多。</div>
+      </div>
+      <div class="myth-card" onclick="revealMyth(this)">
+        <div class="myth-q"><span class="myth-icon">❓</span>「男性天生比女性更有攻击性因为睾酮」</div>
+        <div class="myth-answer"><strong style="color:var(--yellow)">部分正确，严重误导。</strong> 跨文化数据：某些文化中男性攻击性差异与另一文化中的女性攻击性范围重叠。类型很重要：男性更多<em>身体攻击</em>，女性更多<em>关系攻击</em>（排斥、操纵社会关系）——关系攻击在人类中危害同等严重。睾酮解释了平均差异，无法解释个体差异（个体内变异远大于性别间差异）。</div>
+      </div>
+      <div class="myth-card" onclick="revealMyth(this)">
+        <div class="myth-q"><span class="myth-icon">❓</span>「给女性注射睾酮会让她们更暴力」</div>
+        <div class="myth-answer"><strong style="color:var(--red)">错误。</strong> 跨性别研究（van Goozen, 1995）：女→男跨性别者接受睾酮治疗后，攻击<em>倾向</em>和性欲升高，但实际攻击行为并不增加。睾酮改变了内部状态（冲动感），但行为表达受社会化、情境和前额叶皮层控制。同样的睾酮水平，在不同文化背景下产生完全不同的行为结果。</div>
+      </div>
+      <div class="myth-card" onclick="revealMyth(this)">
+        <div class="myth-q"><span class="myth-icon">❓</span>「运动员输了比赛后睾酮下降」</div>
+        <div class="myth-answer"><strong style="color:var(--green)">基本正确，但有重要细节。</strong> Mazur & Booth综述：胜者睾酮上升，败者睾酮下降——即使是棋类比赛，即使是观看自己支持的球队比赛！这是进化上的地位波动反应。但效果很小（幅度有限），可以被其他因素（归因方式、文化期望）完全覆盖。「赢了」的感觉比实际胜负更重要。</div>
+      </div>
+      <div class="myth-card" onclick="revealMyth(this)">
+        <div class="myth-q"><span class="myth-icon">❓</span>「睾酮替代疗法让老年男性更年轻、更强」</div>
+        <div class="myth-answer"><strong style="color:var(--yellow)">部分有效，风险被低估。</strong> TRT确实改善：肌肉量、骨密度、性功能、部分认知功能（空间记忆）。但：① 增加前列腺癌风险（进行中争议）；② 增加红细胞增多症风险；③ 睾丸萎缩（外源性睾酮抑制自身产生）；④ 情绪变化；⑤ 大多数益处在停药后消失。更重要：「男性更年期」睾酮下降大多是慢性压力、肥胖、睡眠不足的<em>结果</em>，而非原因。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 催产素的双面 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🤝</span>
+    <span class="sec-title">互动：催产素——爱的激素还是部落激素？</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="oxy-demo">
+      <h3>选择情景：催产素如何作用</h3>
+      <div class="oxy-selector">
+        <button class="oxy-btn active" onclick="showOxy(this,'bonding')">母婴联结</button>
+        <button class="oxy-btn" onclick="showOxy(this,'ingroup')">内群体信任</button>
+        <button class="oxy-btn" onclick="showOxy(this,'outgroup')">外群体敌意</button>
+        <button class="oxy-btn" onclick="showOxy(this,'stress')">社会应激缓冲</button>
+        <button class="oxy-btn" onclick="showOxy(this,'autism')">孤独症研究</button>
+      </div>
+      <div class="oxy-result" id="oxyResult">
+        <strong style="color:var(--teal)">母婴联结</strong><br>
+        分娩时催产素大量释放（促进宫缩），产后持续分泌（母乳喂养促进释放）。母性行为的核心驱动：新生小鼠注射催产素→主动哺育行为；阻断催产素受体→母性行为丧失。父亲在照顾婴儿时也产生催产素上升（打破「纯母性激素」的神话）。
+      </div>
+    </div>
+    <div class="highlight red">
+      <strong>DeWall 等人的关键发现（2014）：</strong>催产素鼻喷后，被试对内群体成员更慷慨、更信任——但对外群体成员更不信任，甚至更愿意采取先发制人的攻击。催产素不是「爱的激素」，而是「爱我们、防他们」的激素。
+    </div>
+    <table class="compare-table">
+      <thead><tr><th>方面</th><th>对内群体</th><th>对外群体</th></tr></thead>
+      <tbody>
+        <tr><td>信任</td><td style="color:var(--green)">↑ 显著提升</td><td style="color:var(--red)">↓ 降低</td></tr>
+        <tr><td>合作</td><td style="color:var(--green)">↑ 促进</td><td style="color:var(--red)">↓ 对外竞争</td></tr>
+        <tr><td>共情</td><td style="color:var(--green)">↑ 增强</td><td style="color:var(--muted)">不变或↓</td></tr>
+        <tr><td>先发制人攻击</td><td style="color:var(--muted)">不变</td><td style="color:var(--red)">↑ 增加</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 雌激素与孕激素 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🌸</span>
+    <span class="sec-title">雌激素：远不止生殖激素</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <p>Sapolsky 专门强调：雌激素对大脑的作用常被忽视，因为历史上神经科学研究偏重男性被试。</p>
+    <ul>
+      <li><strong>神经保护作用：</strong>雌激素促进海马体突触可塑性（LTP增强），增加BDNF（脑源性神经营养因子）；绝经后雌激素下降→海马体体积减小，阿尔茨海默症风险增加（争议中）</li>
+      <li><strong>情绪调节：</strong>雌激素增强血清素信号传导；雌激素波动（排卵期前后、产后、围绝经期）与情绪变化相关</li>
+      <li><strong>认知功能：</strong>言语记忆在月经周期雌激素高峰期略有提升；空间记忆在孕激素高峰期略有变化</li>
+    </ul>
+    <div class="highlight purple">
+      <strong>激素与大脑的双向关系：</strong>大脑（下丘脑-垂体）控制性激素分泌；但性激素也「上行」改变大脑结构和功能。慢性社会压力→皮质醇升高→抑制GnRH→性激素下降→情绪和认知受影响。这是一个双向反馈的网络，而非线性通路。
+    </div>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">🐭 田鼠的「一夫一妻制基因」：催产素受体分布</div>
+      <p style="font-size:.85rem">草地田鼠（Microtus ochrogaster）终身配对，是哺乳动物中少见的社会性一夫一妻制；草原田鼠（M. pennsylvanicus）则滥交。Sue Carter 和 Tom Insel 发现：两种田鼠的催产素和加压素基因序列几乎相同，但<em>受体分布</em>完全不同——草地田鼠的伏隔核（奖赏中心）有大量催产素和V1a受体，使性行为与奖赏回路强烈捆绑，形成配对偏好。这是「一小段基因调控序列改变了整个社会行为模式」的最清晰案例。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">⚔️ 睾酮与职业扑克选手</div>
+      <p style="font-size:.85rem">Coates & Herbert (2008) 研究伦敦交易员：早晨睾酮水平高的交易日，该交易员当天获利更高；持续盈利的日子，睾酮进一步升高。但：连胜后睾酮过高的交易员开始过度冒险（「赢家诅咒」），最终亏损。睾酮促进地位竞争中的冒险，短期有利，长期过头则适得其反。这完美诠释了Sapolsky的「放大器」理论。</p>
+      <div class="quote">「睾酮不会让你变成混蛋。但如果你已经是个混蛋，它会让你更混蛋。」— Sapolsky</div>
+    </div>
+    <div class="case">
+      <div class="case-title">👃 催产素鼻喷与种族偏见</div>
+      <p style="font-size:.85rem">Sheng et al. (2013, China)：汉族被试催产素鼻喷后，对汉族面孔信任度↑，对维吾尔族面孔信任度不变或↓。De Dreu (2011, Netherlands)：荷兰被试催产素后更愿意牺牲外国人（而非本国人）以拯救更多人（功利主义决策中的内-外群体偏见）。结论：催产素强化进化上已有的内群体偏好，可能<em>加剧</em>种族主义，而非消除。</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l12-deep-dive.html" style="color:var(--muted);margin-right:16px">← L12 内分泌学 I</a>
+  <a href="sapolsky-l14-deep-dive.html" style="color:var(--muted)">L14 边缘系统 →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+function revealMyth(card){card.classList.toggle('revealed');}
+
+const oxyData={
+  bonding:'<strong style="color:var(--teal)">母婴联结</strong><br>分娩时催产素大量释放（促进宫缩），产后持续分泌（哺乳促进）。阻断催产素受体→母性行为丧失；注射催产素→非亲生母鼠也表现母性行为。父亲照顾婴儿时催产素同样上升，皮肤接触（Kangaroo Care）也能触发催产素释放。',
+  ingroup:'<strong style="color:var(--green)">内群体信任增强</strong><br>催产素鼻喷后，被试在信任博弈中对内群体成员投入更多金钱；在集体协作任务中更愿意牺牲个人利益；对内群体面孔评价更正面。这是催产素「好的那面」——增强社会凝聚力，是人类合作的激素基础之一。',
+  outgroup:'<strong style="color:var(--red)">外群体敌意加剧</strong><br>同样的催产素鼻喷，在涉及外群体时：对外群体成员信任↓；更愿意先发制人攻击潜在外群体威胁；在生死抉择中更倾向牺牲外群体成员。这是催产素「黑暗面」——它不是让所有人更友善，而是划定「我们」和「他们」的界限并强化它。',
+  stress:'<strong style="color:var(--blue)">社会应激缓冲</strong><br>「Tend-and-Befriend」理论（Taylor, 2000）：女性在应激时（与男性战斗/逃跑不同）更倾向寻求社会联结，催产素是核心介质。触摸（按摩、拥抱）→催产素↑→皮质醇↓→心率↓。社会支持的抗压效果有其激素机制：陪伴触发催产素，催产素抑制HPA轴。',
+  autism:'<strong style="color:var(--yellow)">孤独症研究（争议中）</strong><br>部分孤独症谱系障碍（ASD）患者血浆催产素水平较低，受体基因多态性与社交困难相关。催产素鼻喷改善某些ASD患者的眼神接触和情绪识别——但效果在大型RCT中不一致，存在显著个体差异。争议：催产素是原因还是关联？外源性给药能否持久改变回路？研究仍在进行中。'
+};
+
+function showOxy(btn,id){
+  document.querySelectorAll('.oxy-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('oxyResult').innerHTML=oxyData[id];
+}
+</script>
+</body>
+</html>
