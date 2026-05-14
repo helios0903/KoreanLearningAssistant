@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L24 精神分裂症 — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(167,139,250,0.1);border-left:3px solid var(--accent);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.green{background:rgba(52,211,153,0.1);border-left-color:var(--green)}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Symptoms explorer */
+.symptom-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.sym-tab{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.79rem;cursor:pointer;transition:all .2s}
+.sym-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,0.1)}
+.sym-result{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.82rem;min-height:80px;margin-bottom:12px}
+/* DA hypothesis diagram */
+.da-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.da-bars{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.da-bar-row{display:flex;align-items:center;gap:10px}
+.da-label{font-size:.78rem;color:var(--muted);width:120px;flex-shrink:0}
+.da-bar-bg{flex:1;background:var(--card);border-radius:4px;height:12px;overflow:hidden;border:1px solid var(--border)}
+.da-bar-fill{height:100%;border-radius:4px;transition:width .4s}
+/* Genetic risk */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
+.risk-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center}
+.risk-label{font-size:.72rem;color:var(--muted);margin-bottom:4px}
+.risk-val{font-size:1rem;font-weight:700}
+/* Case */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(167,139,250,0.15);color:var(--accent)">L24</span>
+  <span class="badge" style="background:rgba(167,139,250,0.15);color:var(--accent)">精神疾病</span>
+  <h1>精神分裂症：神经生物学深挖</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L24 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      精神分裂症不是「人格分裂」（那是DID），而是一种严重的神经发育障碍，影响现实检验、思维组织和社会功能。它的病因涉及遗传、产前发育、神经发育时序和环境应激的复杂互作——没有单一原因。
+    </div>
+    <p>Sapolsky 选择精神分裂症作为「多层次因果分析」的完美案例：从基因到突触到脑结构到社会环境，每个层次都有真实的贡献，没有哪一层可以单独解释这个病。</p>
+    <div class="highlight blue">
+      <strong>流行病学基本事实：</strong>终生患病率约1%（跨文化稳定）；男性发病更早（20–25岁 vs. 女性25–30岁）；男性症状通常更严重；无文化、阶层、种族差异（流行率相似）；但城市居民、低社会阶层、移民群体风险略高。
+    </div>
+  </div>
+</div>
+
+<!-- 症状 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🔍</span>
+    <span class="sec-title">互动：症状的神经生物学基础</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="symptom-tabs">
+      <button class="sym-tab active" onclick="showSym(this,'positive')">阳性症状</button>
+      <button class="sym-tab" onclick="showSym(this,'negative')">阴性症状</button>
+      <button class="sym-tab" onclick="showSym(this,'cognitive')">认知症状</button>
+    </div>
+    <div class="sym-result" id="symResult">
+      <strong style="color:var(--red)">阳性症状（增加了正常人没有的东西）</strong><br>
+      幻觉（最常见：听幻觉——听到声音，通常是评论性的或命令性的）；妄想（被迫害、夸大、关系妄想）；思维混乱（思维散漫、联想松弛）；紊乱行为。<br>
+      神经基础：边缘系统多巴胺过度活跃（中脑-边缘通路：VTA→伏隔核）——D2受体过度激活→「显著性」系统失调，把随机内部噪声标记为「有意义的信号」。典型抗精神病药通过阻断D2受体发挥作用。
+    </div>
+    <div class="highlight yellow">
+      <strong>「显著性劫持」假说（Kapur, 2003）：</strong>多巴胺编码事件的「显著性」（重要性）。精神分裂症中，多巴胺系统功能失调，把无关刺激（路上一辆红色汽车）标记为「极其重要」，患者努力寻找这些「信号」的意义，妄想就是对这些无端显著体验的理性解释尝试。
+    </div>
+  </div>
+</div>
+
+<!-- 多巴胺假说 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧪</span>
+    <span class="sec-title">多巴胺假说的演化</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="da-demo">
+      <h3>不同多巴胺通路的异常模式</h3>
+      <div class="da-bars">
+        <div class="da-bar-row">
+          <div class="da-label">中脑-边缘通路<br><span style="font-size:.7rem">(VTA→伏隔核)</span></div>
+          <div class="da-bar-bg"><div class="da-bar-fill" style="width:90%;background:var(--red)"></div></div>
+          <span style="font-size:.76rem;color:var(--red)">↑ 过度活跃</span>
+        </div>
+        <div class="da-bar-row">
+          <div class="da-label">中脑-皮层通路<br><span style="font-size:.7rem">(VTA→PFC)</span></div>
+          <div class="da-bar-bg"><div class="da-bar-fill" style="width:25%;background:var(--blue)"></div></div>
+          <span style="font-size:.76rem;color:var(--blue)">↓ 活性不足</span>
+        </div>
+        <div class="da-bar-row">
+          <div class="da-label">黑质-纹状体通路<br><span style="font-size:.7rem">(黑质→纹状体)</span></div>
+          <div class="da-bar-bg"><div class="da-bar-fill" style="width:50%;background:var(--muted)"></div></div>
+          <span style="font-size:.76rem;color:var(--muted)">正常（药物副作用区）</span>
+        </div>
+      </div>
+      <p style="font-size:.8rem;margin-top:8px">中脑-边缘DA↑ → 阳性症状；中脑-皮层DA↓ → 阴性症状+认知障碍。传统D2阻断药对阳性症状有效但引起锥体外系副作用（阻断黑质-纹状体通路）。这是典型抗精神病药的核心问题。</p>
+    </div>
+    <div class="highlight">
+      <strong>NMDA受体假说（更完整）：</strong>氯胺酮（NMDA拮抗剂）在正常人中引起精神分裂症样症状（幻觉+认知障碍）。PCP（天使粉）同样。支持NMDA功能不足假说。NMDA减少→谷氨酸能调节失调→中脑-边缘DA失控。这解释了为什么单纯的DA假说不够完整。
+    </div>
+  </div>
+</div>
+
+<!-- 遗传风险 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧬</span>
+    <span class="sec-title">遗传风险与神经发育</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="risk-grid">
+      <div class="risk-card">
+        <div class="risk-label">普通人群</div>
+        <div class="risk-val" style="color:var(--green)">1%</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-label">一级亲属</div>
+        <div class="risk-val" style="color:var(--yellow)">10%</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-label">同卵双胞胎</div>
+        <div class="risk-val" style="color:var(--red)">48%</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-label">遗传度估计</div>
+        <div class="risk-val" style="color:var(--accent)">~80%</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-label">相关基因数</div>
+        <div class="risk-val" style="color:var(--blue)">100+</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-label">最强关联区域</div>
+        <div class="risk-val" style="color:var(--muted)">MHC/C4</div>
+      </div>
+    </div>
+    <p style="font-size:.85rem">同卵双胞胎一致率仅48%（非100%）：说明基因是必要但不充分条件。产前因素：饥荒期（Hollandaise hongerstijd, 1944–45）出生者患病率增加2倍；孕期感染（流感病毒）；产前压力（大屠杀生还者子女）。神经发育异常：精神分裂症患者在儿童期（起病前10年）已有轻微运动协调、认知和社交障碍——不是突然发生，而是长期神经发育轨迹的终点。</p>
+    <div class="highlight red">
+      <strong>C4基因与突触修剪（Sekar, 2016, Nature）：</strong>最大的GWAS发现精神分裂症最强关联在MHC区域（涉及C4补体基因）。机制假说：C4A的某些变体导致青少年期突触修剪过度（补体系统标记突触供小胶质细胞清除），尤其在额叶皮层——正好是发病年龄（青少年晚期/成年早期）与额叶发育高峰期重合的时候。
+    </div>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">📖 Elyn Saks《我与精神分裂症的人生》</div>
+      <p style="font-size:.85rem">Elyn Saks是南加州大学法学教授，同时是精神分裂症患者。她的回忆录描述了精神分裂症的内在体验：幻听不是「听到外面的声音」而是「来自内部的声音，感觉比自己的想法更真实」；妄想不是明显荒唐，而是当时完全合理的解释框架。Sapolsky 引用此例说明：精神分裂症不是「疯了」（智力降低），而是现实检验系统的特定失调——患者通常有正常甚至超高的智力，但内部信号处理系统被破坏了。</p>
+      <div class="quote">「最难的不是幻听，而是你无法相信自己能区分什么是真实的。」— Elyn Saks</div>
+    </div>
+    <div class="case">
+      <div class="case-title">🚬 精神分裂症患者的吸烟率（80%）与尼古丁的自我医疗</div>
+      <p style="font-size:.85rem">精神分裂症患者的吸烟率约为正常人群的3倍（约80% vs 25%）。机制假说：尼古丁通过激活α7烟碱型乙酰胆碱受体，改善精神分裂症患者的感觉门控缺陷（P50听觉抑制）——患者无法「过滤」重复刺激，尼古丁部分恢复此功能。这是「自我医疗」假说的有力案例：患者本能发现了一种部分缓解症状的物质。这也解释了为什么强制戒烟在精神分裂症患者中特别困难，以及为什么要开发靶向α7受体的药物。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">🏙️ 城市效应与精神分裂症</div>
+      <p style="font-size:.85rem">Van Os等人综述：在城市出生和/或成长的人患精神分裂症的风险比农村高约2倍（剂量-效应关系：城市化程度越高，风险越高）。城市中的特定风险因素：更高的社会压力、环境污染（铅/空气质量）、社会隔离、移民中的「少数应激」（被歧视的慢性应激）。但：并非「城市使人精神分裂」——遗传易感个体更可能漂移到城市（社会选择），或城市的社会逆境触发了遗传预设的脆弱性。</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l23-deep-dive.html" style="color:var(--muted);margin-right:16px">← L23 语言</a>
+  <a href="sapolsky-l25-deep-dive.html" style="color:var(--muted)">L25 个体差异 →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+const symData={
+  positive:'<strong style="color:var(--red)">阳性症状（增加了正常人没有的体验）</strong><br>幻觉（最常见是听幻觉，通常评论性或命令性）；妄想（被害/夸大/关系妄想）；思维散漫；紊乱行为。神经基础：边缘系统DA过度活跃→「显著性」系统失调→无关刺激被标记为重要→妄想是对这些体验的解释尝试。D2阻断药对阳性症状有效（但有副作用）。',
+  negative:'<strong style="color:var(--blue)">阴性症状（失去了正常人有的功能）</strong><br>情感平淡（面部表情减少）；情感淡漠（无动力、无兴趣）；言语贫乏；社交退缩；意志减退（无法启动活动）。神经基础：中脑-皮层DA不足（PFC DA活性低）→前额叶功能下降→情绪和动机系统失调。阴性症状对传统抗精神病药反应差，是功能预后的主要决定因素。',
+  cognitive:'<strong style="color:var(--yellow)">认知症状（影响日常功能的认知缺陷）</strong><br>工作记忆受损（最一致的认知缺陷）；注意力/执行功能下降；处理速度慢；学习新信息困难。神经基础：前额叶-海马回路功能异常；NMDA受体减少影响突触可塑性。认知症状是功能预后最强的预测因子（比阳性症状更重要），但是传统治疗最难解决的部分。'
+};
+
+function showSym(btn,id){
+  document.querySelectorAll('.sym-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('symResult').innerHTML=symData[id];
+}
+</script>
+</body>
+</html>
