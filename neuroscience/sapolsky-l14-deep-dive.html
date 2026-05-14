@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L14 边缘系统 — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(248,113,113,0.1);border-left:3px solid var(--red);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.green{background:rgba(52,211,153,0.1);border-left-color:var(--green)}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.purple{background:rgba(167,139,250,0.1);border-left-color:var(--accent)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Fear conditioning simulator */
+.fear-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.fear-phase-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.fear-tab{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.79rem;cursor:pointer;transition:all .2s}
+.fear-tab.active{border-color:var(--red);color:var(--red);background:rgba(248,113,113,0.1)}
+.fear-diagram{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0;padding:10px;background:var(--card);border-radius:8px;border:1px solid var(--border)}
+.fear-node{padding:8px 12px;border-radius:8px;font-size:.78rem;font-weight:600;text-align:center;min-width:80px}
+.fear-arrow{color:var(--muted);font-size:.8rem}
+.fear-result{font-size:.82rem;margin-top:10px;padding:10px;background:var(--card);border-radius:8px;border:1px solid var(--border);min-height:60px}
+/* Memory types */
+.mem-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.mem-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.mem-name{font-size:.82rem;font-weight:700;margin-bottom:4px}
+.mem-brain{font-size:.75rem;color:var(--muted);margin-bottom:4px}
+.mem-example{font-size:.76rem;font-style:italic;color:var(--muted)}
+/* Amygdala connections */
+.conn-table{width:100%;border-collapse:collapse;font-size:.8rem;margin:10px 0}
+.conn-table th{background:var(--card2);padding:8px 10px;text-align:left;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border)}
+.conn-table td{padding:7px 10px;border-bottom:1px solid rgba(46,46,63,0.5)}
+.conn-table tr:last-child td{border-bottom:none}
+/* Case study */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(248,113,113,0.15);color:var(--red)">L14</span>
+  <span class="badge" style="background:rgba(248,113,113,0.15);color:var(--red)">边缘系统</span>
+  <span class="badge" style="background:rgba(248,113,113,0.15);color:var(--red)">⭐ 核心</span>
+  <h1>边缘系统：杏仁核、恐惧与记忆回路</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L14 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      边缘系统不是一个统一的「情绪脑」，而是多个结构的松散联盟，各有专长：杏仁核做威胁评估，海马体做情景记忆，下丘脑执行激素/自主神经指令。理解它们的连接方式，就理解了为什么创伤记忆如此顽固。
+    </div>
+    <p>「边缘系统」这个词是Paul MacLean 1952年造的，现代神经科学认为它过度简化，但仍然是理解情绪神经生物学的实用框架。Sapolsky 既使用这个概念，也不断提醒其局限性。</p>
+    <div class="highlight blue">
+      <strong>核心结构：</strong>杏仁核（威胁/情绪评估）+ 海马体（情景记忆形成）+ 下丘脑（自主神经/激素输出）+ 扣带前回（冲突监控/疼痛）+ 眶额皮层（奖赏/冲动抑制）
+    </div>
+  </div>
+</div>
+
+<!-- 恐惧条件化模拟器 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">😨</span>
+    <span class="sec-title">互动：恐惧条件化模拟器</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="fear-demo">
+      <h3>恐惧学习的三个阶段</h3>
+      <div class="fear-phase-tabs">
+        <button class="fear-tab active" onclick="showFear(this,'acquisition')">获得阶段</button>
+        <button class="fear-tab" onclick="showFear(this,'expression')">恐惧表达</button>
+        <button class="fear-tab" onclick="showFear(this,'extinction')">消退（治疗）</button>
+        <button class="fear-tab" onclick="showFear(this,'ptsd')">PTSD：消退失败</button>
+      </div>
+      <div class="fear-diagram" id="fearDiagram">
+        <div class="fear-node" style="background:rgba(96,165,250,0.15);color:var(--blue)">中性刺激<br><small>铃声/CS</small></div>
+        <div class="fear-arrow">+</div>
+        <div class="fear-node" style="background:rgba(248,113,113,0.15);color:var(--red)">无条件刺激<br><small>电击/US</small></div>
+        <div class="fear-arrow">→</div>
+        <div class="fear-node" style="background:rgba(251,191,36,0.15);color:var(--yellow)">杏仁核<br><small>侧核编码</small></div>
+        <div class="fear-arrow">→</div>
+        <div class="fear-node" style="background:rgba(248,113,113,0.15);color:var(--red)">恐惧反应<br><small>冻结/心跳↑</small></div>
+      </div>
+      <div class="fear-result" id="fearResult">
+        <strong style="color:var(--blue)">获得阶段（Acquisition）</strong><br>
+        CS（铃声）与US（电击）同时呈现3–5次后，杏仁核侧核（LA）形成CS-US关联。分子机制：谷氨酸（LA突触）+去甲肾上腺素（来自蓝斑）→NMDA受体激活→Ca²⁺内流→CaMKII磷酸化→AMPA受体插入→突触增强（类LTP）。仅需1次配对即可建立恐惧记忆（生物准备性/Preparedness）。
+      </div>
+    </div>
+    <div class="highlight yellow">
+      <strong>杏仁核的可塑性：</strong>正常情况下，杏仁核侧核→中央核（CE）→脑干/下丘脑（执行）。但mPFC（腹内侧前额叶）可以抑制CE，通过「间接通路」（mPFC→杏仁核间核→CE）实现消退。消退不是遗忘，而是主动的PFC抑制。
+    </div>
+  </div>
+</div>
+
+<!-- 记忆系统 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">💾</span>
+    <span class="sec-title">记忆系统的神经解剖分离</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="mem-grid">
+      <div class="mem-card">
+        <div class="mem-name" style="color:var(--green)">陈述性/外显记忆</div>
+        <div class="mem-brain">📍 海马体 → 皮层</div>
+        <div class="mem-example">「我在巴黎见过埃菲尔铁塔」（情景）<br>「法国首都是巴黎」（语义）</div>
+      </div>
+      <div class="mem-card">
+        <div class="mem-name" style="color:var(--blue)">程序性/内隐记忆</div>
+        <div class="mem-brain">📍 基底神经节 + 小脑</div>
+        <div class="mem-example">骑车、打字、弹钢琴<br>（无需意识回忆）</div>
+      </div>
+      <div class="mem-card">
+        <div class="mem-name" style="color:var(--red)">情绪性记忆</div>
+        <div class="mem-brain">📍 杏仁核 + 海马体</div>
+        <div class="mem-example">「那条街让我莫名害怕」<br>（条件化恐惧，可无情节记忆）</div>
+      </div>
+      <div class="mem-card">
+        <div class="mem-name" style="color:var(--yellow)">工作记忆</div>
+        <div class="mem-brain">📍 背外侧前额叶(dlPFC)</div>
+        <div class="mem-example">临时保持和操作信息<br>（约7±2 chunks，数秒内）</div>
+      </div>
+    </div>
+    <div class="highlight green">
+      <strong>H.M.案例的完美解离：</strong>双侧海马切除后，H.M. 无法形成新的情景记忆，但仍能学习镜像描画技能（程序性记忆），仍能被条件化恐惧（情绪性记忆）——尽管他完全不记得经历过这些。三种记忆系统的独立神经基础得到完美证明。
+    </div>
+  </div>
+</div>
+
+<!-- 杏仁核连接网络 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🕸️</span>
+    <span class="sec-title">杏仁核的输入输出网络</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <table class="conn-table">
+      <thead><tr><th>连接方向</th><th>来源/目标</th><th>功能意义</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--green)">↓ 输入</td><td>丘脑感觉核团</td><td>快速/粗糙威胁信号（低通路，~12ms）</td></tr>
+        <tr><td style="color:var(--green)">↓ 输入</td><td>感觉皮层</td><td>精确威胁评估（高通路，~200ms）</td></tr>
+        <tr><td style="color:var(--green)">↓ 输入</td><td>海马体</td><td>情景背景（「上次在这里受伤了」）</td></tr>
+        <tr><td style="color:var(--green)">↓ 输入</td><td>mPFC/OFC</td><td>认知调节/消退学习（抑制杏仁核）</td></tr>
+        <tr><td style="color:var(--red)">↑ 输出</td><td>下丘脑</td><td>激活HPA轴（皮质醇）+ 自主神经</td></tr>
+        <tr><td style="color:var(--red)">↑ 输出</td><td>脑干（PAG/蓝斑）</td><td>冻结行为 + NE应激唤醒</td></tr>
+        <tr><td style="color:var(--red)">↑ 输出</td><td>海马体</td><td>增强情绪性记忆编码（情绪放大记忆）</td></tr>
+        <tr><td style="color:var(--red)">↑ 输出</td><td>mPFC</td><td>反过来调节PFC执行功能（恐惧时思维变窄）</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight">
+      <strong>关键不对称性：</strong>杏仁核→PFC 的通路比 PFC→杏仁核 的通路更粗壮。这在进化上合理：威胁时情绪可以「劫持」理性，但理性很难完全关闭情绪。这也是为什么「道理我都懂，就是控制不住自己」是神经解剖学上的现实。
+    </div>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">💣 PTSD：消退失败的神经机制</div>
+      <p style="font-size:.85rem">创伤后应激障碍患者的核心问题不是「记忆太强」，而是「消退失败」。神经影像研究（Milad & Quirk, 2012）：PTSD患者恐惧消退时，vmPFC激活不足（无法抑制杏仁核），杏仁核过度激活，海马体体积减小（情景区分能力下降，无法区分「安全当下」和「危险过去」）。治疗启示：暴露疗法（重建消退记忆）+ NMDA受体激动剂D-cycloserine（促进消退学习）。</p>
+      <div class="quote">「PTSD患者不是活在过去——他们的大脑无法判断过去已经过去了。」— Sapolsky</div>
+    </div>
+    <div class="case">
+      <div class="case-title">🧠 Klüver-Bucy 综合征：双侧颞叶切除</div>
+      <p style="font-size:.85rem">1939年，Klüver & Bucy 切除恒河猴双侧颞叶（包含杏仁核和前颞叶皮层）：动物变得异常温顺（「心理盲目症」——无法识别威胁）、口欲过度（把一切放进嘴里）、性欲亢进（对任何物体尝试交配）、情绪平淡。人类Klüver-Bucy综合征（单纯疱疹病毒脑炎损伤颞叶）症状类似。证明杏仁核在威胁识别和情绪行为中的核心作用。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">🐀 LeDoux的恐惧消退实验</div>
+      <p style="font-size:.85rem">Joseph LeDoux（NYU）的系列实验确立了恐惧回路：① 只损伤杏仁核侧核→无法形成恐惧条件化；② 只损伤中央核→无法表达恐惧（不冻结，不心跳加速）；③ 消退训练后，恐惧记忆在LA中并未被抹除，只是被vmPFC主动抑制——重新暴露于应激或时间流逝后，消退的恐惧「自发恢复」。这解释了为什么心理治疗需要持续强化，以及为什么旧伤容易复发。</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l13-deep-dive.html" style="color:var(--muted);margin-right:16px">← L13 内分泌学 II</a>
+  <a href="sapolsky-l15-deep-dive.html" style="color:var(--muted)">L15 人类性行为 I →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+const fearPhases={
+  acquisition:{
+    diagram:`<div class="fear-node" style="background:rgba(96,165,250,0.15);color:var(--blue)">CS（铃声）</div>
+    <div class="fear-arrow">+</div>
+    <div class="fear-node" style="background:rgba(248,113,113,0.15);color:var(--red)">US（电击）</div>
+    <div class="fear-arrow">→</div>
+    <div class="fear-node" style="background:rgba(251,191,36,0.15);color:var(--yellow)">杏仁核侧核<br><small>LTP编码</small></div>
+    <div class="fear-arrow">→</div>
+    <div class="fear-node" style="background:rgba(248,113,113,0.15);color:var(--red)">UR恐惧</div>`,
+    text:'<strong style="color:var(--blue)">获得阶段（Acquisition）</strong><br>CS与US配对3–5次，杏仁核侧核（LA）形成CS-US突触增强。仅需1次配对即可建立（准备性学习）。NMDA受体激活是关键：若注射NMDA拮抗剂→无法获得恐惧条件化。'
+  },
+  expression:{
+    diagram:`<div class="fear-node" style="background:rgba(96,165,250,0.15);color:var(--blue)">CS（铃声）</div>
+    <div class="fear-arrow">→</div>
+    <div class="fear-node" style="background:rgba(251,191,36,0.15);color:var(--yellow)">杏仁核侧核→中央核</div>
+    <div class="fear-arrow">→</div>
+    <div class="fear-node" style="background:rgba(248,113,113,0.15);color:var(--red)">下丘脑+脑干</div>
+    <div class="fear-arrow">→</div>
+    <div class="fear-node" style="background:rgba(248,113,113,0.15);color:var(--red)">冻结/心跳↑/皮质醇</div>`,
+    text:'<strong style="color:var(--red)">恐惧表达（Expression）</strong><br>单独呈现CS→杏仁核侧核激活→中央核→下丘脑（HPA轴启动）+ PAG（冻结行为）+ 蓝斑（NE释放/心跳加速）。杏仁核中央核是恐惧表达的「总指挥」。'
+  },
+  extinction:{
+    diagram:`<div class="fear-node" style="background:rgba(52,211,153,0.15);color:var(--green)">CS反复单独呈现<br><small>（无US）</small></div>
+    <div class="fear-arrow">→</div>
+    <div class="fear-node" style="background:rgba(167,139,250,0.15);color:var(--accent)">vmPFC激活</div>
+    <div class="fear-arrow">→</div>
+    <div class="fear-node" style="background:rgba(52,211,153,0.15);color:var(--green)">抑制杏仁核中央核</div>
+    <div class="fear-arrow">→</div>
+    <div class="fear-node" style="background:rgba(52,211,153,0.15);color:var(--green)">恐惧反应↓</div>`,
+    text:'<strong style="color:var(--green)">消退（Extinction）= 心理治疗核心</strong><br>反复呈现CS而无US→vmPFC「学会」抑制杏仁核中央核。消退不是删除原始记忆（LA中CS-US关联仍在），而是形成新的「安全记忆」。这是暴露疗法（CBT/EMDR）的神经基础。需在与原始习得不同的情景下强化，否则容易「情景依赖性复发」。'
+  },
+  ptsd:{
+    diagram:`<div class="fear-node" style="background:rgba(248,113,113,0.15);color:var(--red)">创伤刺激<br><small>（甚至微弱线索）</small></div>
+    <div class="fear-arrow">→</div>
+    <div class="fear-node" style="background:rgba(248,113,113,0.15);color:var(--red)">杏仁核过度激活</div>
+    <div class="fear-arrow">→</div>
+    <div class="fear-node" style="background:rgba(136,136,168,0.15);color:var(--muted)">vmPFC功能↓<br><small>无法消退</small></div>
+    <div class="fear-arrow">→</div>
+    <div class="fear-node" style="background:rgba(248,113,113,0.15);color:var(--red)">闪回/高度警觉</div>`,
+    text:'<strong style="color:var(--red)">PTSD：消退回路损伤</strong><br>vmPFC激活不足 + 杏仁核过激活 + 海马体萎缩（无法区分情景「那是过去」）→ 消退记忆无法形成或维持。结果：微弱线索（气味、声音）即可触发完整的创伤再体验。治疗方向：强化vmPFC（正念、认知重评）+ NMDA激动剂辅助消退学习。'
+  }
+};
+
+function showFear(btn,phase){
+  document.querySelectorAll('.fear-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('fearDiagram').innerHTML=fearPhases[phase].diagram;
+  document.getElementById('fearResult').innerHTML=fearPhases[phase].text;
+}
+</script>
+</body>
+</html>
