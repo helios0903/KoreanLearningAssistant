@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L15 人类性行为 I — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(167,139,250,0.1);border-left:3px solid var(--accent);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.green{background:rgba(52,211,153,0.1);border-left-color:var(--green)}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Mate preference quiz */
+.pref-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.pref-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.pref-tab{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.79rem;cursor:pointer;transition:all .2s}
+.pref-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,0.1)}
+.pref-result{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.82rem;min-height:80px}
+/* Compare grid */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.compare-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.compare-title{font-size:.8rem;font-weight:700;margin-bottom:6px}
+.compare-item{font-size:.76rem;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(46,46,63,0.4)}
+.compare-item:last-child{border-bottom:none}
+/* Case study */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(167,139,250,0.15);color:var(--accent)">L15</span>
+  <span class="badge" style="background:rgba(167,139,250,0.15);color:var(--accent)">性行为</span>
+  <h1>人类性行为 I：进化视角</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L15 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      性行为不是由单一机制决定的——它是进化压力（生殖成功）、激素环境、发育史、文化规范和即时情境的共同产物。任何只看一个层次的解释都是不完整的。
+    </div>
+    <p>Sapolsky 在这两讲中明确表态：他将用进化生物学、神经内分泌学和比较动物学来分析性行为，「不是要评价对错，而是要理解这些行为来自哪里」。</p>
+    <div class="highlight blue">
+      <strong>关键问题：</strong>为什么人类有如此多样化的配对系统（一夫一妻、一夫多妻、一妻多夫）？为什么性取向有多样性？基因、激素和经历各贡献多少？
+    </div>
+  </div>
+</div>
+
+<!-- 配对系统比较 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">💑</span>
+    <span class="sec-title">配对系统的进化逻辑</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-title" style="color:var(--yellow)">一夫多妻 Polygyny</div>
+        <div class="compare-item">哺乳动物约95%的物种</div>
+        <div class="compare-item">雄性竞争剧烈（雄-雄选择）</div>
+        <div class="compare-item">雄性体型远大于雌性（性二形）</div>
+        <div class="compare-item">雄性亲代投资少</div>
+        <div class="compare-item">例：大象海豹（后宫制）</div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-title" style="color:var(--green)">社会性一夫一妻 Monogamy</div>
+        <div class="compare-item">约3%哺乳动物，约90%鸟类</div>
+        <div class="compare-item">双亲共同养育</div>
+        <div class="compare-item">性二形程度低</div>
+        <div class="compare-item">催产素/加压素V1a受体丰富</div>
+        <div class="compare-item">例：草地田鼠、信天翁</div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-title" style="color:var(--teal)">一妻多夫 Polyandry</div>
+        <div class="compare-item">极少数物种</div>
+        <div class="compare-item">雌性竞争雄性</div>
+        <div class="compare-item">雌性体型更大（反性二形）</div>
+        <div class="compare-item">雄性主要亲代投资</div>
+        <div class="compare-item">例：水雉、海马（雄性育儿）</div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-title" style="color:var(--blue)">人类（复杂）</div>
+        <div class="compare-item">文化上约85%允许多配偶</div>
+        <div class="compare-item">实际上多数个体接近单配</div>
+        <div class="compare-item">性二形程度：中等（男性略大）</div>
+        <div class="compare-item">双亲共同投资（但程度可变）</div>
+        <div class="compare-item">跨文化差异极大</div>
+      </div>
+    </div>
+    <div class="highlight yellow">
+      <strong>人类精子竞争的解剖学证据：</strong>人类睾丸-体重比（0.079%）高于大猩猩（一夫多妻，后宫制，0.018%），低于黑猩猩（混交制，0.27%）。这暗示人类进化史上有一定程度的精子竞争，与完全单配偶制不符。
+    </div>
+  </div>
+</div>
+
+<!-- 择偶偏好 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🔍</span>
+    <span class="sec-title">互动：择偶偏好的进化解释</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="pref-demo">
+      <h3>选择一个跨文化偏好研究</h3>
+      <div class="pref-tabs">
+        <button class="pref-tab active" onclick="showPref(this,'symmetry')">面部对称性</button>
+        <button class="pref-tab" onclick="showPref(this,'voice')">声音特征</button>
+        <button class="pref-tab" onclick="showPref(this,'resources')">资源/地位</button>
+        <button class="pref-tab" onclick="showPref(this,'scent')">气味/MHC</button>
+        <button class="pref-tab" onclick="showPref(this,'age')">年龄偏好</button>
+      </div>
+      <div class="pref-result" id="prefResult">
+        <strong style="color:var(--accent)">面部对称性</strong><br>
+        跨文化研究（Gangestad & Thornhill）：面部和身体对称性与遗传质量、发育稳定性（抗寄生虫、抗氧化应激能力）相关。高对称性男性：睾酮更高，免疫功能更强，精子质量更好；女性排卵期时对高对称性男性体味偏好显著增强。<br>
+        <em style="color:var(--muted)">重要争议：效应量小，可重复性受质疑（2010s重复危机）。跨文化差异也存在。</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 人类性行为的神经生物学 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧠</span>
+    <span class="sec-title">性行为的神经生物学</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <p>性欲望、性唤起和性高潮涉及不同的神经回路，受不同因素调节。</p>
+    <ul>
+      <li><strong>欲望（Desire）：</strong>睾酮（男女均有）→ 下丘脑内侧视前区（mPOA）激活；多巴胺奖赏回路参与</li>
+      <li><strong>唤起（Arousal）：</strong>副交感神经系统主导（放松、血管扩张）；任何干扰（焦虑、皮质醇↑）都会损害唤起</li>
+      <li><strong>高潮（Orgasm）：</strong>交感神经系统主导；催产素大量释放（促进社会联结）；多巴胺/阿片系统激活</li>
+    </ul>
+    <div class="highlight red">
+      <strong>压力对性欲的损害：</strong>皮质醇↑ → 抑制GnRH → 性激素↓；且皮质醇直接损害下丘脑mPOA性行为回路。这解释了为什么高压状态下性欲下降——不是「心理问题」，而是HPA轴与HPG轴的生理拮抗。
+    </div>
+    <div class="highlight green">
+      <strong>下丘脑内侧视前区（mPOA）：</strong>雄性性行为的关键区域——受睾酮激活，损毁后雄性性行为消失。但mPOA不控制快感，控制的是「主动追求」行为（动机）。性快感的底物在腹侧被盖区/伏隔核奖赏回路。
+    </div>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">🦚 孔雀尾巴与Zahavian理论</div>
+      <p style="font-size:.85rem">孔雀尾巴是「性选择失控」（Fisher失控）还是真实质量信号（Zahavi 残障原理）？Zahavi：只有真正高质量的雄性才能负担得起孔雀尾巴的代价（容易被捕食、消耗能量）——正因为代价高，才是可靠的质量信号。Hamilton & Zuk验证：高寄生虫负担物种（需要免疫信号）性二形更显著。Sapolsky 用此例讨论人类的「代价高昂的信号」（奢侈消费、极限运动）。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">🐬 海豚和倭黑猩猩的「非生殖性性行为」</div>
+      <p style="font-size:.85rem">倭黑猩猩（Pan paniscus）：性行为频率极高，不限于发情期，不限于异性，不总是导向生殖——用性行为缓解社会紧张、建立联盟、分享食物。这打破了「性行为=生殖」的简单等号。Sapolsky 用此驳斥「只有生殖目的才是'自然'性行为」的论断：自然界中非生殖性性行为极其普遍。</p>
+      <div class="quote">「自然界中，性行为被用来做的事，比繁殖要多得多。」— Sapolsky</div>
+    </div>
+    <div class="case">
+      <div class="case-title">📊 Buss (1989) 37文化择偶偏好研究</div>
+      <p style="font-size:.85rem">David Buss 跨越37个文化的研究发现跨文化一致性：女性比男性更看重伴侣的资源/地位和雄心；男性比女性更看重伴侣的年轻/外貌。进化解释：女性因亲代投资更高（妊娠成本）对伴侣更挑剔，选择资源提供者；男性寻找生育能力信号（年轻外貌=高繁殖潜力）。但：效应量适中，文化差异仍然显著，且无法区分进化原因还是文化习得。Sapolsky 强调：跨文化数据是必要但不充分的进化证据。</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l14-deep-dive.html" style="color:var(--muted);margin-right:16px">← L14 边缘系统</a>
+  <a href="sapolsky-l16-deep-dive.html" style="color:var(--muted)">L16 人类性行为 II →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+const prefData={
+  symmetry:'<strong style="color:var(--accent)">面部对称性</strong><br>跨文化研究：对称性与发育稳定性（抵抗寄生虫/氧化应激）相关。女性在排卵期对高对称性男性体味偏好增强（Gangestad & Thornhill）。但效应量小，2010s重复危机显示部分结果不可重复，需谨慎解读。',
+  voice:'<strong style="color:var(--blue)">声音特征</strong><br>男性低沉声音与睾酮水平和体型正相关（Puts, 2005）；跨文化研究显示女性偏好较低沉的男声（尤其在排卵期）；男性偏好较高的女声（与雌激素和年龄相关）。声音可能传递免疫质量信号（MHC相关）。但声音可以主动调整，文化效果显著。',
+  resources:'<strong style="color:var(--yellow)">资源与地位</strong><br>Buss (1989)：女性在37个文化中均比男性更看重伴侣经济前景。进化解释：女性亲代投资成本高（妊娠、哺乳），选择能提供资源的伴侣。反驳：当女性经济独立程度增加时，此偏差减小（Eagly & Wood, 1999）——支持社会角色理论。两者可能都有贡献。',
+  scent:'<strong style="color:var(--green)">气味与MHC</strong><br>Wedekind T恤实验：偏好MHC不同的体味。延伸研究：MHC相似的夫妻性满足度较低，更可能出轨（Garver-Apgar, 2006）；MHC混合对后代免疫多样性有利。但：避孕药改变MHC偏好（偏向相似MHC）——可能影响伴侣选择质量？',
+  age:'<strong style="color:var(--red)">年龄偏好</strong><br>跨文化一致性：男性偏好年轻女性（生育能力指标），女性对年龄偏好更灵活（更看重地位）。男性择偶年龄偏差随自身年龄增大而增大（老年男性仍偏好较年轻女性）。但偏好与实际配对有差距——社会规范、可及性、个体偏差大量存在。'
+};
+
+function showPref(btn,id){
+  document.querySelectorAll('.pref-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('prefResult').innerHTML=prefData[id];
+}
+</script>
+</body>
+</html>
