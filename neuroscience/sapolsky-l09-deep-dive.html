@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L09 动物行为学 — Sapolsky 深度拆解</title>
+<style>
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding-bottom:60px;}
+.hero{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);padding:36px 20px 28px;text-align:center;border-bottom:1px solid var(--border);}
+.badge{display:inline-block;background:rgba(96,165,250,0.15);color:var(--blue);border:1px solid rgba(96,165,250,0.3);border-radius:20px;font-size:12px;padding:3px 12px;margin-bottom:12px;letter-spacing:1px;}
+.hero h1{font-size:22px;font-weight:700;margin-bottom:8px;line-height:1.3;}
+.hero p{color:var(--muted);font-size:13px;}
+.container{max-width:680px;margin:0 auto;padding:20px 16px;}
+.section{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:16px;overflow:hidden;}
+.sec-hdr{display:flex;align-items:center;gap:10px;padding:16px;cursor:pointer;user-select:none;transition:background .2s;}
+.sec-hdr:hover{background:var(--card2);}
+.sec-icon{font-size:20px;flex-shrink:0;}
+.sec-title{font-weight:600;font-size:15px;flex:1;}
+.chevron{color:var(--muted);transition:transform .25s;font-size:12px;}
+.sec-body{display:none;padding:0 16px 16px;}
+.sec-body.open{display:block;}
+.concept{background:var(--card2);border-radius:10px;padding:14px;margin-bottom:10px;}
+.concept h4{color:var(--blue);font-size:13px;font-weight:600;margin-bottom:6px;}
+.tag{display:inline-block;border-radius:6px;font-size:11px;padding:2px 8px;margin:2px;font-weight:600;}
+.tag-g{background:rgba(52,211,153,0.15);color:var(--green);}
+.tag-y{background:rgba(251,191,36,0.15);color:var(--yellow);}
+.tag-r{background:rgba(248,113,113,0.15);color:var(--red);}
+.tag-b{background:rgba(96,165,250,0.15);color:var(--blue);}
+.tag-t{background:rgba(38,198,168,0.15);color:var(--teal);}
+.tag-a{background:rgba(167,139,250,0.15);color:var(--accent);}
+.hl{background:rgba(167,139,250,0.1);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px;}
+.hl-g{background:rgba(52,211,153,0.08);border-left-color:var(--green);}
+.hl-y{background:rgba(251,191,36,0.08);border-left-color:var(--yellow);}
+.hl-r{background:rgba(248,113,113,0.08);border-left-color:var(--red);}
+.hl-b{background:rgba(96,165,250,0.08);border-left-color:var(--blue);}
+.fap-demo{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.fap-demo h4{color:var(--blue);font-size:13px;font-weight:600;margin-bottom:8px;}
+.fap-scenario{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.fap-card{background:#12121c;border-radius:8px;padding:12px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .25s;}
+.fap-card:hover{border-color:var(--blue);}
+.fap-card.active{border-color:var(--blue);background:rgba(96,165,250,0.08);}
+.fap-card .emoji{font-size:28px;display:block;margin-bottom:4px;}
+.fap-card .label{font-size:12px;color:var(--muted);}
+.fap-result{background:#12121c;border-radius:8px;padding:10px;font-size:13px;min-height:50px;}
+.cp-timeline{position:relative;margin:12px 0;}
+.cp-track{height:16px;background:#12121c;border-radius:8px;overflow:hidden;margin-bottom:4px;}
+.cp-fill{height:100%;border-radius:8px;transition:width .5s;}
+.cp-row{margin-bottom:12px;}
+.cp-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;}
+.cp-species{font-weight:600;color:var(--text);}
+.cp-window{font-size:11px;color:var(--blue);}
+.imp-demo{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.imp-demo h4{color:var(--yellow);font-size:13px;font-weight:600;margin-bottom:8px;}
+.imp-steps{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;}
+.imp-step{flex-shrink:0;background:#12121c;border-radius:8px;padding:10px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .25s;width:90px;}
+.imp-step:hover{border-color:var(--yellow);}
+.imp-step.active{border-color:var(--yellow);background:rgba(251,191,36,0.08);}
+.imp-step .emoji{font-size:24px;display:block;margin-bottom:4px;}
+.imp-step .lbl{font-size:10px;color:var(--muted);}
+.imp-result{background:#12121c;border-radius:8px;padding:10px;font-size:13px;min-height:50px;}
+.comp-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;}
+.comp-table th{color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;}
+.comp-table td{padding:7px 8px;border-bottom:1px solid rgba(46,46,63,0.5);vertical-align:top;}
+.comp-table tr:last-child td{border-bottom:none;}
+.ex-box{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.ex-box h4{font-size:13px;font-weight:600;margin-bottom:6px;}
+.quiz{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.quiz p{font-size:14px;margin-bottom:10px;}
+.q-btn{display:block;width:100%;text-align:left;background:#12121c;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 12px;margin:5px 0;cursor:pointer;font-size:13px;transition:all .2s;}
+.q-btn:hover{border-color:var(--accent);}
+.q-btn.correct{background:rgba(52,211,153,0.15);border-color:var(--green);color:var(--green);}
+.q-btn.wrong{background:rgba(248,113,113,0.1);border-color:var(--red);color:var(--red);}
+.q-explain{font-size:12px;color:var(--muted);margin-top:8px;padding:8px;background:#12121c;border-radius:6px;display:none;}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="badge">LECTURE 09</div>
+  <h1>动物行为学<br><span style="color:var(--blue);font-size:18px;">Ethology</span></h1>
+  <p style="margin-top:8px;">固定行为模式 · 印记 · 关键期 · 本能与学习</p>
+</div>
+<div class="container">
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧩</span><span class="sec-title">核心概念速览</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="concept"><h4>动物行为学 (Ethology) 是什么？</h4><p style="font-size:13px;color:var(--muted);">在自然环境中研究动物行为的学科，强调行为的<strong style="color:var(--text);">进化功能</strong>和<strong style="color:var(--text);">适应意义</strong>。代表人物：Konrad Lorenz、Niko Tinbergen、Karl von Frisch（1973年诺贝尔奖）。</p></div>
+    <div class="concept"><h4>固定行为模式 (Fixed Action Pattern, FAP)</h4><p style="font-size:13px;color:var(--muted);">由<strong style="color:var(--text);">特定刺激（释放物/超常刺激）</strong>触发的、刻板、不可中断的行为序列。一旦启动就会完整执行，即使刺激已移除。</p></div>
+    <div class="concept"><h4>印记 (Imprinting)</h4><p style="font-size:13px;color:var(--muted);">在特定<strong style="color:var(--text);">关键期</strong>内，某种经历对行为产生长期、相对不可逆的影响。最著名的是<strong style="color:var(--text);">Lorenz 的灰雁印记</strong>：孵化后第一个移动物体 = 母亲。</p></div>
+    <div class="concept"><h4>关键期 vs 敏感期</h4><p style="font-size:13px;color:var(--muted);"><strong style="color:var(--text);">关键期</strong>：某种学习必须发生的时间窗口，之后几乎无法再习得（如雁的母亲印记）。<strong style="color:var(--text);">敏感期</strong>：更宽泛的影响窗口，经历后更容易习得，但不是唯一机会（如人类语言学习）。</p></div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+      <span class="tag tag-b">FAP</span><span class="tag tag-y">印记</span><span class="tag tag-g">关键期</span><span class="tag tag-a">释放刺激</span><span class="tag tag-t">超常刺激</span>
+    </div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🐟</span><span class="sec-title">互动：固定行为模式模拟</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="fap-demo">
+      <h4>🔬 选择刺激物，观察刺棘鱼的攻击性 FAP</h4>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">繁殖季节的雄性刺棘鱼（Stickleback）会攻击腹部红色的入侵者，对无红色的完美鱼类模型不理会。</p>
+      <div class="fap-scenario">
+        <div class="fap-card" onclick="showFAP(this,'A')"><span class="emoji">🐟</span><div class="label">真实鱼类<br>(无红色)</div></div>
+        <div class="fap-card" onclick="showFAP(this,'B')"><span class="emoji">🔴</span><div class="label">红色粗糙模型<br>(非常不像鱼)</div></div>
+        <div class="fap-card" onclick="showFAP(this,'C')"><span class="emoji">🐡</span><div class="label">精确鱼类模型<br>(腹部红色)</div></div>
+        <div class="fap-card" onclick="showFAP(this,'D')"><span class="emoji">🟠</span><div class="label">橙色木块<br>(最大超常刺激)</div></div>
+      </div>
+      <div class="fap-result" id="fapResult"><span style="color:var(--muted)">👆 点击选择刺激物，观察雄鱼的反应</span></div>
+    </div>
+    <div class="hl hl-b"><strong>超常刺激 (Supernormal Stimulus)：</strong>比自然刺激更能触发 FAP 的人工刺激。银鸥雏鸟喜欢啄更大、更红的人工喙模型；人类可能对"超常"食物（高糖高脂）、媒体图像（修图）过度反应。</div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🐣</span><span class="sec-title">印记过程详解</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="imp-demo">
+      <h4>🦆 Lorenz 灰雁印记实验——点击每个阶段</h4>
+      <div class="imp-steps">
+        <div class="imp-step" onclick="showImp(this,'egg')"><span class="emoji">🥚</span><div class="lbl">孵化前</div></div>
+        <div class="imp-step" onclick="showImp(this,'hatch')"><span class="emoji">🐣</span><div class="lbl">孵化</div></div>
+        <div class="imp-step" onclick="showImp(this,'first')"><span class="emoji">👀</span><div class="lbl">第一眼</div></div>
+        <div class="imp-step" onclick="showImp(this,'follow')"><span class="emoji">🚶</span><div class="lbl">跟随</div></div>
+        <div class="imp-step" onclick="showImp(this,'adult')"><span class="emoji">🦢</span><div class="lbl">成年行为</div></div>
+      </div>
+      <div class="imp-result" id="impResult"><span style="color:var(--muted)">👆 点击阶段了解印记过程</span></div>
+    </div>
+    <div class="concept"><h4>印记的特点</h4><p style="font-size:13px;color:var(--muted);"><span style="color:var(--green);">✓</span> 发生在特定关键期内（孵化后12-36小时）<br><span style="color:var(--green);">✓</span> 快速习得（单次暴露即可）<br><span style="color:var(--green);">✓</span> 长期稳定，难以逆转<br><span style="color:var(--green);">✓</span> 影响后期择偶行为（雄雁长大后求偶对象与印记对象相似）<br><span style="color:var(--red);">✗</span> 不必主动练习，无需强化</p></div>
+    <div class="hl hl-y"><strong>性印记 (Sexual Imprinting)：</strong>幼年接触的物种/个体影响成年后的择偶偏好。动物园中单独抚养的鸟类常对饲养员产生求偶行为，跨物种性印记。</div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">⏰</span><span class="sec-title">关键期 — 不同物种比较</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="cp-timeline">
+      <div class="cp-row"><div class="cp-label"><span class="cp-species">🦆 灰雁（母亲印记）</span><span class="cp-window">孵化后 12–36 小时</span></div><div class="cp-track"><div class="cp-fill" style="width:5%;background:var(--blue)"></div></div></div>
+      <div class="cp-row"><div class="cp-label"><span class="cp-species">🐕 狗（社会化关键期）</span><span class="cp-window">3–14 周龄</span></div><div class="cp-track"><div class="cp-fill" style="width:15%;background:var(--green)"></div></div></div>
+      <div class="cp-row"><div class="cp-label"><span class="cp-species">🐦 鸣禽（歌声学习）</span><span class="cp-window">孵化后约 20–60 天</span></div><div class="cp-track"><div class="cp-fill" style="width:20%;background:var(--yellow)"></div></div></div>
+      <div class="cp-row"><div class="cp-label"><span class="cp-species">😺 猫（视觉皮层）</span><span class="cp-window">4–8 周龄（可塑性高峰）</span></div><div class="cp-track"><div class="cp-fill" style="width:18%;background:var(--teal)"></div></div></div>
+      <div class="cp-row"><div class="cp-label"><span class="cp-species">👶 人类（语言）</span><span class="cp-window">出生至约 7–12 岁（敏感期延续至青春期）</span></div><div class="cp-track"><div class="cp-fill" style="width:60%;background:var(--accent)"></div></div></div>
+      <div class="cp-row"><div class="cp-label"><span class="cp-species">👶 人类（依附）</span><span class="cp-window">出生至约 3–4 岁</span></div><div class="cp-track"><div class="cp-fill" style="width:35%;background:var(--red)"></div></div></div>
+      <p style="font-size:11px;color:var(--muted);margin-top:4px;">条形宽度：相对关键期长度（非真实比例）</p>
+    </div>
+    <div class="concept"><h4>人类语言关键期的证据</h4><p style="font-size:13px;color:var(--muted);"><strong style="color:var(--text);">Genie 案例：</strong>1970年发现的语言剥夺儿童，被隔离至13岁。获救后即使强化训练，语法习得始终存在严重缺陷，而词汇习得相对较好，支持关键期假说（句法 vs 词汇有不同关键期）。</p></div>
+    <div class="hl hl-g"><strong>早期双语：</strong>7岁前学习第二语言可达到母语水平；7岁后学习第二语言则使用独立但相邻的神经区域，难以消除口音。</div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">❓</span><span class="sec-title">Tinbergen 的四个问题</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="hl hl-b">Tinbergen 认为对任何行为的完整解释必须回答四个层次的问题：</div>
+    <table class="comp-table">
+      <thead><tr><th>问题</th><th>层次</th><th>举例（攻击行为）</th></tr></thead>
+      <tbody>
+        <tr><td><strong style="color:var(--blue);">机制</strong><br>Mechanism</td><td>近因（如何发生）</td><td>杏仁核激活，睾酮升高，神经环路激活</td></tr>
+        <tr><td><strong style="color:var(--green);">发育</strong><br>Ontogeny</td><td>近因（如何发展）</td><td>早期激素暴露，社会化经历，关键期塑造</td></tr>
+        <tr><td><strong style="color:var(--yellow);">功能</strong><br>Function</td><td>远因（为何存在）</td><td>保卫领地/资源/配偶，提高繁殖成功率</td></tr>
+        <tr><td><strong style="color:var(--accent);">进化</strong><br>Evolution</td><td>远因（如何演化）</td><td>祖先物种的攻击行为模式，自然选择历史</td></tr>
+      </tbody>
+    </table>
+    <div class="hl hl-y"><strong>Sapolsky 的核心主张：</strong>L02-L25 整个课程就是在用 Tinbergen 框架系统分析人类行为——从基因到神经到激素到个人经历到文化，每个层面都是真实的解释，没有一个是"最终"答案。</div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span><span class="sec-title">经典案例深析</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="ex-box"><h4 style="color:var(--blue);">案例1：布谷鸟寄生与雏鸟 FAP</h4><p style="font-size:13px;color:var(--muted);">布谷鸟幼雏比养父母的亲生蛋更大、嘴更红。宿主亲鸟的喂食 FAP 被超常刺激激活，甚至在幼雏把其他蛋推出巢后仍继续喂食。这说明 FAP 不需要认知评估——<strong style="color:var(--text);">刺激触发行为，行为自动执行</strong>。</p></div>
+    <div class="ex-box"><h4 style="color:var(--yellow);">案例2：Lorenz 的"水力模型"</h4><p style="font-size:13px;color:var(--muted);">Lorenz 用水箱比喻行为动机：能量不断积累，越来越容易被释放物触发，剥夺越久阈值越低（"空枪射击"——无刺激也自发释放）。虽然该模型过于简化，但引入了<strong style="color:var(--text);">行为动机的内在状态</strong>概念，影响深远。</p></div>
+    <div class="ex-box"><h4 style="color:var(--green);">案例3：人类早期依附与关键期</h4><p style="font-size:13px;color:var(--muted);">Bowlby 和 Ainsworth 的依附理论：婴儿需要在早期（0-3岁）与照料者建立安全依附。罗马尼亚孤儿院研究表明，严重早期剥夺导致长期认知、情绪、社交缺陷，即使后来被收养也难以完全逆转——<strong style="color:var(--text);">依附关键期的人类证据</strong>。</p></div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧪</span><span class="sec-title">理解测验</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="quiz">
+      <p>关于固定行为模式 (FAP)，以下哪项描述正确？</p>
+      <button class="q-btn" onclick="ans(this,false)">A. FAP 只在训练后才能出现</button>
+      <button class="q-btn" onclick="ans(this,true)">B. FAP 一旦由释放物触发，即使刺激消失也会完整执行</button>
+      <button class="q-btn" onclick="ans(this,false)">C. FAP 是通过学习获得的灵活行为</button>
+      <div class="q-explain" id="qex1">正确！FAP 是刻板的、不需学习的行为序列。一旦被适当的"释放物"（releaser）触发，即会自动完整运行。刺棘鱼对腹部红色产生攻击 FAP，即使移走模型，攻击动作序列也会继续完成。</div>
+    </div>
+    <div class="quiz">
+      <p>鸟类歌声学习关键期结束后再接触物种典型歌声，该鸟会？</p>
+      <button class="q-btn" onclick="ans2(this,false)">A. 学会正常歌声，关键期不影响成年学习</button>
+      <button class="q-btn" onclick="ans2(this,true)">B. 无法完整习得正常歌声，将唱出不完整或异常的歌</button>
+      <button class="q-btn" onclick="ans2(this,false)">C. 学会歌声但质量略差</button>
+      <div class="q-explain" id="qex2">正确！Marler 的鸣禽研究表明，隔离的雀类如果在关键期内没有听到同种歌声，成年后无法唱出完整正常的歌声。关键期内接触模板歌声 → 记忆储存 → 关键期结束后对照模板学习发声。无模板 = 无法对照，习得极度受限。</div>
+    </div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">💡</span><span class="sec-title">核心要点 &amp; 考点</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="hl hl-b">1. FAP：由特定释放物触发，刻板、不可中断，超常刺激比自然刺激更有效</div>
+    <div class="hl">2. 印记：关键期内快速习得，长期稳定，影响后期社会和性行为</div>
+    <div class="hl hl-g">3. 关键期 vs 敏感期：严格程度不同，语言是敏感期，母亲印记是关键期</div>
+    <div class="hl hl-y">4. Tinbergen 四个问题：机制、发育、功能、进化——每个都是合法的解释层次</div>
+    <div class="hl hl-r">5. 人类例子：语言、依附、Westermarck 效应都有关键期/敏感期性质</div>
+  </div>
+</div>
+</div>
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+const fapResults={
+  'A':'<strong style="color:var(--muted)">反应：忽视</strong><br><span style="color:var(--muted);font-size:12px">真实鱼类（无红色腹部）不会触发攻击 FAP，即使形态完美。Tinbergen 将正确的触发刺激称为"符号刺激"(sign stimulus)。形状不重要，红色才是关键释放物。</span>',
+  'B':'<strong style="color:var(--red)">反应：强烈攻击！</strong><br><span style="color:var(--muted);font-size:12px">红色粗糙木块虽然不像鱼，但腹部红色是关键释放物。FAP 被触发，雄鱼发起完整攻击行为序列。这证明了 FAP 的刻板性——不需要完整刺激，只需要关键信号特征。</span>',
+  'C':'<strong style="color:var(--red)">反应：强烈攻击！</strong><br><span style="color:var(--muted);font-size:12px">精确鱼类模型 + 红色腹部 = 完美释放物组合。攻击 FAP 被强烈触发。如果移走模型，攻击动作序列仍会继续完成（FAP 不可中断性）。</span>',
+  'D':'<strong style="color:var(--yellow)">反应：超强攻击！（超常刺激）</strong><br><span style="color:var(--muted);font-size:12px">橙色（接近红色）且面积更大——超常刺激！比真实鱼类模型引发更强烈的攻击反应。超常刺激利用了神经系统对特征的量化敏感性：更大/更红 = 更强信号 = 更强反应。</span>'
+};
+function showFAP(el,id){document.querySelectorAll('.fap-card').forEach(c=>c.classList.remove('active'));el.classList.add('active');document.getElementById('fapResult').innerHTML=fapResults[id];}
+const impData={
+  'egg':'<strong style="color:var(--muted)">孵化前</strong><br><span style="color:var(--muted);font-size:12px">Lorenz 将灰雁蛋分成两组：一组正常孵化（母亲陪伴），一组由他亲自孵化。两组蛋在孵化前无差异。关键是孵化后第一个小时内看到什么。</span>',
+  'hatch':'<strong style="color:var(--yellow)">孵化时刻——关键期开始</strong><br><span style="color:var(--muted);font-size:12px">灰雁孵化后约12-36小时内，对第一个见到的移动物体产生印记。Lorenz 的实验雏雁孵化后看到的第一个移动物体是他自己（而非母亲）。</span>',
+  'first':'<strong style="color:var(--blue)">第一眼——印记形成</strong><br><span style="color:var(--muted);font-size:12px">雏雁将 Lorenz 记录为"母亲"。印记只需单次或少数暴露，无需强化，无需奖励。之后再让雏雁见到真正的母亲也无法改变这一印记。</span>',
+  'follow':'<strong style="color:var(--green)">跟随行为</strong><br><span style="color:var(--muted);font-size:12px">印记形成后，雏雁开始跟随 Lorenz 到处走。这是著名的"Lorenz 与他的灰雁队伍"照片场景。跟随行为本身也是一个 FAP，由移动的印记对象触发。</span>',
+  'adult':'<strong style="color:var(--accent)">成年后的影响</strong><br><span style="color:var(--muted);font-size:12px">印记影响了这批雁的成年行为：求偶时倾向于寻找与印记对象相似的对象（即更像人类而非鸟类的配偶）。这是<strong>性印记</strong>的效果，跨越了十年时间跨度。</span>'
+};
+function showImp(el,id){document.querySelectorAll('.imp-step').forEach(s=>s.classList.remove('active'));el.classList.add('active');document.getElementById('impResult').innerHTML=impData[id];}
+function ans(btn,correct){const btns=btn.parentElement.querySelectorAll('.q-btn');btns.forEach(b=>b.disabled=true);btn.classList.add(correct?'correct':'wrong');document.getElementById('qex1').style.display='block';}
+function ans2(btn,correct){const btns=btn.parentElement.querySelectorAll('.q-btn');btns.forEach(b=>b.disabled=true);btn.classList.add(correct?'correct':'wrong');document.getElementById('qex2').style.display='block';}
+</script>
+</body>
+</html>
