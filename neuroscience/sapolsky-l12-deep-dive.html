@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L12 内分泌学 I — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(251,191,36,0.1);border-left:3px solid var(--yellow);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.green{background:rgba(52,211,153,0.1);border-left-color:var(--green)}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.purple{background:rgba(167,139,250,0.1);border-left-color:var(--accent)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+.cortisol-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.scenario-btn{padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.78rem;cursor:pointer;transition:all .2s;text-align:left}
+.scenario-btn.active,.scenario-btn:hover{border-color:var(--yellow);color:var(--text);background:rgba(251,191,36,0.1)}
+.cortisol-bar-wrap{margin:10px 0}
+.cortisol-bar-label{font-size:.78rem;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between}
+.cortisol-bar-bg{background:var(--card);border-radius:6px;height:16px;overflow:hidden;border:1px solid var(--border)}
+.cortisol-bar-fill{height:100%;border-radius:6px;transition:width .5s ease;background:linear-gradient(90deg,var(--green),var(--yellow),var(--red))}
+.cortisol-result{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.82rem;min-height:70px}
+.hpa-axis{display:flex;flex-direction:column;align-items:center;gap:2px;margin:12px 0}
+.hpa-box{padding:10px 20px;border-radius:8px;font-size:.82rem;font-weight:600;text-align:center;width:220px}
+.hpa-arrow{color:var(--muted);font-size:.9rem;text-align:center}
+.hpa-feedback{display:flex;align-items:center;gap:8px;margin-top:8px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:8px;padding:8px 12px;font-size:.78rem}
+.effect-table{width:100%;border-collapse:collapse;font-size:.8rem;margin:10px 0}
+.effect-table th{background:var(--card2);padding:8px 10px;text-align:left;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border)}
+.effect-table td{padding:7px 10px;border-bottom:1px solid rgba(46,46,63,0.5)}
+.effect-table tr:last-child td{border-bottom:none}
+.eff-pos{color:var(--green)}
+.eff-neg{color:var(--red)}
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(251,191,36,0.15);color:var(--yellow)">L12</span>
+  <span class="badge" style="background:rgba(251,191,36,0.15);color:var(--yellow)">内分泌学</span>
+  <h1>内分泌学 I：HPA轴与压力激素</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L12 · 约90分钟</div>
+</div>
+
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      皮质醇（压力激素）是进化设计用于应对30秒内的生死危机的。把它持续激活数月（现代人的慢性压力）就如同一直踩着急刹车——终将损坏整个系统。
+    </div>
+    <p>Sapolsky 的名著《斑马为什么不得溃疡》正是建立在这一讲的基础上：斑马只在被狮子追时分泌皮质醇，结束后立即恢复。人类却会因「明天的会议」持续泵出皮质醇数周。</p>
+    <div class="highlight blue">
+      <strong>激素的基本规则：</strong>① 所有激素通过血液传播；② 只有拥有对应受体的细胞才响应；③ 同一激素在不同情境下效果相反（皮质醇免疫短期↑，长期↓）；④ 激素改变行为倾向，不决定行为。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🔄</span>
+    <span class="sec-title">HPA轴：从感知威胁到皮质醇</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="hpa-axis">
+      <div class="hpa-box" style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);color:var(--red)">杏仁核 / 前额叶皮层<br><span style="font-weight:400;font-size:.74rem;color:var(--muted)">感知威胁（真实或心理）</span></div>
+      <div class="hpa-arrow">↓</div>
+      <div class="hpa-box" style="background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);color:var(--yellow)">下丘脑<br><span style="font-weight:400;font-size:.74rem;color:var(--muted)">释放 CRH（促肾上腺皮质激素释放激素）</span></div>
+      <div class="hpa-arrow">↓</div>
+      <div class="hpa-box" style="background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.3);color:var(--blue)">垂体前叶<br><span style="font-weight:400;font-size:.74rem;color:var(--muted)">释放 ACTH（促肾上腺皮质激素）</span></div>
+      <div class="hpa-arrow">↓</div>
+      <div class="hpa-box" style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);color:var(--green)">肾上腺皮质<br><span style="font-weight:400;font-size:.74rem;color:var(--muted)">分泌 糖皮质激素（皮质醇）</span></div>
+    </div>
+    <div class="hpa-feedback">
+      <span style="color:var(--red)">↩ 负反馈：</span>皮质醇升高→ 抑制下丘脑CRH分泌 + 抑制垂体ACTH分泌（海马体有大量GR受体，也参与负反馈调节）
+    </div>
+    <div class="highlight red" style="margin-top:10px">
+      <strong>慢性压力打破负反馈：</strong>持续高皮质醇→海马体GR受体下调→负反馈失效→皮质醇更难被关闭。同时，慢性皮质醇损害海马体树突→记忆力下降、抑郁风险上升。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📊</span>
+    <span class="sec-title">互动：皮质醇水平情景模拟器</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="cortisol-demo">
+      <h3>选择情景：皮质醇如何响应</h3>
+      <div class="scenario-grid">
+        <button class="scenario-btn active" onclick="showScenario(this,'morning')">☀️ 清晨觉醒</button>
+        <button class="scenario-btn" onclick="showScenario(this,'exercise')">🏃 剧烈运动</button>
+        <button class="scenario-btn" onclick="showScenario(this,'lion')">🦁 被狮子追</button>
+        <button class="scenario-btn" onclick="showScenario(this,'exam')">📝 重要考试</button>
+        <button class="scenario-btn" onclick="showScenario(this,'chronic')">😰 慢性工作压力</button>
+        <button class="scenario-btn" onclick="showScenario(this,'meditation')">🧘 冥想30分钟</button>
+      </div>
+      <div class="cortisol-bar-wrap">
+        <div class="cortisol-bar-label"><span>皮质醇水平</span><span id="cortLevel">正常基线 (10 μg/dL)</span></div>
+        <div class="cortisol-bar-bg"><div class="cortisol-bar-fill" id="cortFill" style="width:20%"></div></div>
+      </div>
+      <div class="cortisol-result" id="cortResult">
+        <strong style="color:var(--yellow)">清晨觉醒反应 (CAR)</strong><br>
+        皮质醇在睡醒后30分钟内上升50–100%，这是正常生理节律（由SCN生物钟驱动）。目的：为即将到来的一天准备能量，提高葡萄糖、增加警觉性。长期抑郁、PTSD患者CAR异常（过低或过高）。
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">⚡</span>
+    <span class="sec-title">皮质醇的双面效应</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <table class="effect-table">
+      <thead><tr><th>系统</th><th>急性效应（有益）</th><th>慢性效应（有害）</th></tr></thead>
+      <tbody>
+        <tr><td>能量代谢</td><td class="eff-pos">↑葡萄糖释放<br>↑脂肪动员</td><td class="eff-neg">↑ II型糖尿病风险<br>腹部脂肪堆积</td></tr>
+        <tr><td>免疫系统</td><td class="eff-pos">↑局部炎症反应<br>动员免疫细胞</td><td class="eff-neg">免疫抑制<br>↑感染/肿瘤风险</td></tr>
+        <tr><td>心血管</td><td class="eff-pos">↑心率、血压<br>↑血流量到肌肉</td><td class="eff-neg">高血压<br>动脉粥样硬化</td></tr>
+        <tr><td>神经系统</td><td class="eff-pos">↑注意力/警觉<br>↑短期记忆</td><td class="eff-neg">海马体萎缩<br>↑抑郁/焦虑</td></tr>
+        <tr><td>生殖系统</td><td class="eff-pos">短期无影响</td><td class="eff-neg">↓睾酮/雌激素<br>不孕不育风险</td></tr>
+        <tr><td>生长系统</td><td class="eff-pos">短期无影响</td><td class="eff-neg">↓生长激素<br>儿童生长迟缓</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight">
+      <strong>关键洞见：</strong>皮质醇的所有「有害」效应，其实都是有益效应的延伸。关闭消化（节省能量给肌肉）短期有用，长期就是溃疡。抑制生殖（逃跑时不需要生育）短期有用，长期就是不孕。进化只设计了短期版本。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">⚡</span>
+    <span class="sec-title">肾上腺素：战斗或逃跑的即时开关</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <p>与HPA轴（皮质醇，起效需15–30分钟）不同，肾上腺髓质在接到交感神经信号后<strong>数秒内</strong>释放肾上腺素（Adrenaline/Epinephrine）。这是即时应激反应的执行者。</p>
+    <ul>
+      <li>↑心率、↑心输出量、↑血压</li>
+      <li>支气管扩张（↑呼吸效率）</li>
+      <li>骨骼肌血管扩张、内脏血管收缩（血流重分配）</li>
+      <li>肝糖原分解（↑血糖）</li>
+      <li>瞳孔散大、汗腺激活</li>
+    </ul>
+    <div class="highlight green">
+      <strong>肾上腺素 vs. 去甲肾上腺素：</strong>肾上腺素主要来自肾上腺髓质（血液），侧重心输出量增加；去甲肾上腺素主要是神经递质（蓝斑→全脑），侧重血管收缩和唤醒。普萘洛尔（β阻滞剂）阻断两者的β受体，舞台恐惧症时用它「平心」——心不跳那么快，恐慌感大幅降低。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">🦓 Sapolsky的狒狒研究（肯尼亚马赛马拉）</div>
+      <p style="font-size:.85rem">Sapolsky对非洲狒狒群体追踪研究30年。发现：低等级雄性狒狒（慢性社会压力）基础皮质醇水平高于高等级雄性；遭受攻击后皮质醇回落慢；海马体体积更小；免疫指标更差。但关键发现：在有稳定社会支持的低等级雄性中，这些指标改善——<strong>控制感和社会支持是压力的缓冲器</strong>，而非社会地位本身。</p>
+      <div class="quote">「压力不是狮子本身，而是你认为狮子会来的那种感觉。」— Sapolsky</div>
+    </div>
+    <div class="case">
+      <div class="case-title">🌲 Forest Bathing（森林浴）的皮质醇研究</div>
+      <p style="font-size:.85rem">日本研究者（Li, 2010）对比城市步行与森林步行：在森林中步行后，唾液皮质醇下降12.4%，交感神经活性（心率变异性指标）降低，NK细胞（自然杀伤细胞，免疫监视）活性增加。植物挥发性物质（phytoncides，如α-蒎烯）被吸入后可直接抑制HPA轴，激活副交感神经系统。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">😔 库欣综合征：慢性高皮质醇的极端案例</div>
+      <p style="font-size:.85rem">库欣综合征（ACTH分泌肿瘤或长期服用糖皮质激素）患者：腹部/面部肥胖（水牛背、满月脸）、肌肉萎缩、骨质疏松、皮肤变薄、伤口难愈、严重抑郁、认知下降。海马体MRI显示显著萎缩。这是在人体上观察到慢性皮质醇毒性的最清晰自然实验。</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l11-deep-dive.html" style="color:var(--muted);margin-right:16px">← L11 神经科学 II</a>
+  <a href="sapolsky-l13-deep-dive.html" style="color:var(--muted)">L13 内分泌学 II →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+const scenarios={
+  morning:{level:25,label:'清晨觉醒峰值 (~25 μg/dL)',text:'<strong style="color:var(--yellow)">清晨觉醒反应 (CAR)</strong><br>皮质醇在睡醒后30分钟内上升50–100%（正常生理节律）。由SCN生物钟驱动，目的是为即将到来的一天备能。长期抑郁、PTSD患者CAR异常。'},
+  exercise:{level:40,label:'运动峰值 (~40 μg/dL)',text:'<strong style="color:var(--green)">剧烈运动</strong><br>有氧运动会急性升高皮质醇（肌肉需要能量）。但规律运动的长期效果是<em>降低</em>基础皮质醇水平，提高HPA轴负反馈敏感性。运动后1–2小时恢复基线。运动是最有效的压力管理工具之一。'},
+  lion:{level:90,label:'极度恐惧 (~80–90 μg/dL)',text:'<strong style="color:var(--red)">急性生死威胁</strong><br>皮质醇在15–30分钟内飙升至极高水平，同时肾上腺素即时释放。进化目的：动员所有能量资源以对抗/逃跑。威胁解除后，健康动物可在1–2小时内恢复基线（斑马模式）。'},
+  exam:{level:35,label:'心理应激峰值 (~35 μg/dL)',text:'<strong style="color:var(--yellow)">心理/社会性应激</strong><br>这是人类独有的应激来源——纯心理威胁（考试、批评、失去控制感）可以激活和真实身体威胁相同的HPA轴反应。适度皮质醇上升有助于注意力集中（耶克斯-道德森曲线），过度则损害记忆和表现。'},
+  chronic:{level:55,label:'慢性压力水平 (~45–55 μg/dL，持续数月)',text:'<strong style="color:var(--red)">慢性压力：最危险的模式</strong><br>皮质醇持续中高水平，无法完全回落基线。后果：海马体萎缩（记忆↓）、免疫抑制（感染风险↑）、腹部脂肪堆积、抑郁风险↑3倍、心血管疾病风险↑。这是Sapolsky整本书的核心主题。'},
+  meditation:{level:12,label:'冥想后基线 (~10–12 μg/dL)',text:'<strong style="color:var(--green)">冥想/放松</strong><br>MBSR（正念减压）8周训练后，唾液皮质醇显著下降；杏仁核体积减小；前额叶皮层灰质密度增加。激活副交感神经系统（休息-消化模式），直接拮抗HPA轴。长期练习者基础皮质醇水平低于普通人。'}
+};
+
+function showScenario(btn,id){
+  document.querySelectorAll('.scenario-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const s=scenarios[id];
+  document.getElementById('cortFill').style.width=Math.min(s.level,100)+'%';
+  document.getElementById('cortLevel').textContent=s.label;
+  document.getElementById('cortResult').innerHTML=s.text;
+}
+</script>
+</body>
+</html>
