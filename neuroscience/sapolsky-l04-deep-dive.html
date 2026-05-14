@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>L04 分子遗传学 I · Sapolsky</title>
+<style>
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:60px}
+.hero{background:linear-gradient(135deg,#1a0a3a 0%,#0a2040 50%,#0f1a2e 100%);padding:32px 20px 28px;text-align:center;border-bottom:1px solid var(--border);position:relative}
+.back-link{position:absolute;top:16px;left:16px;font-size:13px;color:var(--muted);text-decoration:none}
+.badge{display:inline-block;font-size:11px;font-weight:700;background:rgba(38,198,168,0.12);color:var(--teal);padding:4px 12px;border-radius:99px;border:1px solid rgba(38,198,168,0.25);margin-bottom:12px}
+.hero h1{font-size:24px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:4px}
+.hero h1 span{font-size:16px;font-weight:400;color:var(--muted)}
+.meta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.meta span{font-size:12px;background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:99px;color:var(--muted)}
+.content{padding:20px 16px 0}
+.sec-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin:16px 0 10px 2px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden}
+.coll-head{padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;user-select:none}
+.coll-body{padding:0 16px 16px;display:none}
+.coll-body.open{display:block}
+.coll-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.chevron{font-size:18px;color:var(--muted);transition:transform 0.2s;flex-shrink:0}
+.body-text{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:10px}
+.hl{background:var(--card2);border-radius:10px;padding:12px;margin:10px 0;border-left:3px solid var(--teal)}
+.hl .lbl{font-size:11px;font-weight:700;color:var(--teal);text-transform:uppercase;margin-bottom:4px}
+.hl p{font-size:13px;color:var(--text);line-height:1.6}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(38,198,168,0.1);color:var(--teal);border:1px solid rgba(38,198,168,0.2)}
+.tag.p{background:rgba(167,139,250,0.1);color:var(--accent);border-color:rgba(167,139,250,0.2)}
+.tag.y{background:rgba(251,191,36,0.1);color:var(--yellow);border-color:rgba(251,191,36,0.2)}
+.ex-card{background:var(--card2);border-radius:12px;margin:8px 0;overflow:hidden}
+.ex-head{padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.ex-body{padding:0 14px 14px;display:none;font-size:13px;color:var(--muted);line-height:1.7}
+.ex-body.open{display:block}
+.gloss-item{border-bottom:1px solid var(--border);padding:12px 0}
+.gloss-item:last-child{border-bottom:none}
+.gloss-en{font-size:12px;font-weight:700;color:var(--teal)}
+.gloss-def{font-size:12px;color:var(--muted);line-height:1.5;margin-top:2px}
+.conn-item{background:var(--card2);border-radius:10px;padding:12px;margin:6px 0;display:flex;gap:10px}
+.conn-text{font-size:13px;color:var(--muted);line-height:1.5}
+.conn-text strong{color:var(--text)}
+.flow{display:flex;align-items:center;gap:0;margin:14px 0;overflow-x:auto}
+.flow-box{background:var(--card2);border-radius:10px;padding:12px 14px;text-align:center;flex-shrink:0;cursor:pointer;border:2px solid transparent;transition:all 0.2s;min-width:80px}
+.flow-box:hover,.flow-box.active{border-color:var(--teal)}
+.flow-box .fb-icon{font-size:22px;margin-bottom:4px}
+.flow-box .fb-name{font-size:12px;font-weight:700;color:var(--text)}
+.flow-box .fb-zh{font-size:11px;color:var(--muted);margin-top:1px}
+.flow-arr{font-size:20px;color:var(--muted);padding:0 8px;flex-shrink:0}
+.flow-info{background:var(--card2);border-radius:10px;padding:12px;margin-top:8px;font-size:13px;color:var(--muted);line-height:1.6;min-height:60px}
+.mut-row{display:flex;gap:8px;margin:6px 0;align-items:flex-start}
+.mut-type{background:var(--card2);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;min-width:80px}
+.mut-desc{font-size:12px;color:var(--muted);line-height:1.5}
+</style>
+</head>
+<body>
+<div class="hero">
+  <a href="index.html" class="back-link">← 神经科学中心</a>
+  <div class="badge">Sapolsky · Lecture 04</div>
+  <h1>分子遗传学 I<br><span>Molecular Genetics I</span></h1>
+  <div class="meta">
+    <span>🕐 1h27m</span><span>🧬 DNA</span><span>⭐⭐</span><span>🔬 遗传学基础</span>
+  </div>
+</div>
+
+<div class="content">
+
+<div class="card" style="border-color:rgba(38,198,168,0.3)">
+  <div style="padding:18px;text-align:center">
+    <div style="font-size:11px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">分子生物学中心法则</div>
+    <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:6px">DNA → RNA → 蛋白质</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.6">遗传信息的单向流动：基因组编码指令，通过转录和翻译，最终产生行使功能的蛋白质</div>
+  </div>
+</div>
+
+<div class="sec-label">问题链 · Issue Tree</div>
+
+<div class="card" style="border-color:rgba(38,198,168,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(38,198,168,0.15)">🔍</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">基因是什么？如何储存信息？</div><div style="font-size:12px;color:var(--muted);margin-top:2px">What is a gene?</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">DNA（脱氧核糖核酸）是双螺旋结构，由两条互补链组成。碱基配对规则：A-T，G-C。人类基因组约 <strong>30亿碱基对</strong>，约 20,000–25,000 个基因。</div>
+    <div class="hl"><div class="lbl">关键数字</div><p>人类与黑猩猩基因组相似度：<strong>98.7%</strong>。差异不仅在基因序列，更在基因<strong>表达时间、地点和程度</strong>。Sapolsky的核心观点：基因决定论是谬误。</p></div>
+    <div class="tags"><span class="tag">双螺旋</span><span class="tag">碱基配对</span><span class="tag">30亿碱基对</span></div>
+  </div>
+</div>
+
+<div class="card" style="border-color:rgba(96,165,250,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(96,165,250,0.12)">📝</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">转录：DNA变成RNA</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Transcription: DNA → mRNA</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">转录发生在<strong>细胞核</strong>内：RNA聚合酶沿DNA模板链合成前体mRNA（pre-mRNA）。</div>
+    <div class="hl"><div class="lbl">RNA加工步骤</div><p>① 5'加帽（保护mRNA）<br>② 剪接（splicing）：去除内含子，保留外显子<br>③ 3'多聚腺苷酸尾（polyA tail）<br>→ 成熟 mRNA 出核，进入细胞质</p></div>
+    <div class="tags"><span class="tag">RNA聚合酶</span><span class="tag">内含子/外显子</span><span class="tag p">pre-mRNA加工</span></div>
+  </div>
+</div>
+
+<div class="card" style="border-color:rgba(167,139,250,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(167,139,250,0.15)">🔧</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">翻译：RNA变成蛋白质</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Translation: mRNA → Protein</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">翻译在<strong>核糖体</strong>上进行：mRNA上每3个碱基（密码子/codon）编码一个氨基酸。tRNA携带对应氨基酸识别密码子，氨基酸依次连接形成多肽链，折叠成蛋白质。</div>
+    <div class="hl"><div class="lbl">遗传密码的特性</div><p>• 64种密码子编码仅20种氨基酸 → <strong>简并性</strong><br>• 起始密码子：AUG；终止密码子：UAA / UAG / UGA<br>• 密码子表几乎所有生物通用——生命统一性的证明</p></div>
+    <div class="tags"><span class="tag">核糖体</span><span class="tag">密码子</span><span class="tag">tRNA</span><span class="tag p">氨基酸→蛋白质</span></div>
+  </div>
+</div>
+
+<div class="card" style="border-color:rgba(251,191,36,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(251,191,36,0.12)">⚡</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">突变与多态性</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Mutations &amp; Polymorphisms</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">DNA复制偶尔出错，或受到辐射/化学物质损伤，产生突变。突变不一定有害，是进化的原材料。</div>
+    <div style="margin:10px 0">
+      <div class="mut-row"><div class="mut-type" style="color:var(--muted)">同义突变</div><div class="mut-desc">密码子改变但氨基酸不变（简并性保护），蛋白质功能不受影响</div></div>
+      <div class="mut-row"><div class="mut-type" style="color:var(--yellow)">错义突变</div><div class="mut-desc">一个氨基酸被另一个替换，可能改变蛋白质功能（镰刀型贫血是典型例子）</div></div>
+      <div class="mut-row"><div class="mut-type" style="color:var(--red)">无义突变</div><div class="mut-desc">产生提前终止密码子，蛋白质截短，通常功能丧失</div></div>
+      <div class="mut-row"><div class="mut-type" style="color:var(--red)">移码突变</div><div class="mut-desc">插入或缺失1-2个碱基，读码框完全打乱，后续氨基酸序列全错</div></div>
+    </div>
+    <div class="hl"><div class="lbl">SNP 单核苷酸多态性</div><p>人群中常见的单碱基差异（>1%频率）。人类基因组约有 <strong>1000万个SNP</strong>，是行为遗传学GWAS研究的基础。</p></div>
+    <div class="tags"><span class="tag y">点突变</span><span class="tag">SNP</span><span class="tag">移码突变</span></div>
+  </div>
+</div>
+
+<div class="sec-label">互动：中心法则流程</div>
+<div class="card">
+  <div style="padding:16px">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:10px">点击每个步骤了解详细机制 →</div>
+    <div class="flow">
+      <div class="flow-box" onclick="showFlow(this,'dna')"><div class="fb-icon">🧬</div><div class="fb-name">DNA</div><div class="fb-zh">脱氧核糖核酸</div></div>
+      <div class="flow-arr">→</div>
+      <div class="flow-box" onclick="showFlow(this,'tx')"><div class="fb-icon">📝</div><div class="fb-name">转录</div><div class="fb-zh">Transcription</div></div>
+      <div class="flow-arr">→</div>
+      <div class="flow-box" onclick="showFlow(this,'rna')"><div class="fb-icon">🧵</div><div class="fb-name">mRNA</div><div class="fb-zh">信使RNA</div></div>
+      <div class="flow-arr">→</div>
+      <div class="flow-box" onclick="showFlow(this,'tl')"><div class="fb-icon">🔧</div><div class="fb-name">翻译</div><div class="fb-zh">Translation</div></div>
+      <div class="flow-arr">→</div>
+      <div class="flow-box" onclick="showFlow(this,'pr')"><div class="fb-icon">⚙️</div><div class="fb-name">蛋白质</div><div class="fb-zh">Protein</div></div>
+    </div>
+    <div class="flow-info" id="flowInfo">← 点击任意步骤查看详情</div>
+  </div>
+</div>
+
+<div class="sec-label">三个真实案例</div>
+<div class="card">
+  <div style="padding:16px 16px 8px">
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">🔴</div>
+        <div style="flex:1;font-size:14px;font-weight:600">镰刀型贫血：错义突变的代价与收益</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">血红蛋白β链第6位谷氨酸→缬氨酸，一个点突变。红细胞变形为镰刀状，携氧能力下降。进化悖论：此突变在撒哈拉以南非洲高频存在——携带一个突变基因（杂合子）对疟原虫有天然抵抗力！杂合子适应度最高 = 平衡选择。</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">🧠</div>
+        <div style="flex:1;font-size:14px;font-weight:600">5-HTTLPR：血清素转运体基因变异</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">血清素转运体基因启动子区有"短/长"多态性。短等位基因 → 转运体表达减少。Caspi等(2003)：携带短等位基因且有童年创伤者，抑郁症风险显著升高。基因×环境交互的经典证据。</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">🌿</div>
+        <div style="flex:1;font-size:14px;font-weight:600">表观遗传：老鼠妈妈的舔舐改变基因表达</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">Meaney等：出生后被妈妈多舔舐的小鼠，长大后应激反应更平静。机制：母亲关爱行为 → 减少海马GR基因启动子甲基化 → 基因表达增加 → 压力轴更受调控。DNA序列没有改变，但基因表达改变了，且可遗传给下一代。</div>
+    </div>
+  </div>
+</div>
+
+<div class="sec-label">术语表 · Glossary</div>
+<div class="card">
+  <div style="padding:16px">
+    <div class="gloss-item"><div class="gloss-en">Transcription / 转录</div><div class="gloss-def">以DNA为模板合成RNA的过程，发生在细胞核内，由RNA聚合酶催化</div></div>
+    <div class="gloss-item"><div class="gloss-en">Translation / 翻译</div><div class="gloss-def">以mRNA为模板在核糖体上合成蛋白质的过程，密码子对应特定氨基酸</div></div>
+    <div class="gloss-item"><div class="gloss-en">Codon / 密码子</div><div class="gloss-def">mRNA上编码一个氨基酸的三碱基序列，共64种密码子编码20种氨基酸</div></div>
+    <div class="gloss-item"><div class="gloss-en">Exon / Intron — 外显子/内含子</div><div class="gloss-def">外显子：编码蛋白质的序列；内含子：转录后被剪切掉的非编码序列</div></div>
+    <div class="gloss-item"><div class="gloss-en">Point Mutation / 点突变</div><div class="gloss-def">单个碱基对的改变，包括同义、错义、无义三类，对蛋白质影响不同</div></div>
+    <div class="gloss-item"><div class="gloss-en">SNP / 单核苷酸多态性</div><div class="gloss-def">人群中频率>1%的单碱基变异，GWAS研究的分子标记</div></div>
+    <div class="gloss-item"><div class="gloss-en">Epigenetics / 表观遗传学</div><div class="gloss-def">不改变DNA序列但影响基因表达的可遗传变化，如DNA甲基化、组蛋白修饰</div></div>
+    <div class="gloss-item"><div class="gloss-en">Central Dogma / 中心法则</div><div class="gloss-def">Francis Crick提出：信息从DNA→RNA→蛋白质单向流动（逆转录病毒是例外）</div></div>
+  </div>
+</div>
+
+<div class="sec-label">课程联系</div>
+<div class="card">
+  <div style="padding:16px">
+    <div class="conn-item"><div style="font-size:16px">←</div><div class="conn-text"><strong>L02-03 行为进化</strong>：基因是进化的基本单位；自然选择作用于基因频率</div></div>
+    <div class="conn-item"><div style="font-size:16px;color:var(--accent)">→</div><div class="conn-text"><strong>L05 分子遗传学II</strong>：基因调控、选择性剪接、表观遗传详解</div></div>
+    <div class="conn-item"><div style="font-size:16px;color:var(--accent)">→</div><div class="conn-text"><strong>L06-07 行为遗传学</strong>：基因如何影响行为——双胞胎研究和GWAS</div></div>
+    <div class="conn-item"><div style="font-size:16px;color:var(--yellow)">📖</div><div class="conn-text"><strong>The Selfish Gene</strong> — Dawkins (1976)：基因中心视角；基因作为进化单位的完整阐述</div></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+function togEx(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+const flowData={
+  dna:'🧬 DNA（脱氧核糖核酸）：双螺旋结构，由脱氧核糖、磷酸基团和碱基（A/T/G/C）组成。人类基因组约30亿碱基对，分布在23对染色体上。每个细胞核含完整基因组（约2米长的DNA压缩存储）。',
+  tx:'📝 转录（Transcription）：细胞核内，RNA聚合酶在转录因子帮助下识别启动子，沿模板链合成pre-mRNA。随后经过5\'加帽、剪接（去除内含子）、3\'polyA尾加工，成为成熟mRNA出核。',
+  rna:'🧵 mRNA（信使RNA）：单链RNA，携带蛋白质合成指令。每3个碱基（密码子）编码1个氨基酸。mRNA有一定寿命（分钟到数小时），可被调控——这是基因表达调控的关键节点。',
+  tl:'🔧 翻译（Translation）：核糖体结合mRNA，tRNA携带对应氨基酸识别密码子，氨基酸依次连接形成多肽链。多肽链折叠成特定三维结构 = 功能性蛋白质。一个mRNA可被多个核糖体同时翻译（多核糖体）。',
+  pr:'⚙️ 蛋白质：生命功能的执行者。酶（催化反应）、结构蛋白（细胞骨架）、信号蛋白（激素/受体）、转录因子（调控基因表达）……同一个基因通过调控和剪接可产生多种蛋白质变体。'
+};
+function showFlow(el,id){document.querySelectorAll('.flow-box').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('flowInfo').textContent=flowData[id];}
+</script>
+</body>
+</html>
