@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Learning Hub · 学习中心</title>
+<style>
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--neuro:#7c6af7;--neuro-dim:#2a1f6a;--ai:#26c6a8;--ai-dim:#0d4a3f;--math:#fbbf24;--math-dim:#3a2a00;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:60px}
+.hero{background:linear-gradient(135deg,#1a0a3a 0%,#0a2040 50%,#0f1a2e 100%);padding:48px 20px 36px;text-align:center;border-bottom:1px solid var(--border)}
+.hero-icon{font-size:52px;margin-bottom:14px}
+.hero h1{font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.5px}
+.hero-sub{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.6}
+.hero-badge{display:inline-block;margin-top:14px;font-size:11px;font-weight:700;background:rgba(167,139,250,0.12);color:var(--accent);padding:5px 14px;border-radius:99px;border:1px solid rgba(167,139,250,0.25)}
+.content{padding:24px 16px 0}
+.sec-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin:0 0 12px 2px}
+.hub-card{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 16px;margin-bottom:12px;text-decoration:none;color:var(--text);transition:border-color 0.2s,transform 0.15s;position:relative;overflow:hidden}
+.hub-card:active{transform:scale(0.98)}
+.hub-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.hub-card.neuro::before{background:var(--neuro)}
+.hub-card.neuro{border-left-color:rgba(124,106,247,0.3)}
+.hub-card.ai::before{background:var(--ai)}
+.hub-card.ai{border-left-color:rgba(38,198,168,0.3)}
+.hub-card.math::before{background:var(--math)}
+.hub-card.math{border-left-color:rgba(251,191,36,0.3)}
+.card-icon{font-size:32px;flex-shrink:0}
+.card-body{flex:1;min-width:0}
+.card-title{font-size:16px;font-weight:700;color:#fff}
+.card-sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5}
+.card-meta{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.card-tag{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--neuro-dim);color:var(--neuro)}
+.card-tag.ai{background:var(--ai-dim);color:var(--ai)}
+.card-tag.coming{background:var(--card2);color:var(--muted)}
+.card-arrow{font-size:20px;color:var(--muted);flex-shrink:0}
+.coming{opacity:0.45;pointer-events:none}
+.divider{margin:20px 0 16px;border:none;border-top:1px solid var(--border)}
+.stats-row{display:flex;gap:8px;margin-bottom:20px}
+.stat-box{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.stat-num{font-size:20px;font-weight:800;color:var(--accent)}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-icon">🎓</div>
+  <h1>Learning Hub</h1>
+  <div class="hero-sub">个人学习中心<br>神经科学 · AI · 数学基础</div>
+  <div class="hero-badge">Mobile-First · 随时随地学习</div>
+</div>
+<div class="content">
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">50+</div><div class="stat-label">课程讲次</div></div>
+    <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">课程系列</div></div>
+    <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">深度拆解</div></div>
+  </div>
+
+  <div class="sec-label">现有课程</div>
+
+  <a href="neuroscience/" class="hub-card neuro">
+    <div class="card-icon">🧠</div>
+    <div class="card-body">
+      <div class="card-title">Neuroscience 学习中心</div>
+      <div class="card-sub">Sapolsky · MIT 认知 · Huberman · 计算神经科学<br>25讲深度拆解 + 进度追踪</div>
+      <div class="card-meta">
+        <span class="card-tag">进化行为学</span>
+        <span class="card-tag">神经解剖</span>
+        <span class="card-tag">内分泌学</span>
+      </div>
+    </div>
+    <div class="card-arrow">→</div>
+  </a>
+
+  <hr class="divider">
+  <div class="sec-label">即将上线</div>
+
+  <div class="hub-card ai coming">
+    <div class="card-icon">🤖</div>
+    <div class="card-body">
+      <div class="card-title">AI / ML 学习路径</div>
+      <div class="card-sub">Karpathy · Fast.ai · 深度学习实战</div>
+      <div class="card-meta">
+        <span class="card-tag coming">即将上线</span>
+      </div>
+    </div>
+    <div class="card-arrow">→</div>
+  </div>
+
+  <div class="hub-card math coming">
+    <div class="card-icon">📐</div>
+    <div class="card-body">
+      <div class="card-title">数学基础</div>
+      <div class="card-sub">线性代数 · 概率论 · 微积分 · 信息论</div>
+      <div class="card-meta">
+        <span class="card-tag coming">即将上线</span>
+      </div>
+    </div>
+    <div class="card-arrow">→</div>
+  </div>
+</div>
+</body>
+</html>

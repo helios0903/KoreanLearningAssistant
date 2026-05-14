@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Sapolsky L2 · 行为进化 I</title>
+<style>
+:root{
+  --bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;
+  --text:#e8e8f0;--muted:#8888a8;
+  --sap:#7c6af7;--sap-dim:#2a1f6a;--sap-glow:rgba(124,106,247,0.15);
+  --mit:#26c6a8;--hub:#f77c6a;--neuro:#6ac8f7;
+  --accent:#a78bfa;--done:#34d399;--warn:#fbbf24;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:60px}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,#1a0a3a 0%,#0d1840 60%,#0f1a2e 100%);padding:20px 18px 18px;border-bottom:1px solid var(--border)}
+.hero-back{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);text-decoration:none;background:rgba(255,255,255,0.05);padding:6px 12px;border-radius:99px;border:1px solid var(--border);margin-bottom:14px}
+.hero-badge{display:inline-block;background:var(--sap-dim);color:var(--sap);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;border:1px solid rgba(124,106,247,0.3);margin-bottom:8px;letter-spacing:0.5px}
+.hero h1{font-size:20px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-0.3px}
+.hero-sub{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}
+.hero-meta{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{font-size:11px;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted)}
+.meta-chip span{color:var(--text);font-weight:600}
+
+/* Block containers */
+.section{padding:16px 16px 0}
+.block{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden}
+.block-header{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;user-select:none}
+.block-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--sap-dim)}
+.block-title{flex:1}
+.block-title h3{font-size:14px;font-weight:700;color:var(--text)}
+.block-title p{font-size:11px;color:var(--muted);margin-top:2px}
+.block-arrow{font-size:16px;color:var(--muted);transition:transform 0.25s}
+.block-arrow.open{transform:rotate(90deg)}
+.block-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
+.block-body.open{display:block}
+
+/* Formula box */
+.formula-box{background:linear-gradient(135deg,var(--sap-dim),rgba(42,31,106,0.5));border:1px solid rgba(124,106,247,0.4);border-radius:12px;padding:14px 16px;margin-top:12px;margin-bottom:4px}
+.formula-main{font-size:22px;font-weight:800;color:var(--sap);font-family:monospace;text-align:center;letter-spacing:1px}
+.formula-sub{font-size:11px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.6}
+.formula-terms{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+.formula-term{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:8px 12px;text-align:center;min-width:70px}
+.formula-term-key{font-size:16px;font-weight:800;color:var(--accent);font-family:monospace}
+.formula-term-val{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+
+/* Issue Tree */
+.tree-root{margin-top:12px}
+.tree-node{margin-bottom:8px}
+.tree-toggle{display:flex;align-items:flex-start;gap:8px;padding:11px 12px;background:var(--card2);border-radius:10px;cursor:pointer;border:1px solid var(--border);transition:border-color 0.2s}
+.tree-toggle:active{opacity:0.85}
+.tree-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.tree-dot.l1{background:var(--sap)}
+.tree-dot.l2{background:var(--warn)}
+.tree-dot.l3{background:var(--hub)}
+.tree-dot.l4{background:var(--done)}
+.tree-label{flex:1;font-size:13px;font-weight:600;color:var(--text);line-height:1.4}
+.tree-sublabel{font-size:11px;color:var(--muted);margin-top:3px}
+.tree-caret{font-size:12px;color:var(--muted);flex-shrink:0;margin-top:5px;transition:transform 0.2s}
+.tree-caret.open{transform:rotate(90deg)}
+.tree-children{display:none;margin-left:18px;margin-top:6px;border-left:2px solid var(--border);padding-left:12px}
+.tree-children.open{display:block}
+.tree-leaf{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;margin-bottom:5px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border)}
+.tree-leaf-dot{width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;margin-top:6px}
+.tree-leaf-text{font-size:12px;color:var(--muted);line-height:1.6}
+.tree-leaf-text strong{color:var(--text)}
+.error-node .tree-toggle{border-color:rgba(247,124,106,0.3);background:rgba(247,124,106,0.04)}
+.solution-node .tree-toggle{border-color:rgba(52,211,153,0.3);background:rgba(52,211,153,0.04)}
+
+/* Kinship diagram */
+.kin-container{margin-top:12px;border-radius:12px;overflow:hidden;background:var(--card2);border:1px solid var(--border)}
+.kin-svg{width:100%;display:block}
+.kin-info{padding:14px;border-top:1px solid var(--border);min-height:90px}
+.kin-info-title{font-size:12px;font-weight:700;color:var(--sap);margin-bottom:5px}
+.kin-info-text{font-size:12px;color:var(--muted);line-height:1.6}
+.kin-info-formula{font-size:12px;font-weight:600;color:var(--done);margin-top:8px;font-family:monospace;background:rgba(52,211,153,0.08);border-radius:6px;padding:8px 10px;line-height:1.7}
+.kin-hint{font-size:11px;color:var(--muted);text-align:center;font-style:italic;padding:12px}
+
+/* Examples */
+.eg-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.eg-header{display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;user-select:none}
+.eg-icon{font-size:24px;flex-shrink:0}
+.eg-title{flex:1}
+.eg-title h4{font-size:13px;font-weight:700;color:var(--text)}
+.eg-title p{font-size:11px;color:var(--muted);margin-top:2px}
+.eg-caret{font-size:12px;color:var(--muted);transition:transform 0.2s;flex-shrink:0}
+.eg-caret.open{transform:rotate(180deg)}
+.eg-body{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
+.eg-body.open{display:block}
+.eg-body p{font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px}
+.eg-body p strong{color:var(--text)}
+.eg-formula{background:rgba(124,106,247,0.08);border:1px solid rgba(124,106,247,0.2);border-radius:8px;padding:10px 12px;margin-top:10px;font-size:12px;color:var(--accent);font-family:monospace;line-height:1.8;white-space:pre-wrap}
+.eg-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.eg-tag{font-size:11px;padding:3px 8px;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--muted)}
+
+/* Glossary */
+.gloss-grid{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.gloss-item{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.gloss-en{font-size:13px;font-weight:700;color:var(--text)}
+.gloss-zh{font-size:12px;font-weight:600;color:var(--sap);margin-top:2px}
+.gloss-def{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6}
+
+/* Connections */
+.conn-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.conn-item{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;background:var(--card2);border:1px solid var(--border);border-radius:10px}
+.conn-dir{font-size:16px;flex-shrink:0;margin-top:1px}
+.conn-text{flex:1}
+.conn-text strong{font-size:13px;color:var(--text)}
+.conn-text p{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5}
+
+/* Sec label */
+.sec-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin:8px 0 10px;padding:0 2px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <a href="index.html" class="hero-back">← 返回学习中心</a>
+  <div class="hero-badge">Sapolsky · Lecture 02</div>
+  <h1>行为进化 I<br><span style="color:var(--sap);font-size:16px">Behavioral Evolution I</span></h1>
+  <div class="hero-sub">自然选择如何塑造行为？利他悖论与汉密尔顿的天才解法</div>
+  <div class="hero-meta">
+    <div class="meta-chip">时长 <span>1h28m</span></div>
+    <div class="meta-chip">核心 <span>亲缘选择</span></div>
+    <div class="meta-chip">难度 <span>⭐⭐⭐</span></div>
+    <div class="meta-chip">模块 <span>进化与遗传学</span></div>
+  </div>
+</div>
+
+<!-- Hamilton's Rule Banner -->
+<div class="section">
+  <div class="sec-label">本讲核心公式</div>
+  <div class="formula-box">
+    <div class="formula-main">r · B &gt; C</div>
+    <div class="formula-sub">汉密尔顿法则 / Hamilton's Rule (1964)<br>当此条件成立，利他行为在进化上得以保留</div>
+    <div class="formula-terms">
+      <div class="formula-term">
+        <div class="formula-term-key">r</div>
+        <div class="formula-term-val">亲缘系数<br>Relatedness<br>0～1</div>
+      </div>
+      <div class="formula-term">
+        <div class="formula-term-key">B</div>
+        <div class="formula-term-val">受益方<br>繁殖收益<br>Benefit</div>
+      </div>
+      <div class="formula-term">
+        <div class="formula-term-key">C</div>
+        <div class="formula-term-val">利他者<br>繁殖代价<br>Cost</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Issue Tree -->
+<div class="section">
+  <div class="sec-label">本讲问题树</div>
+  <div class="block">
+    <div class="block-header" onclick="toggleBlock('tree')">
+      <div class="block-icon">🌳</div>
+      <div class="block-title">
+        <h3>利他悖论的四层拆解</h3>
+        <p>从"这不可能存在"到"这其实最自私"</p>
+      </div>
+      <div class="block-arrow open" id="arr-tree">▶</div>
+    </div>
+    <div class="block-body open" id="body-tree">
+      <div class="tree-root">
+
+        <div class="tree-node">
+          <div class="tree-toggle" onclick="toggleNode('n1')">
+            <div class="tree-dot l1"></div>
+            <div style="flex:1">
+              <div class="tree-label">🔍 为什么利他行为存在？</div>
+              <div class="tree-sublabel">Layer 1 · 表面现象 — 动物帮助彼此，甚至牺牲自己</div>
+            </div>
+            <div class="tree-caret open" id="nc-n1">▶</div>
+          </div>
+          <div class="tree-children open" id="nd-n1">
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>地松鼠报警声：</strong>发现捕食者时大声鸣叫，把自己暴露在危险中，以警告群体中的其他成员</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>工蜂不育：</strong>蜜蜂工蜂终生不繁殖，只服务蜂后 — 这怎么可能是自然选择塑造出来的？</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>人类家庭牺牲：</strong>父母为子女冒生命危险，甚至陌生人救助落水儿童 — 跨文化普遍存在</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>Sapolsky 的核心问题：</strong>"如果自然选择奖励最大化个体繁殖，那利他行为怎么可能进化出来？这是整个课程最重要的悖论。"</div></div>
+          </div>
+        </div>
+
+        <div class="tree-node">
+          <div class="tree-toggle" onclick="toggleNode('n2')">
+            <div class="tree-dot l2"></div>
+            <div style="flex:1">
+              <div class="tree-label">⚡ 自然选择应该消灭利他行为</div>
+              <div class="tree-sublabel">Layer 2 · 问题深化 — 进化逻辑与观察事实相矛盾</div>
+            </div>
+            <div class="tree-caret" id="nc-n2">▶</div>
+          </div>
+          <div class="tree-children" id="nd-n2">
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>"适应度"不是体能：</strong>Fitness = 繁殖成功率，即留下多少后代。最"适应"的个体 = 留下后代最多的个体，与体格无关。</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>自然选择三要素：</strong>① 种群中存在变异 ② 变异可遗传 ③ 不同变异导致不同繁殖成功率 → 有利变异扩散，不利变异消失</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>利他行为的代价：</strong>报警的松鼠被捕食风险增加 → 后代减少 → 报警基因频率下降 → 几代后应该消失。但它没消失。</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>达尔文的困惑：</strong>工蜂问题是《物种起源》中达尔文自认"最难解释"的现象。他预见了问题，但没有完整答案。</div></div>
+          </div>
+        </div>
+
+        <div class="tree-node error-node">
+          <div class="tree-toggle" onclick="toggleNode('n3')">
+            <div class="tree-dot l3"></div>
+            <div style="flex:1">
+              <div class="tree-label">❌ 错误答案：群体选择论</div>
+              <div class="tree-sublabel">Layer 3 · 失败尝试 — 听起来合理，但数学上根本行不通</div>
+            </div>
+            <div class="tree-caret" id="nc-n3">▶</div>
+          </div>
+          <div class="tree-children" id="nd-n3">
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>Wynne-Edwards (1962)：</strong>"动物为了种群利益会克制繁殖" — 乌鸦不过度繁殖是因为对种群有好处。这种想法统治了行为生态学几十年。</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>为什么失败（思想实验）：</strong>想象一个所有成员都克制繁殖的"合作种群"。某天出现一个不克制的突变体。突变体后代更多，后代继承不克制的基因。几代后，"克制"消失。欺骗者永远能入侵。</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>George Williams (1966)：</strong>《Adaptation and Natural Selection》系统摧毁群体选择论。核心论点：自然选择的单位是个体（甚至基因），不是群体。</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>Sapolsky 的比喻：</strong>"说'为了种群好'就像说公司里每个员工都会主动放弃奖金。第一个不放弃的人立刻占便宜，制度立即崩溃。"</div></div>
+          </div>
+        </div>
+
+        <div class="tree-node solution-node">
+          <div class="tree-toggle" onclick="toggleNode('n4')">
+            <div class="tree-dot l4"></div>
+            <div style="flex:1">
+              <div class="tree-label">✅ 汉密尔顿的解答：包容适应度</div>
+              <div class="tree-sublabel">Layer 4 · 解决方案 — 1964年，重新定义了"自私"的含义</div>
+            </div>
+            <div class="tree-caret" id="nc-n4">▶</div>
+          </div>
+          <div class="tree-children" id="nd-n4">
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>核心洞见：</strong>你的基因不只存在于你身上。你兄弟有 50% 与你相同，你父母有 50% 与你相同。帮助亲属存活繁殖 = 传播你的基因副本。</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>包容适应度：</strong>Fitness 的正确计算方式不是"我有几个孩子"，而是"我的基因通过所有途径传播了多少副本"。包容适应度 = 自身繁殖 + Σ(r × 亲属的繁殖贡献)</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>汉密尔顿法则 rB &gt; C：</strong>r×受益方繁殖收益B 大于 利他者自身繁殖代价C → 利他行为进化。这是生物学最精炼的量化预测之一。</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>Haldane 的经典笑话（数学完全正确）：</strong>"我愿意为 2 个亲兄弟或 8 个堂兄弟献出生命。" r=0.5×2=1.0；r=0.125×8=1.0。两种情况基因净传播量都等于 1 个自己。</div></div>
+            <div class="tree-leaf"><div class="tree-leaf-dot"></div><div class="tree-leaf-text"><strong>重要提醒（Sapolsky 反复强调）：</strong>我们不是在计算后才决定去爱。进化塑造了深刻的情感 — 爱、牵挂、保护冲动。公式描述的是进化结果，不是人类的思考过程。</div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Kinship Diagram -->
+<div class="section">
+  <div class="sec-label">亲缘系数图谱</div>
+  <div class="block">
+    <div class="block-header" onclick="toggleBlock('kin')">
+      <div class="block-icon">🧬</div>
+      <div class="block-title">
+        <h3>谁与你共享多少基因？</h3>
+        <p>点击各亲属节点，查看汉密尔顿法则计算</p>
+      </div>
+      <div class="block-arrow open" id="arr-kin">▶</div>
+    </div>
+    <div class="block-body open" id="body-kin">
+      <div class="kin-container">
+        <svg class="kin-svg" viewBox="0 0 340 230" xmlns="http://www.w3.org/2000/svg">
+          <rect width="340" height="230" fill="#22222f"/>
+          <text x="170" y="18" text-anchor="middle" fill="#8888a8" font-size="10">点击节点查看 rB&gt;C 计算 / Tap a node for details</text>
+
+          <!-- You: center -->
+          <circle cx="170" cy="115" r="30" fill="#3d2f8a" stroke="#7c6af7" stroke-width="2.5"/>
+          <text x="170" y="112" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">你</text>
+          <text x="170" y="126" text-anchor="middle" fill="#a78bfa" font-size="10">You</text>
+
+          <!-- Parent: top-left -->
+          <line x1="148" y1="89" x2="97" y2="57" stroke="#7c6af7" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <circle cx="80" cy="47" r="26" fill="#1a1a24" stroke="#7c6af7" stroke-width="1.5" onclick="showKin('parent')" style="cursor:pointer"/>
+          <text x="80" y="44" text-anchor="middle" fill="#e8e8f0" font-size="10" font-weight="600">父/母</text>
+          <text x="80" y="56" text-anchor="middle" fill="#7c6af7" font-size="11" font-weight="700">r=0.5</text>
+
+          <!-- Child: bottom-left -->
+          <line x1="148" y1="141" x2="97" y2="173" stroke="#7c6af7" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <circle cx="80" cy="183" r="26" fill="#1a1a24" stroke="#7c6af7" stroke-width="1.5" onclick="showKin('child')" style="cursor:pointer"/>
+          <text x="80" y="180" text-anchor="middle" fill="#e8e8f0" font-size="10" font-weight="600">子/女</text>
+          <text x="80" y="192" text-anchor="middle" fill="#7c6af7" font-size="11" font-weight="700">r=0.5</text>
+
+          <!-- Full sibling: left -->
+          <line x1="140" y1="115" x2="62" y2="115" stroke="#26c6a8" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <circle cx="42" cy="115" r="26" fill="#1a1a24" stroke="#26c6a8" stroke-width="1.5" onclick="showKin('sibling')" style="cursor:pointer"/>
+          <text x="42" y="111" text-anchor="middle" fill="#e8e8f0" font-size="9" font-weight="600">兄弟</text>
+          <text x="42" y="121" text-anchor="middle" fill="#e8e8f0" font-size="9" font-weight="600">姐妹</text>
+          <text x="42" y="133" text-anchor="middle" fill="#26c6a8" font-size="11" font-weight="700">r=0.5</text>
+
+          <!-- Half sibling: top-right -->
+          <line x1="194" y1="92" x2="240" y2="60" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <circle cx="258" cy="49" r="26" fill="#1a1a24" stroke="#fbbf24" stroke-width="1.5" onclick="showKin('half')" style="cursor:pointer"/>
+          <text x="258" y="45" text-anchor="middle" fill="#e8e8f0" font-size="9" font-weight="600">同父异母</text>
+          <text x="258" y="55" text-anchor="middle" fill="#e8e8f0" font-size="9" font-weight="600">半同胞</text>
+          <text x="258" y="67" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="700">r=0.25</text>
+
+          <!-- First cousin: right -->
+          <line x1="200" y1="115" x2="272" y2="115" stroke="#f77c6a" stroke-width="1" stroke-dasharray="4,4" opacity="0.7"/>
+          <circle cx="298" cy="115" r="26" fill="#1a1a24" stroke="#f77c6a" stroke-width="1.2" onclick="showKin('cousin')" style="cursor:pointer"/>
+          <text x="298" y="111" text-anchor="middle" fill="#e8e8f0" font-size="9" font-weight="600">堂/表</text>
+          <text x="298" y="121" text-anchor="middle" fill="#e8e8f0" font-size="9" font-weight="600">兄弟姐妹</text>
+          <text x="298" y="133" text-anchor="middle" fill="#f77c6a" font-size="11" font-weight="700">r=0.125</text>
+
+          <!-- Bee sister: bottom-right (special!) -->
+          <line x1="192" y1="139" x2="240" y2="171" stroke="#6ac8f7" stroke-width="2" stroke-dasharray="5,3"/>
+          <circle cx="258" cy="183" r="26" fill="#0a2f3f" stroke="#6ac8f7" stroke-width="2.5" onclick="showKin('bee')" style="cursor:pointer"/>
+          <text x="258" y="179" text-anchor="middle" fill="#6ac8f7" font-size="16">🐝</text>
+          <text x="258" y="196" text-anchor="middle" fill="#6ac8f7" font-size="11" font-weight="800">r=0.75!</text>
+
+          <!-- Label prompt -->
+          <rect x="90" y="215" width="160" height="13" rx="4" fill="rgba(124,106,247,0.12)" stroke="rgba(124,106,247,0.25)" stroke-width="1"/>
+          <text x="170" y="225" text-anchor="middle" fill="#a78bfa" font-size="9" font-weight="600">← 点击亲属节点查看详情</text>
+        </svg>
+        <div class="kin-info" id="kinInfo">
+          <div class="kin-hint">点击上方节点查看汉密尔顿法则如何计算是否值得帮助<br>🐝 蜜蜂是特例，r=0.75，解释了为什么工蜂不生育</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Real Examples -->
+<div class="section">
+  <div class="sec-label">三个真实案例</div>
+
+  <div class="eg-card">
+    <div class="eg-header" onclick="toggleEg('e1')">
+      <div class="eg-icon">🐿️</div>
+      <div class="eg-title">
+        <h4>Belding 地松鼠的报警声</h4>
+        <p>Paul Sherman 1977 — 亲缘选择的经典野外实验</p>
+      </div>
+      <div class="eg-caret open" id="ec-e1">▼</div>
+    </div>
+    <div class="eg-body open" id="eb-e1">
+      <p><strong>观察：</strong>雌性地松鼠在发现鹰或郊狼时发出高频警报叫声，自己暴露在危险中，却警告了群体。雄性同类很少这样做。性别差异为什么如此明显？</p>
+      <p><strong>Paul Sherman 的研究（1977, Science）：</strong>在加州 Tioga Pass 追踪地松鼠种群多年，记录谁在发警报叫声，谁的亲属在附近。结果非常清晰。</p>
+      <p><strong>关键发现：</strong>雌性出生后留在出生地（母亲、姐妹、女儿都在附近）。雄性性成熟后迁移到新地盘（周围几乎没有亲属）。</p>
+      <div class="eg-formula">雌性：r(姐妹) = 0.5，附近有 3 只姐妹
+rB = 0.5 × 3 × 2（每只姐妹额外存活价值）= 3.0
+C（自身被捕风险）≈ 0.5
+rB 3.0 >> C 0.5 ✅ 值得报警！
+
+雄性：周围无亲属，r ≈ 0
+rB ≈ 0 × B = 0 &lt; C ❌ 不值得！</div>
+      <p><strong>关键洞见：</strong>松鼠不在执行数学计算。进化塑造了一种心理机制，让它在有亲属在场时产生更强的"想报警"的冲动。行为感觉是本能，公式是事后描述。</p>
+      <div class="eg-tags">
+        <span class="eg-tag">亲缘选择</span><span class="eg-tag">经典实验</span><span class="eg-tag">性别差异</span><span class="eg-tag">野外研究</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="eg-card">
+    <div class="eg-header" onclick="toggleEg('e2')">
+      <div class="eg-icon">🐝</div>
+      <div class="eg-title">
+        <h4>工蜂不育——单倍二倍体的奥秘</h4>
+        <p>为什么帮姐姐比自己生孩子更"自私"？</p>
+      </div>
+      <div class="eg-caret" id="ec-e2">▼</div>
+    </div>
+    <div class="eg-body" id="eb-e2">
+      <p><strong>让达尔文头疼的问题：</strong>工蜂终生不繁殖，怎么可能进化出来？如果工蜂"没有后代"，它的不育基因怎么传到下一代？</p>
+      <p><strong>答案藏在奇特的遗传系统里：</strong>膜翅目（蜂、蚂蚁、黄蜂）的雄性由未受精卵发育，是单倍体（n）；雌性由受精卵发育，是二倍体（2n）。这叫<strong>单倍二倍体（Haplodiploidy）</strong>。</p>
+      <p><strong>神奇的数学：</strong>在这个系统中，同一蜂后产的全姐妹之间共享 <strong style="color:var(--neuro)">75%</strong> 的基因（来自父亲的 50% 完全相同，来自母亲的各 50% 有 50% 相同，合计 50%+25%=75%），而母女之间只共享 50%。</p>
+      <div class="eg-formula">工蜂帮助抚养姐妹：r = 0.75
+自己生女儿：r = 0.50
+
+帮助 1 只姐妹存活繁殖 → 0.75 个基因副本传播
+自己生 1 个女儿 → 0.50 个基因副本传播
+
+0.75 &gt; 0.50 → 帮助姐妹"更自私"！✅
+→ 真社会性（eusociality）进化的数学基础</div>
+      <p><strong>Sapolsky 的点评：</strong>"工蜂不是在牺牲自己。从基因的视角，它们在做最'自私'的选择——这个选择恰好是不生孩子、帮蜂后育儿。没有意图，只有进化逻辑。"</p>
+      <div class="eg-tags">
+        <span class="eg-tag">单倍二倍体</span><span class="eg-tag">r=0.75</span><span class="eg-tag">真社会性</span><span class="eg-tag">达尔文难题</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="eg-card">
+    <div class="eg-header" onclick="toggleEg('e3')">
+      <div class="eg-icon">❤️</div>
+      <div class="eg-title">
+        <h4>人类器官捐献与亲缘系数</h4>
+        <p>我们的"爱"是进化塑造的亲缘选择机制</p>
+      </div>
+      <div class="eg-caret" id="ec-e3">▼</div>
+    </div>
+    <div class="eg-body" id="eb-e3">
+      <p><strong>数据观察：</strong>全球活体器官捐献（肾脏、部分肝脏）中，约 70-80% 来自亲属。捐献率大致按亲缘系数递减：父母/子女 → 同胞 → 堂表亲 → 配偶（无血缘但高度依附）→ 非亲属。</p>
+      <p><strong>更直接的例子：</strong>父母为年幼子女冲入火场、跳入深水是人类最普遍的英雄行为。同样情境下为陌生人这样做要罕见得多。</p>
+      <div class="eg-formula">父母为幼儿冒险：r = 0.5
+B（孩子存活的繁殖价值）= 孩子整个生育期 × 平均后代数
+若孩子 5 岁，B ≈ 40 年 × 2.5 个后代 = 100 个后代当量
+rB = 0.5 × 100 = 50
+
+C（父母自身剩余繁殖价值）= 约 10-20（父母已有子女）
+rB 50 >> C 15 → 强烈保护冲动进化 ✅</div>
+      <p><strong>重要提醒（Sapolsky 反复强调）：</strong>我们不是计算完才去爱孩子。进化塑造了深刻的情感——爱、牵挂、无法控制的保护欲。汉密尔顿法则描述的是进化为什么选择这种情感，不是人类如何做决定。<strong>情感是真实的，公式是描述工具。</strong></p>
+      <div class="eg-tags">
+        <span class="eg-tag">亲缘选择</span><span class="eg-tag">人类行为</span><span class="eg-tag">情感与进化</span><span class="eg-tag">器官捐献</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Glossary -->
+<div class="section">
+  <div class="sec-label">双语词汇表</div>
+  <div class="block">
+    <div class="block-header" onclick="toggleBlock('gloss')">
+      <div class="block-icon">📚</div>
+      <div class="block-title">
+        <h3>核心词汇 · 8 个术语</h3>
+        <p>本讲关键概念中英对照</p>
+      </div>
+      <div class="block-arrow" id="arr-gloss">▶</div>
+    </div>
+    <div class="block-body" id="body-gloss">
+      <div class="gloss-grid">
+        <div class="gloss-item">
+          <div class="gloss-en">Natural Selection</div>
+          <div class="gloss-zh">自然选择 / 天择</div>
+          <div class="gloss-def">进化的核心机制。可遗传的变异 → 不同繁殖成功率 → 有利变异在种群中扩散，不利变异减少。注意：选择作用于表现型，遗传的是基因型。</div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-en">Fitness (Reproductive Fitness)</div>
+          <div class="gloss-zh">适应度 / 生殖适应度</div>
+          <div class="gloss-def">个体留下后代的能力，以后代数量衡量。<strong>不是身体健壮程度</strong>，是繁殖成功率。最"适应"的个体 = 留下最多可存活后代的个体。</div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-en">Inclusive Fitness</div>
+          <div class="gloss-zh">广义适应度 / 包容适应度</div>
+          <div class="gloss-def">Hamilton (1964) 提出。Fitness 的完整计算：自身繁殖 + Σ(r × 亲属繁殖贡献)。将帮助有共同基因的亲属视为传播自身基因的另一条途径。</div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-en">Coefficient of Relatedness (r)</div>
+          <div class="gloss-zh">亲缘系数 / 血缘系数</div>
+          <div class="gloss-def">两个个体因共同祖先而共享基因的概率。常见值：同卵双胞胎=1.0；亲子/全同胞=0.5；半同胞/叔侄=0.25；堂表亲=0.125；蜜蜂全姐妹=0.75（特例）。</div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-en">Kin Selection</div>
+          <div class="gloss-zh">亲缘选择</div>
+          <div class="gloss-def">自然选择偏好帮助遗传亲属的行为，因为亲属共享基因。注意：亲缘选择依然在基因/个体层面运作，不是群体选择。帮助亲属 = 自私基因的另一种传播途径。</div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-en">Hamilton's Rule</div>
+          <div class="gloss-zh">汉密尔顿法则</div>
+          <div class="gloss-def">利他行为进化的充分必要条件：rB &gt; C。r=亲缘系数，B=受益方额外繁殖收益，C=利他者繁殖代价。是进化生物学中最精炼的量化预测工具之一。</div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-en">Group Selection</div>
+          <div class="gloss-zh">群体选择（已被推翻）</div>
+          <div class="gloss-def">认为自然选择会保留对群体有益的行为。问题：欺骗者（不合作个体）总能在任何合作群体中传播，"为了群体好"的基因无法稳定存在。Williams (1966) 系统推翻此论。</div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-en">Adaptation vs. Spandrel</div>
+          <div class="gloss-zh">适应性状 vs. 侧拱效应</div>
+          <div class="gloss-def">适应：因增加适应度而被选择的特征。侧拱（Gould &amp; Lewontin, 1979）：选择其他特征时产生的副产品，本身并非被直接选择。Sapolsky 提醒：不要对每个行为都强行寻找"进化目的"。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Connections -->
+<div class="section" style="padding-bottom:20px">
+  <div class="sec-label">知识连接</div>
+  <div class="block">
+    <div class="block-header" onclick="toggleBlock('conn')">
+      <div class="block-icon">🔗</div>
+      <div class="block-title">
+        <h3>前后讲次的逻辑脉络</h3>
+        <p>这节课是整个课程的进化框架核心</p>
+      </div>
+      <div class="block-arrow" id="arr-conn">▶</div>
+    </div>
+    <div class="block-body" id="body-conn">
+      <div class="conn-list">
+        <div class="conn-item">
+          <div class="conn-dir" style="color:var(--muted)">←</div>
+          <div class="conn-text">
+            <strong>L01 · 课程导论</strong>
+            <p>本讲应用了 L01 的核心方法论：<strong>多层因果分析</strong>（进化层、发育层、机制层、近因层）。L01 问"行为由什么决定"，L02 展示进化层是如何塑造行为的最基本答案。</p>
+          </div>
+        </div>
+        <div class="conn-item">
+          <div class="conn-dir" style="color:var(--done)">→</div>
+          <div class="conn-text">
+            <strong>L03 · Behavioral Evolution II</strong>
+            <p>L02 解释了<strong>亲属间</strong>的利他（亲缘选择）。L03 继续解释<strong>非亲属间</strong>的合作：互利利他（Reciprocal Altruism）、博弈论、囚徒困境、以牙还牙（Tit-for-Tat）策略。</p>
+          </div>
+        </div>
+        <div class="conn-item">
+          <div class="conn-dir" style="color:var(--done)">→</div>
+          <div class="conn-text">
+            <strong>L08 · Recognizing Relatives</strong>
+            <p>亲缘选择需要识别亲属！L08 探讨动物如何实际识别亲属：<strong>嗅觉标记（MHC 基因）、出生地印记、表型匹配</strong>。还包括 Westermarck 效应：为什么青梅竹马不易产生爱情？</p>
+          </div>
+        </div>
+        <div class="conn-item">
+          <div class="conn-dir" style="color:var(--done)">→</div>
+          <div class="conn-text">
+            <strong>L14 · Limbic System</strong>
+            <p>亲缘选择的进化逻辑通过<strong>情感系统落地</strong>在大脑中。杏仁核处理恐惧和社会信号，催产素系统创造亲密与信任感。这是 L14 的机制层实现 L02 进化层逻辑的具体方式。</p>
+          </div>
+        </div>
+        <div class="conn-item">
+          <div class="conn-dir" style="color:var(--hub)">📖</div>
+          <div class="conn-text">
+            <strong>延伸阅读 · The Selfish Gene (Dawkins, 1976)</strong>
+            <p>Hamilton 理论的最佳科普。引入"基因视角"：动物是基因的"生存机器"，基因通过帮助含相同基因的亲属来扩散自己。读完后再看 L02，会有完全不同的深度。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleBlock(id){
+  const body=document.getElementById('body-'+id);
+  const arr=document.getElementById('arr-'+id);
+  const open=body.classList.toggle('open');
+  if(arr)arr.classList.toggle('open',open);
+}
+function toggleNode(id){
+  const ch=document.getElementById('nd-'+id);
+  const ca=document.getElementById('nc-'+id);
+  const open=ch.classList.toggle('open');
+  if(ca)ca.classList.toggle('open',open);
+}
+function toggleEg(id){
+  const body=document.getElementById('eb-'+id);
+  const caret=document.getElementById('ec-'+id);
+  const open=body.classList.toggle('open');
+  if(caret)caret.classList.toggle('open',open);
+}
+
+const kinData={
+  parent:{
+    title:'父/母 — Parent (r = 0.5)',
+    text:'你从父或母那里继承了 50% 的基因。反过来，父母与你共享 50% 的基因。这是父母保护子女冲动极强的进化原因。',
+    formula:'父母为幼儿冒险示例：\nr=0.5, B=孩子整个繁殖未来（很大）\nrB = 0.5 × 大 >> C → 强烈保护冲动进化 ✅'
+  },
+  child:{
+    title:'子/女 — Child (r = 0.5)',
+    text:'你的孩子有 50% 的基因来自你（另 50% 来自配偶）。孩子年龄越小，其剩余繁殖价值越高，父母保护行为越强烈。',
+    formula:'为子女冒险：r=0.5\n若孩子年幼，B（剩余繁殖价值）极大\nrB 远 > C（父母自身风险）\n→ 父母冲入火场是进化"理性"✅'
+  },
+  sibling:{
+    title:'兄弟/姐妹 — Full Sibling (r = 0.5)',
+    text:'全同胞（同父同母）与你共享 50% 的基因——与亲子关系的 r 值相同！帮助兄弟姐妹和帮助自己的孩子，进化上等效。',
+    formula:'Haldane 笑话（数学正确）：\n"我愿为 2 个亲兄弟献命"\nr=0.5 × 2 兄弟 = 1.0\n等于 1 个自己的基因传播量\n→ 进化上"打平" ✅'
+  },
+  half:{
+    title:'同父异母/同母异父 — Half Sibling (r = 0.25)',
+    text:'半同胞只通过一个父母连接，共享 25% 基因。帮助他们的进化收益是全同胞的一半，门槛相应更高。',
+    formula:'帮助半同胞：r = 0.25\n需要 B > 4C 才值得\n（即受益方收益要大 4 倍）\nvs 帮助全同胞只需 B > 2C ⚠️'
+  },
+  cousin:{
+    title:'堂/表兄弟姐妹 — First Cousin (r = 0.125)',
+    text:'第一表亲只共享 12.5% 的基因。Haldane 的公式：需要 8 个堂表亲的基因收益才等于 1 个自己，门槛很高。',
+    formula:'Haldane 笑话延续：\n"我愿为 8 个堂兄弟献命"\nr=0.125 × 8 = 1.0\n才等于 1 个自己的基因传播量\n→ 门槛极高，陌生人 r≈0 更无动力 ❌'
+  },
+  bee:{
+    title:'🐝 蜜蜂全姐妹 — Bee Sisters (r = 0.75!)',
+    text:'单倍二倍体特殊遗传系统：雄蜂是单倍体，所有工蜂姐妹共享父亲的100%基因+各自来自蜂后的50%×50%=25%母系基因，合计r=0.75！这比母女关系（r=0.5）更亲！',
+    formula:'工蜂帮助姐妹 vs 自己生孩子：\n帮助姐妹：r=0.75×B = 0.75B\n自己生女儿：r=0.50×B = 0.50B\n0.75B > 0.50B\n→ 帮助姐妹"更自私"！\n→ 真社会性进化的数学基础 ✅✅'
+  }
+};
+
+function showKin(type){
+  const d=kinData[type];
+  if(!d)return;
+  document.getElementById('kinInfo').innerHTML=
+    '<div class="kin-info-title">'+d.title+'</div>'+
+    '<div class="kin-info-text">'+d.text+'</div>'+
+    '<div class="kin-info-formula">'+d.formula+'</div>';
+}
+</script>
+</body>
+</html>
