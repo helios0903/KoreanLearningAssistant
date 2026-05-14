@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>L03 行为进化 II · Sapolsky</title>
+<style>
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--orange:#fb923c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:60px}
+.hero{background:linear-gradient(135deg,#1a0a3a 0%,#0a2040 50%,#0f1a2e 100%);padding:32px 20px 28px;text-align:center;border-bottom:1px solid var(--border);position:relative}
+.back-link{position:absolute;top:16px;left:16px;font-size:13px;color:var(--muted);text-decoration:none}
+.badge{display:inline-block;font-size:11px;font-weight:700;background:rgba(167,139,250,0.12);color:var(--accent);padding:4px 12px;border-radius:99px;border:1px solid rgba(167,139,250,0.25);margin-bottom:12px}
+.hero h1{font-size:24px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:4px}
+.hero h1 span{font-size:16px;font-weight:400;color:var(--muted)}
+.meta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.meta span{font-size:12px;background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:99px;color:var(--muted)}
+.content{padding:20px 16px 0}
+.sec-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin:16px 0 10px 2px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden}
+.coll-head{padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;user-select:none}
+.coll-body{padding:0 16px 16px;display:none}
+.coll-body.open{display:block}
+.coll-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.coll-title{font-size:15px;font-weight:700;flex:1}
+.coll-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.chevron{font-size:18px;color:var(--muted);transition:transform 0.2s;flex-shrink:0}
+.body-text{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:10px}
+.hl{background:var(--card2);border-radius:10px;padding:12px;margin:10px 0;border-left:3px solid var(--accent)}
+.hl .lbl{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:4px}
+.hl p{font-size:13px;color:var(--text);line-height:1.6}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(167,139,250,0.1);color:var(--accent);border:1px solid rgba(167,139,250,0.2)}
+.tag.g{background:rgba(52,211,153,0.1);color:var(--green);border-color:rgba(52,211,153,0.2)}
+.tag.y{background:rgba(251,191,36,0.1);color:var(--yellow);border-color:rgba(251,191,36,0.2)}
+.tag.r{background:rgba(248,113,113,0.1);color:var(--red);border-color:rgba(248,113,113,0.2)}
+.ex-card{background:var(--card2);border-radius:12px;margin:8px 0;overflow:hidden}
+.ex-head{padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.ex-body{padding:0 14px 14px;display:none;font-size:13px;color:var(--muted);line-height:1.7}
+.ex-body.open{display:block}
+.gloss-item{border-bottom:1px solid var(--border);padding:12px 0}
+.gloss-item:last-child{border-bottom:none}
+.gloss-en{font-size:12px;font-weight:700;color:var(--accent)}
+.gloss-def{font-size:12px;color:var(--muted);line-height:1.5;margin-top:2px}
+.conn-item{background:var(--card2);border-radius:10px;padding:12px;margin:6px 0;display:flex;gap:10px}
+.conn-arr{font-size:16px;flex-shrink:0;margin-top:1px}
+.conn-text{font-size:13px;color:var(--muted);line-height:1.5}
+.conn-text strong{color:var(--text)}
+/* matrix */
+.matrix-wrap{overflow-x:auto;margin:12px 0}
+.pd-table{width:100%;border-collapse:separate;border-spacing:6px}
+.pd-table th{font-size:12px;color:var(--muted);padding:8px;text-align:center}
+.pd-cell{background:var(--card2);border-radius:10px;padding:14px 8px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all 0.2s}
+.pd-cell.active,.pd-cell:hover{border-color:var(--accent);background:#1e1a3a}
+.pd-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.pd-label{font-size:10px;color:var(--muted)}
+.cc .pd-score{color:var(--green)} .cd .pd-score{color:var(--red)} .dc .pd-score{color:var(--yellow)} .dd .pd-score{color:var(--orange)}
+.cell-info{background:var(--card2);border-radius:10px;padding:12px;margin-top:8px;font-size:13px;color:var(--muted);line-height:1.6;min-height:64px}
+/* strategy bars */
+.s-bar{margin:10px 0}
+.s-top{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.s-name{color:var(--text);font-weight:600}
+.s-score{color:var(--muted)}
+.bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <a href="index.html" class="back-link">← 神经科学中心</a>
+  <div class="badge">Sapolsky · Lecture 03</div>
+  <h1>行为进化 II<br><span>Behavioral Evolution II</span></h1>
+  <div class="meta">
+    <span>🕐 1h26m</span><span>🎮 博弈论</span><span>⭐⭐⭐</span><span>🧬 进化遗传学</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ESS BANNER -->
+<div class="card" style="border-color:rgba(251,191,36,0.3)">
+  <div style="padding:18px;text-align:center">
+    <div style="font-size:11px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">核心概念</div>
+    <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:6px">进化稳定策略 ESS</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px">当种群大多数个体采用某策略时，任何突变者均无法通过改变策略获益</div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:10px 14px;text-align:center;flex:1;min-width:90px">
+        <div style="font-size:14px;font-weight:800;color:var(--yellow)">关键条件</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">重复博弈＋个体识别</div>
+      </div>
+      <div style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3);border-radius:10px;padding:10px 14px;text-align:center;flex:1;min-width:90px">
+        <div style="font-size:14px;font-weight:800;color:var(--green)">胜出策略</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">以牙还牙 TfT</div>
+      </div>
+      <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);border-radius:10px;padding:10px 14px;text-align:center;flex:1;min-width:90px">
+        <div style="font-size:14px;font-weight:800;color:var(--accent)">提出者</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Maynard Smith 1973</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec-label">问题链 · Issue Tree</div>
+
+<!-- L1 -->
+<div class="card" style="border-color:rgba(124,106,247,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(124,106,247,0.15)">🔍</div>
+    <div style="flex:1"><div class="coll-title">为何非亲属间会合作？</div><div class="coll-sub">Why do non-relatives cooperate?</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">L02 汉密尔顿法则（r·B>C）解释了亲属利他，但吸血蝙蝠向<strong>非亲属</strong>邻居分享血液、黑猩猩跨家族结盟、人类跨国贸易——r≈0，亲缘选择完全失效。</div>
+    <div class="hl"><div class="lbl">核心谜题</div><p>自然选择应该惩罚任何"无回报的慷慨"。这些合作行为如何抵抗进化压力而留存？需要全新框架：<strong>博弈论</strong>。</p></div>
+    <div class="tags"><span class="tag">亲缘选择失效</span><span class="tag">非亲利他</span><span class="tag">博弈论入口</span></div>
+  </div>
+</div>
+
+<!-- L2 -->
+<div class="card" style="border-color:rgba(251,191,36,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(251,191,36,0.12)">⚡</div>
+    <div style="flex:1"><div class="coll-title">囚徒困境：合作的逻辑陷阱</div><div class="coll-sub">The Prisoner's Dilemma</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">博弈论（von Neumann 1944, Nash 1950）分析理性行为者的策略互动。<strong>囚徒困境</strong>：两囚徒分别选择沉默（合作）或告发（背叛），无法沟通。</div>
+    <div class="hl"><div class="lbl">理性逻辑</div><p>无论对方怎么选，<strong>背叛都是个体最优</strong>（占优策略）→ 纳什均衡 = 双方背叛，双方得最差集体结果。这是个体理性导致集体悲剧的原型案例。</p></div>
+    <div class="body-text">解决办法：现实中多为<strong>重复博弈</strong>——双方未来还会再见，这改变了一切。</div>
+    <div class="tags"><span class="tag r">占优策略</span><span class="tag r">纳什均衡</span><span class="tag y">重复博弈破局</span></div>
+  </div>
+</div>
+
+<!-- L3 -->
+<div class="card" style="border-color:rgba(248,113,113,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(248,113,113,0.12)">🦅</div>
+    <div style="flex:1"><div class="coll-title">鹰鸽博弈：频率依赖选择</div><div class="coll-sub">Hawk-Dove &amp; ESS</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">Maynard Smith (1973) 的鹰鸽博弈：🦅鹰总是争斗，🕊️鸽总是展示后撤。两种纯策略都不是ESS——种群中全是鹰时鸽子可入侵，全是鸽时鹰可入侵。</div>
+    <div class="hl"><div class="lbl">混合ESS</div><p>最终稳定在<strong>鹰:鸽的特定比例</strong>，取决于争斗代价/资源价值之比。这解释了为什么攻击性行为在自然界总有一定频率存在，不多不少。</p></div>
+    <div class="body-text">核心洞见：<strong>最优策略取决于种群中他人的行为</strong>——进化博弈论的精髓，频率依赖选择。</div>
+    <div class="tags"><span class="tag">ESS</span><span class="tag">混合策略</span><span class="tag">频率依赖选择</span></div>
+  </div>
+</div>
+
+<!-- L4 -->
+<div class="card" style="border-color:rgba(52,211,153,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(52,211,153,0.12)">✅</div>
+    <div style="flex:1"><div class="coll-title">Axelrod锦标赛：以牙还牙胜出</div><div class="coll-sub">Tit-for-Tat wins everything</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">1980年，政治学家 Robert Axelrod 举办计算机锦标赛：顶级博弈论家提交策略，进行重复囚徒困境。14种策略，胜者：<strong>以牙还牙（TfT）</strong>，仅4行代码。</div>
+    <div class="hl"><div class="lbl">TfT的四个特征</div><p>① <strong>Nice（友善）</strong>：首先合作，从不主动背叛<br>② <strong>Retaliatory（报复）</strong>：对方背叛立即回击<br>③ <strong>Forgiving（宽容）</strong>：对方恢复合作立即和解<br>④ <strong>Clear（清晰）</strong>：对手能预测你的行为</p></div>
+    <div class="body-text">Trivers (1971) 互利利他的条件：长寿命 + 低扩散率 + 个体识别 + 记忆。满足这些条件，TfT自然进化。</div>
+    <div class="tags"><span class="tag g">Tit-for-Tat</span><span class="tag g">互利利他</span><span class="tag g">Trivers 1971</span><span class="tag g">Axelrod 1984</span></div>
+  </div>
+</div>
+
+<!-- MATRIX -->
+<div class="sec-label">互动：囚徒困境收益矩阵</div>
+<div class="card">
+  <div style="padding:16px">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:10px">点击格子了解每种策略组合的结果 →</div>
+    <div class="matrix-wrap">
+      <table class="pd-table">
+        <tr><th></th><th>对手：合作 C</th><th>对手：背叛 D</th></tr>
+        <tr>
+          <th style="text-align:left;font-size:12px;color:var(--muted)">你：合作 C</th>
+          <td><div class="pd-cell cc" onclick="showCell(this,'cc')"><div class="pd-score">3,3</div><div class="pd-label">双赢</div></div></td>
+          <td><div class="pd-cell cd" onclick="showCell(this,'cd')"><div class="pd-score">0,5</div><div class="pd-label">被剥削</div></div></td>
+        </tr>
+        <tr>
+          <th style="text-align:left;font-size:12px;color:var(--muted)">你：背叛 D</th>
+          <td><div class="pd-cell dc" onclick="showCell(this,'dc')"><div class="pd-score">5,0</div><div class="pd-label">剥削对手</div></div></td>
+          <td><div class="pd-cell dd" onclick="showCell(this,'dd')"><div class="pd-score">1,1</div><div class="pd-label">双输</div></div></td>
+        </tr>
+      </table>
+    </div>
+    <div class="cell-info" id="cellInfo">← 点击任意格子查看解释</div>
+  </div>
+</div>
+
+<!-- STRATEGY -->
+<div class="sec-label">策略对比：Axelrod锦标赛模拟（200轮）</div>
+<div class="card">
+  <div style="padding:16px">
+    <div class="s-bar">
+      <div class="s-top"><span class="s-name">🤝 以牙还牙 (TfT)</span><span class="s-score">600分</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--green)"></div></div>
+    </div>
+    <div class="s-bar">
+      <div class="s-top"><span class="s-name">🕊️ 总是合作</span><span class="s-score">420分</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--blue)"></div></div>
+    </div>
+    <div class="s-bar">
+      <div class="s-top"><span class="s-name">🔀 随机策略</span><span class="s-score">370分</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:62%;background:var(--muted)"></div></div>
+    </div>
+    <div class="s-bar">
+      <div class="s-top"><span class="s-name">🦅 总是背叛</span><span class="s-score">220分</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:37%;background:var(--red)"></div></div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6">⚠️ "总是背叛"在一次性博弈获益，但在重复博弈中被孤立，长期垫底。</div>
+  </div>
+</div>
+
+<!-- EXAMPLES -->
+<div class="sec-label">三个真实案例</div>
+<div class="card">
+  <div style="padding:16px 16px 8px">
+
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">🦇</div>
+        <div style="flex:1;font-size:14px;font-weight:600">吸血蝙蝠血液分享</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">
+        <strong>Gerald Wilkinson (1984)</strong>：哥斯达黎加吸血蝙蝠，超过60h不进食会死亡。回巢后将血液反刍给饥饿邻居，分享对象并非只是亲属。<br><br>
+        关键记录：存在双向交流——今晚你喂我，下次我喂你。曾欺骗者（吃了不还）未来被拒分享。完美满足 Trivers 互利利他条件：重复互动 + 个体识别 + 欺骗追踪。
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">🐟</div>
+        <div style="flex:1;font-size:14px;font-weight:600">裂唇鱼的清洁站</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">
+        <strong>裂唇鱼（Cleaner wrasse）</strong>在珊瑚礁设清洁站，为大鱼清除寄生虫。大鱼理论上可随时吃掉小鱼，但它们不这么做——这是重复博弈的合作。<br><br>
+        当裂唇鱼"背叛"（咬一口黏液），大鱼会<strong>颤抖警告</strong>并驱逐它。观察中的其他鱼减少访问该欺骗者。声誉机制在进化中自发出现，支持合作。
+      </div>
+    </div>
+
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">🧠</div>
+        <div style="flex:1;font-size:14px;font-weight:600">人类的欺骗检测模块</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">
+        <strong>Wason 选择任务（Cosmides &amp; Tooby 1992）</strong><br><br>
+        抽象逻辑版："若卡片一面是元音，另一面是偶数" → 仅 <strong>25%</strong> 答对<br>
+        社会契约版："若你喝酒，你必须满18岁" → <strong>75%+</strong> 答对！<br><br>
+        结论：人脑有<strong>专用欺骗检测模块</strong>，远超等效纯逻辑任务的能力。这是互利利他进化留下的适应性遗产——我们天生就擅长发现骗子。
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- GLOSSARY -->
+<div class="sec-label">术语表 · Glossary</div>
+<div class="card">
+  <div style="padding:16px">
+    <div class="gloss-item"><div class="gloss-en">Game Theory / 博弈论</div><div class="gloss-def">研究理性行为者在策略互动中决策的数学框架（von Neumann 1944）</div></div>
+    <div class="gloss-item"><div class="gloss-en">Prisoner's Dilemma / 囚徒困境</div><div class="gloss-def">个体背叛是理性选择，但全体背叛导致最差集体结果的经典博弈模型</div></div>
+    <div class="gloss-item"><div class="gloss-en">Nash Equilibrium / 纳什均衡</div><div class="gloss-def">没有任何玩家能通过单方面改变策略提升收益的稳定状态</div></div>
+    <div class="gloss-item"><div class="gloss-en">ESS / 进化稳定策略</div><div class="gloss-def">当种群大多数采用时无法被突变策略入侵的行为策略（Maynard Smith 1973）</div></div>
+    <div class="gloss-item"><div class="gloss-en">Tit-for-Tat / 以牙还牙</div><div class="gloss-def">首先合作，之后复制对手上一步行为；Axelrod锦标赛两轮冠军</div></div>
+    <div class="gloss-item"><div class="gloss-en">Reciprocal Altruism / 互利利他</div><div class="gloss-def">向非亲属提供帮助并期待回报的行为；条件：重复互动+个体识别（Trivers 1971）</div></div>
+    <div class="gloss-item"><div class="gloss-en">Hawk-Dove Game / 鹰鸽博弈</div><div class="gloss-def">鹰（总争斗）vs鸽（总展示）的频率依赖博弈，结果为混合ESS</div></div>
+    <div class="gloss-item"><div class="gloss-en">Defection / 背叛</div><div class="gloss-def">在合作博弈中选择不合作，以牺牲集体利益换取个人短期收益</div></div>
+  </div>
+</div>
+
+<!-- CONNECTIONS -->
+<div class="sec-label">课程联系</div>
+<div class="card">
+  <div style="padding:16px">
+    <div class="conn-item"><div class="conn-arr" style="color:var(--muted)">←</div><div class="conn-text"><strong>L02 行为进化I</strong>：亲缘选择 r·B>C 解释亲属利他；本讲扩展到非亲利他的互利机制</div></div>
+    <div class="conn-item"><div class="conn-arr" style="color:var(--accent)">→</div><div class="conn-text"><strong>L08 亲属识别</strong>：互利利他需要个体识别能力——L08 讲解大脑如何识别熟悉个体</div></div>
+    <div class="conn-item"><div class="conn-arr" style="color:var(--accent)">→</div><div class="conn-text"><strong>L17-19 攻击性</strong>：鹰策略在现实中表现为攻击行为；TfT的报复性如何调节攻击阈值</div></div>
+    <div class="conn-item"><div class="conn-arr" style="color:var(--yellow)">📖</div><div class="conn-text"><strong>The Evolution of Cooperation</strong> — Robert Axelrod (1984)：锦标赛完整报告，合作进化的里程碑著作</div></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+function togEx(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+const cellData={
+  cc:'双方合作 → 各得3分。最优集体结果。在重复博弈中，TfT维持这种状态，双方长期受益。',
+  cd:'你合作，对手背叛 → 你得0被剥削，对手得5。TfT会立即在下一轮报复，阻止进一步剥削。',
+  dc:'你背叛，对手合作 → 你得5，对手得0。短期最大收益，但TfT下一轮必定报复——长期代价高。',
+  dd:'双方背叛 → 各得1分。纳什均衡但双方皆输。囚徒困境的核心悲剧，重复博弈可打破此局。'
+};
+function showCell(el,id){document.querySelectorAll('.pd-cell').forEach(c=>c.classList.remove('active'));el.classList.add('active');document.getElementById('cellInfo').textContent=cellData[id];}
+</script>
+</body>
+</html>
