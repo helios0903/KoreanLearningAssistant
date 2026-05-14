@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L10 神经科学入门 I — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h2{font-size:1.05rem;font-weight:600;margin-bottom:12px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px;background:rgba(52,211,153,0.15);color:var(--green)}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.back:hover{color:var(--text)}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.concept-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.concept-label{font-size:.75rem;color:var(--muted);margin-bottom:4px}
+.concept-val{font-size:.88rem;font-weight:600}
+.highlight{background:rgba(52,211,153,0.1);border-left:3px solid var(--green);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.purple{background:rgba(167,139,250,0.1);border-left-color:var(--accent)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* AP Simulator */
+.ap-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.ap-canvas-wrap{position:relative;width:100%;height:160px;background:#0a0a10;border-radius:8px;overflow:hidden;margin-bottom:10px}
+canvas#apCanvas{width:100%;height:100%;display:block}
+.ap-phase-labels{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.phase-badge{padding:4px 10px;border-radius:20px;font-size:.72rem;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .2s}
+.phase-badge.resting{background:rgba(136,136,168,0.15);color:var(--muted);border-color:rgba(136,136,168,0.3)}
+.phase-badge.threshold{background:rgba(251,191,36,0.15);color:var(--yellow);border-color:rgba(251,191,36,0.3)}
+.phase-badge.depol{background:rgba(248,113,113,0.15);color:var(--red);border-color:rgba(248,113,113,0.3)}
+.phase-badge.repol{background:rgba(96,165,250,0.15);color:var(--blue);border-color:rgba(96,165,250,0.3)}
+.phase-badge.hyper{background:rgba(52,211,153,0.15);color:var(--green);border-color:rgba(52,211,153,0.3)}
+.phase-badge.active,.phase-badge:hover{opacity:1;filter:brightness(1.3)}
+.ap-info{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.82rem;min-height:52px}
+.ap-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.ap-btn{padding:8px 16px;border-radius:8px;border:none;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
+.ap-btn.primary{background:rgba(52,211,153,0.2);color:var(--green);border:1px solid rgba(52,211,153,0.4)}
+.ap-btn.primary:hover{background:rgba(52,211,153,0.35)}
+.ap-btn.secondary{background:rgba(136,136,168,0.1);color:var(--muted);border:1px solid var(--border)}
+.ap-btn.secondary:hover{background:rgba(136,136,168,0.2)}
+.ap-voltage{font-size:.8rem;color:var(--muted);padding:4px 8px;background:var(--bg);border-radius:6px;border:1px solid var(--border)}
+/* Ion channel table */
+.ion-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.82rem}
+.ion-table th{background:var(--card2);padding:8px 10px;text-align:left;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border)}
+.ion-table td{padding:8px 10px;border-bottom:1px solid rgba(46,46,63,0.5)}
+.ion-table tr:last-child td{border-bottom:none}
+.ion-open{color:var(--green);font-weight:600}
+.ion-closed{color:var(--red);font-weight:600}
+/* Synapse demo */
+.syn-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.syn-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.syn-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.8rem;cursor:pointer;transition:all .2s}
+.syn-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,0.1)}
+.syn-result{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.82rem;min-height:60px}
+/* Neuron anatomy */
+.neuron-parts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.neuron-part{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.part-name{font-size:.8rem;font-weight:700;margin-bottom:4px}
+.part-desc{font-size:.78rem;color:var(--muted)}
+/* Case study */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.case-icon{font-size:1rem}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge">L10</span>
+  <span class="badge" style="background:rgba(52,211,153,0.15);color:var(--green)">神经科学</span>
+  <span class="badge" style="background:rgba(248,113,113,0.15);color:var(--red)">⭐ 核心</span>
+  <h1>神经科学入门 I</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L10 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      神经元是行为的最小信息单元。理解一个神经元如何产生动作电位、如何在突触处传递信号，是理解所有复杂行为（攻击、恐惧、爱、上瘾）的物理基础。
+    </div>
+    <p>Sapolsky 在这讲把神经元比作「极其挑剔的接线员」：它们只在收到足够多的「请求」时才会转发消息，而这个选择过程直接编码了你的每一个决定。</p>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="concept-label">静息电位</div>
+        <div class="concept-val" style="color:var(--blue)">−70 mV</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-label">动作电位阈值</div>
+        <div class="concept-val" style="color:var(--yellow)">−55 mV</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-label">峰值电位</div>
+        <div class="concept-val" style="color:var(--red)">+40 mV</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-label">不应期</div>
+        <div class="concept-val" style="color:var(--green)">1–2 ms</div>
+      </div>
+    </div>
+    <p>关键洞见：动作电位遵循「全或无」法则——一旦触发，其幅度和形状固定不变。信息编码在<strong>频率</strong>中，而非幅度中。</p>
+  </div>
+</div>
+
+<!-- 动作电位模拟器 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">⚡</span>
+    <span class="sec-title">互动：动作电位模拟器</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="ap-demo">
+      <h3>膜电位追踪</h3>
+      <div class="ap-canvas-wrap">
+        <canvas id="apCanvas"></canvas>
+      </div>
+      <div class="ap-phase-labels">
+        <span class="phase-badge resting" onclick="showPhase('resting')">静息期</span>
+        <span class="phase-badge threshold" onclick="showPhase('threshold')">阈值点</span>
+        <span class="phase-badge depol" onclick="showPhase('depol')">去极化</span>
+        <span class="phase-badge repol" onclick="showPhase('repol')">复极化</span>
+        <span class="phase-badge hyper" onclick="showPhase('hyper')">超极化</span>
+      </div>
+      <div class="ap-info" id="apInfo">
+        点击下方「刺激神经元」观看完整动作电位过程，或点击各阶段标签了解详情。
+      </div>
+      <div class="ap-controls">
+        <button class="ap-btn primary" onclick="runAP()">⚡ 刺激神经元</button>
+        <button class="ap-btn secondary" onclick="resetAP()">↺ 重置</button>
+        <span class="ap-voltage" id="voltageDisplay">膜电位：−70 mV</span>
+      </div>
+    </div>
+    <table class="ion-table">
+      <thead><tr><th>离子通道</th><th>静息期</th><th>去极化</th><th>复极化</th></tr></thead>
+      <tbody>
+        <tr><td>Na⁺ 快速通道</td><td class="ion-closed">关闭</td><td class="ion-open">大量开放 →</td><td class="ion-closed">失活关闭</td></tr>
+        <tr><td>K⁺ 延迟通道</td><td class="ion-closed">关闭</td><td class="ion-closed">缓慢开放</td><td class="ion-open">大量开放 →</td></tr>
+        <tr><td>Na⁺/K⁺ 泵</td><td class="ion-open">持续运作</td><td class="ion-open">持续运作</td><td class="ion-open">持续运作</td></tr>
+        <tr><td>漏电通道</td><td class="ion-open">少量开放</td><td class="ion-open">少量开放</td><td class="ion-open">少量开放</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 神经元解剖 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧬</span>
+    <span class="sec-title">神经元解剖结构</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="neuron-parts">
+      <div class="neuron-part">
+        <div class="part-name" style="color:var(--green)">树突 Dendrite</div>
+        <div class="part-desc">接收来自其他神经元的信号；形态高度分支，极大增加接触面积</div>
+      </div>
+      <div class="neuron-part">
+        <div class="part-name" style="color:var(--blue)">细胞体 Soma</div>
+        <div class="part-desc">整合所有输入信号；若总和超过阈值则在轴丘触发动作电位</div>
+      </div>
+      <div class="neuron-part">
+        <div class="part-name" style="color:var(--yellow)">轴突 Axon</div>
+        <div class="part-desc">传导动作电位；髓鞘（施万细胞）大幅加速传导，最快可达120 m/s</div>
+      </div>
+      <div class="neuron-part">
+        <div class="part-name" style="color:var(--accent)">轴突末梢 Terminal</div>
+        <div class="part-desc">释放神经递质；突触小泡与膜融合，经胞吐释放到突触间隙</div>
+      </div>
+    </div>
+    <div class="highlight blue" style="margin-top:12px">
+      <strong>髓鞘的魔法：</strong>跳跃式传导（Saltatory conduction）——动作电位在朗飞结之间「跳跃」，比无髓鞘神经快100倍。多发性硬化症（MS）正是髓鞘被自身免疫系统破坏，导致信号传导失败。
+    </div>
+  </div>
+</div>
+
+<!-- 突触传递 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🔗</span>
+    <span class="sec-title">互动：突触传递与神经递质</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="syn-demo">
+      <h3>选择神经递质类型</h3>
+      <div class="syn-selector">
+        <button class="syn-btn active" onclick="showNT(this,'glu')">谷氨酸</button>
+        <button class="syn-btn" onclick="showNT(this,'gaba')">GABA</button>
+        <button class="syn-btn" onclick="showNT(this,'da')">多巴胺</button>
+        <button class="syn-btn" onclick="showNT(this,'5ht')">血清素</button>
+        <button class="syn-btn" onclick="showNT(this,'ach')">乙酰胆碱</button>
+        <button class="syn-btn" onclick="showNT(this,'ne')">去甲肾上腺素</button>
+      </div>
+      <div class="syn-result" id="synResult">
+        <strong style="color:var(--green)">谷氨酸 (Glutamate)</strong> — 主要兴奋性递质<br>
+        受体：AMPA（快速）、NMDA（学习/记忆关键）、代谢型<br>
+        NMDA受体是"关联探测器"——需要同时有突触前谷氨酸释放 + 突触后去极化才能开放（Mg²⁺门控）。这正是突触可塑性（LTP，长时程增强）的分子基础。<br>
+        <em style="color:var(--muted)">过多谷氨酸→兴奋性毒性→中风后神经元死亡</em>
+      </div>
+    </div>
+    <div class="highlight">
+      <strong>突触后电位的整合：</strong>一个神经元可能同时收到数千个兴奋性突触后电位(EPSP)和抑制性突触后电位(IPSP)。细胞体对这些信号进行空间和时间求和，决定是否在轴丘触发动作电位。
+    </div>
+  </div>
+</div>
+
+<!-- 关键概念深挖 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🔬</span>
+    <span class="sec-title">关键概念深挖</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <h3>全或无法则与信息编码</h3>
+    <p>动作电位的幅度固定（约110 mV的电压变化）。神经元通过调节<strong>发放频率</strong>来编码刺激强度。手指轻触时，躯体感觉皮层神经元以低频（5–10 Hz）发放；剧烈疼痛时，同一区域神经元可达200+ Hz。</p>
+    <div class="highlight yellow">
+      <strong>频率编码 vs. 时间编码：</strong>现代神经科学认为，大脑同时使用两种策略：多个神经元的<em>发放时间同步</em>（gamma震荡，~40Hz）也携带信息，尤其在感知整合中。
+    </div>
+    <h3 style="margin-top:12px">不应期的功能意义</h3>
+    <p>绝对不应期（~1ms）确保动作电位单向传导，防止信号反向回流。相对不应期（~2ms）决定了神经元的最大发放频率上限（约500 Hz）。</p>
+    <div class="highlight red">
+      <strong>河豚毒素（TTX）实验：</strong>TTX特异性阻断Na⁺快速通道，完全抑制动作电位。给蛙腿注射TTX后，肌肉完全瘫痪——即使钙离子和K⁺通道完好。这个实验确立了Na⁺通道在动作电位中的必要作用。
+    </div>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title"><span class="case-icon">🐟</span>电鳗的动作电位叠加</div>
+      <p style="font-size:.85rem">电鳗（Electrophorus electricus）的发电器官由数千个电板细胞（electrocyte）串联排列。每个细胞产生约100 mV的动作电位，串联后可达600V。这是进化对基本神经元电化学原理的极端放大。Sapolsky用此例说明：理解一个神经元的动作电位，就理解了电鳗如何电晕猎物。</p>
+    </div>
+    <div class="case">
+      <div class="case-title"><span class="case-icon">💊</span>可卡因的突触机制</div>
+      <p style="font-size:.85rem">可卡因阻断多巴胺转运体（DAT），使突触间隙的多巴胺无法被回收，导致其在突触间隙积累，持续激活受体。伏隔核（奖赏中心）的多巴胺信号被人为放大，产生强烈愉悦感。理解了突触传递，就理解了为什么停药后会有强烈渴求——突触后受体已经下调，正常多巴胺水平不够用了。</p>
+      <div class="quote">「毒品不是创造了愉悦，而是劫持了本来用于食物、性、社会联系的奖赏回路。」— Sapolsky</div>
+    </div>
+    <div class="case">
+      <div class="case-title"><span class="case-icon">🧠</span>LTP与海马体记忆</div>
+      <p style="font-size:.85rem">1973年，Bliss & Lømo发现：对兔海马体施加高频电刺激后，该突触的EPSP幅度持续增大数小时至数天。这就是长时程增强（LTP）。机制：高频刺激→NMDA受体被激活（需要Mg²⁺被顶走）→Ca²⁺大量涌入→激活CaMKII→AMPA受体磷酸化+新AMPA受体插入→突触后响应增强。这是「用进废退」的分子实现，是陈述性记忆形成的细胞基础。</p>
+    </div>
+  </div>
+</div>
+
+<!-- Sapolsky的连接 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🌉</span>
+    <span class="sec-title">Sapolsky的连接：从神经元到行为</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <p>Sapolsky反复强调一个点：神经科学最危险的错误是「只看神经元」。一个动作电位的发生，受到：</p>
+    <ul>
+      <li>当下的<strong>神经化学环境</strong>（睾酮、皮质醇、雌激素水平）</li>
+      <li>数小时前的<strong>激素变化</strong></li>
+      <li>童年<strong>应激经历</strong>塑造的突触连接密度</li>
+      <li>进化出的<strong>基因倾向</strong>（ion channel基因多态性）</li>
+    </ul>
+    <div class="highlight purple">
+      <strong>核心批判：</strong>「我们不能把行为简化为神经元发放。但我们也不能忽视神经元——因为每一个感受、每一个决定，最终都在这里实现。」
+    </div>
+    <p>L10的神经科学知识是整门课的「硬件层」——之后每讲讨论的激素、进化、发育，最终都会落回到这些突触和离子通道上。</p>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l09-deep-dive.html" style="color:var(--muted);margin-right:16px">← L09 动物行为学</a>
+  <a href="sapolsky-l11-deep-dive.html" style="color:var(--muted)">L11 神经科学 II →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+// AP Simulator
+const canvas=document.getElementById('apCanvas');
+const ctx=canvas.getContext('2d');
+let apAnim=null;
+let apProgress=0;
+let isRunning=false;
+
+function resizeCanvas(){canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;}
+
+function getAPVoltage(t){
+  // t: 0..1 normalized time
+  if(t<0.1) return -70; // resting
+  if(t<0.15) return -70+((-55-(-70))*((t-0.1)/0.05)); // toward threshold
+  if(t<0.2) return -55+(40-(-55))*((t-0.15)/0.05); // depolarization
+  if(t<0.35) return 40+((-70-40)*((t-0.2)/0.15)); // repolarization
+  if(t<0.5) return -70+(-80-(-70))*((t-0.35)/0.15); // hyperpolarization
+  if(t<0.65) return -80+(-70-(-80))*((t-0.5)/0.15); // return to resting
+  return -70; // resting
+}
+
+function drawAP(progress){
+  resizeCanvas();
+  const w=canvas.width,h=canvas.height;
+  ctx.clearRect(0,0,w,h);
+
+  // Grid lines
+  ctx.strokeStyle='rgba(46,46,63,0.8)';ctx.lineWidth=1;
+  const levels=[-80,-70,-55,0,40];
+  levels.forEach(v=>{
+    const y=voltToY(v,h);
+    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();
+    ctx.fillStyle='rgba(136,136,168,0.6)';ctx.font='10px sans-serif';
+    ctx.fillText(v+'mV',4,y-2);
+  });
+
+  // Threshold line
+  ctx.strokeStyle='rgba(251,191,36,0.5)';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+  const ty=voltToY(-55,h);
+  ctx.beginPath();ctx.moveTo(0,ty);ctx.lineTo(w,ty);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(251,191,36,0.7)';ctx.font='10px sans-serif';ctx.fillText('阈值',w-36,ty-3);
+
+  if(progress===0){
+    // Just draw resting line
+    ctx.strokeStyle='var(--blue)';ctx.lineWidth=2;
+    const ry=voltToY(-70,h);
+    ctx.beginPath();ctx.moveTo(0,ry);ctx.lineTo(w*0.3,ry);ctx.stroke();
+    document.getElementById('voltageDisplay').textContent='膜电位：−70 mV';
+    return;
+  }
+
+  // Draw AP curve up to progress
+  ctx.strokeStyle='#60a5fa';ctx.lineWidth=2.5;
+  ctx.beginPath();
+  const steps=200;
+  let currentV=-70;
+  for(let i=0;i<=steps;i++){
+    const t=i/steps;
+    if(t>progress) break;
+    const x=(t/1)*w*0.9+w*0.05;
+    const v=getAPVoltage(t);
+    const y=voltToY(v,h);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    if(i===Math.floor(progress*steps)) currentV=v;
+    // color based on phase
+    if(t>0.15&&t<0.25){ctx.strokeStyle='#f87171';}
+    else if(t>0.25&&t<0.45){ctx.strokeStyle='#60a5fa';}
+    else if(t>0.45&&t<0.55){ctx.strokeStyle='#34d399';}
+    else{ctx.strokeStyle='#60a5fa';}
+  }
+  ctx.stroke();
+
+  // Voltage display
+  currentV=Math.round(getAPVoltage(Math.min(progress,1)));
+  document.getElementById('voltageDisplay').textContent=`膜电位：${currentV>0?'+':''}${currentV} mV`;
+}
+
+function voltToY(v,h){
+  const min=-90,max=50;
+  return h-(((v-min)/(max-min))*h*0.8+h*0.1);
+}
+
+function runAP(){
+  if(isRunning) return;
+  isRunning=true;apProgress=0;
+  const start=performance.now();
+  const duration=3000;
+  function step(now){
+    apProgress=Math.min((now-start)/duration,1);
+    drawAP(apProgress);
+    if(apProgress<1) apAnim=requestAnimationFrame(step);
+    else{isRunning=false;apProgress=1;}
+  }
+  apAnim=requestAnimationFrame(step);
+}
+
+function resetAP(){
+  if(apAnim) cancelAnimationFrame(apAnim);
+  isRunning=false;apProgress=0;
+  drawAP(0);
+  document.getElementById('apInfo').textContent='点击「刺激神经元」观看完整动作电位过程，或点击各阶段标签了解详情。';
+  document.getElementById('voltageDisplay').textContent='膜电位：−70 mV';
+}
+
+const phaseInfo={
+  resting:'<strong style="color:var(--muted)">静息期 (−70 mV)</strong><br>Na⁺/K⁺-ATPase泵持续工作：每次泵出3个Na⁺、泵入2个K⁺，耗费大量ATP（约20%的脑能量用于此）。膜内外形成稳定的电化学梯度。',
+  threshold:'<strong style="color:var(--yellow)">阈值点 (−55 mV)</strong><br>当EPSP的累积将膜电位推过阈值，电压门控Na⁺通道的正反馈循环启动：去极化→更多Na⁺通道开放→更多去极化。此点之后无法回头，动作电位必然发生。',
+  depol:'<strong style="color:var(--red)">去极化 (−55 → +40 mV)</strong><br>Na⁺通道大量开放，Na⁺顺浓度梯度大量涌入。膜电位急剧上升，整个过程仅需约0.5ms。到达+40 mV时，Na⁺通道失活。',
+  repol:'<strong style="color:var(--blue)">复极化 (+40 → −70 mV)</strong><br>Na⁺通道失活后，延迟开放的K⁺通道开始大量开放，K⁺顺浓度梯度流出。膜电位迅速回落。',
+  hyper:'<strong style="color:var(--green)">超极化 (−70 → −80 mV)</strong><br>K⁺通道关闭稍有延迟，导致K⁺外流略过量，膜电位短暂低于静息水平（−80 mV）。此期间为相对不应期，需要更强刺激才能再次触发动作电位。'
+};
+
+function showPhase(p){
+  document.querySelectorAll('.phase-badge').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.phase-badge.'+p).classList.add('active');
+  document.getElementById('apInfo').innerHTML=phaseInfo[p];
+}
+
+// Neurotransmitter info
+const ntData={
+  glu:'<strong style="color:var(--green)">谷氨酸 (Glutamate)</strong> — 主要兴奋性递质<br>受体：AMPA（快速离子型）、NMDA（学习/记忆，需Mg²⁺解除封闭）、代谢型<br>NMDA受体是"关联探测器"——突触前+突触后同时激活才开放。LTP的核心机制。<br><em style="color:var(--muted)">过量→兴奋性毒性→中风后神经元死亡；过少→精神分裂症症状（NMDA受体假说）</em>',
+  gaba:'<strong style="color:var(--accent)">GABA (γ-氨基丁酸)</strong> — 主要抑制性递质<br>受体：GABA-A（Cl⁻通道，快速，苯二氮䓬类作用位点）、GABA-B（代谢型，慢速）<br>苯二氮䓬类（安定、氯硝西泮）通过增强GABA-A效率产生镇静效果。酒精也增强GABA-A并抑制NMDA。<br><em style="color:var(--muted)">癫痫=GABA系统功能不足导致异常同步放电</em>',
+  da:'<strong style="color:var(--yellow)">多巴胺 (Dopamine)</strong> — 奖赏/动机调节<br>受体：D1-D5（均为代谢型GPCR）；D1/D5兴奋性，D2/D3/D4抑制性<br>关键回路：腹侧被盖区(VTA)→伏隔核（奖赏预测误差）；黑质→纹状体（运动控制）<br><em style="color:var(--muted)">黑质多巴胺神经元死亡→帕金森症；精神分裂症的D2受体过度活跃假说</em>',
+  '5ht':'<strong style="color:var(--red)">血清素 (Serotonin/5-HT)</strong> — 情绪/冲动调节<br>受体：14种亚型（5-HT1A～5-HT7），大多为GPCR<br>90%的血清素在肠道中！脑内来源：中缝核（Raphe nuclei），广泛投射到整个大脑<br>SSRI（百忧解、左洛复）阻断血清素回收，增加突触间隙浓度。<br><em style="color:var(--muted)">低血清素→攻击性↑、冲动↑（在Sapolsky的攻击章节会详述）</em>',
+  ach:'<strong style="color:var(--teal)">乙酰胆碱 (Acetylcholine)</strong> — 运动/注意/记忆<br>受体：烟碱型（离子通道，快速，神经肌肉接头）、毒蕈碱型（GPCR，慢速，心脏/自主神经）<br>神经肌肉接头的主要递质；基底前脑→海马体/皮层（注意和记忆）<br><em style="color:var(--muted)">阿尔茨海默症早期：基底前脑胆碱能神经元死亡；阿托品阻断M受体</em>',
+  ne:'<strong style="color:var(--blue)">去甲肾上腺素 (Norepinephrine)</strong> — 唤醒/应激<br>受体：α1、α2（突触前自身受体）、β1、β2（均为GPCR）<br>来源：蓝斑（Locus coeruleus）——整个大脑最重要的唤醒系统<br>应激时大量释放，参与战斗-逃跑反应；SNRI类抗抑郁药同时作用于NE和5-HT。<br><em style="color:var(--muted)">β受体阻断剂（普萘洛尔）阻断心脏β1受体降低心率，也可减少创伤记忆的躯体成分</em>'
+};
+
+function showNT(btn,id){
+  document.querySelectorAll('.syn-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('synResult').innerHTML=ntData[id];
+}
+
+window.addEventListener('resize',()=>drawAP(apProgress));
+resizeCanvas();drawAP(0);
+</script>
+</body>
+</html>

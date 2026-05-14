@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L11 神经科学入门 II — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h2{font-size:1.05rem;font-weight:600;margin-bottom:12px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.back:hover{color:var(--text)}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(96,165,250,0.1);border-left:3px solid var(--blue);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.green{background:rgba(52,211,153,0.1);border-left-color:var(--green)}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.purple{background:rgba(167,139,250,0.1);border-left-color:var(--accent)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Brain explorer */
+.brain-explorer{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.brain-svg-wrap{position:relative;width:100%;max-width:420px;margin:0 auto 12px}
+.brain-btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.brain-btn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.8rem;cursor:pointer;transition:all .2s;text-align:left}
+.brain-btn:hover,.brain-btn.active{border-color:var(--blue);color:var(--text);background:rgba(96,165,250,0.1)}
+.brain-btn .region-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.brain-info{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.82rem;min-height:80px}
+.brain-info-title{font-weight:700;margin-bottom:6px;font-size:.9rem}
+/* Layers diagram */
+.layer-stack{display:flex;flex-direction:column;gap:4px;margin:10px 0}
+.layer{padding:10px 14px;border-radius:8px;cursor:pointer;transition:all .2s;border:1px solid transparent}
+.layer:hover{filter:brightness(1.2)}
+.layer-label{font-weight:600;font-size:.85rem}
+.layer-desc{font-size:.78rem;opacity:.8;margin-top:2px}
+/* Pathway demo */
+.pathway-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
+.pathway-steps{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
+.pstep{padding:6px 10px;border-radius:6px;font-size:.78rem;font-weight:600;border:1px solid}
+.parrow{color:var(--muted);font-size:.9rem}
+.pathway-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.pw-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.78rem;cursor:pointer;transition:all .2s}
+.pw-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,0.1)}
+.pathway-result{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.82rem}
+/* Cortex lobes */
+.lobe-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.lobe-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.lobe-name{font-size:.82rem;font-weight:700;margin-bottom:4px}
+.lobe-func{font-size:.76rem;color:var(--muted)}
+/* Case study */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(96,165,250,0.15);color:var(--blue)">L11</span>
+  <span class="badge" style="background:rgba(96,165,250,0.15);color:var(--blue)">神经科学</span>
+  <span class="badge" style="background:rgba(248,113,113,0.15);color:var(--red)">⭐ 核心</span>
+  <h1>神经科学入门 II：大脑结构</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L11 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      大脑不是一个均质的器官，而是由进化上不同年龄的模块拼接而成。理解每个结构的位置和功能，是理解为什么「情绪」和「理性」会冲突的解剖学基础。
+    </div>
+    <p>Sapolsky 用「地质层」类比大脑进化：最古老的脑干控制生存本能，中间的边缘系统处理情绪和记忆，最新的新皮质负责抽象思维。这三层并非和谐共处——它们经常争夺对行为的控制权。</p>
+    <div class="highlight green">
+      <strong>MacLean 的三脑模型（简化版）：</strong>爬虫脑（脑干）→ 哺乳脑（边缘系统）→ 新哺乳脑（新皮质）。虽然过度简化，但有助于理解为什么恐惧杏仁核可以在皮层「想清楚」之前就让你逃跑。
+    </div>
+  </div>
+</div>
+
+<!-- 大脑区域探索器 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧠</span>
+    <span class="sec-title">互动：大脑区域探索器</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="brain-explorer">
+      <h3>点击区域了解功能</h3>
+      <div class="brain-btn-grid">
+        <button class="brain-btn active" onclick="showRegion(this,'cortex')"><span class="region-dot" style="background:#60a5fa"></span>大脑皮层</button>
+        <button class="brain-btn" onclick="showRegion(this,'amygdala')"><span class="region-dot" style="background:#f87171"></span>杏仁核</button>
+        <button class="brain-btn" onclick="showRegion(this,'hippo')"><span class="region-dot" style="background:#34d399"></span>海马体</button>
+        <button class="brain-btn" onclick="showRegion(this,'basal')"><span class="region-dot" style="background:#fbbf24"></span>基底神经节</button>
+        <button class="brain-btn" onclick="showRegion(this,'cereb')"><span class="region-dot" style="background:#a78bfa"></span>小脑</button>
+        <button class="brain-btn" onclick="showRegion(this,'hypo')"><span class="region-dot" style="background:#26c6a8"></span>下丘脑</button>
+        <button class="brain-btn" onclick="showRegion(this,'brain_stem')"><span class="region-dot" style="background:#fb923c"></span>脑干</button>
+        <button class="brain-btn" onclick="showRegion(this,'pfc')"><span class="region-dot" style="background:#818cf8"></span>前额叶皮层</button>
+      </div>
+      <div class="brain-info" id="brainInfo">
+        <div class="brain-info-title" style="color:var(--blue)">大脑皮层 (Cerebral Cortex)</div>
+        约2–4 mm厚的灰质层，展开面积约2,500 cm²（对折塞进颅骨）。约160亿个神经元。分为4叶：额叶（执行功能/运动）、顶叶（躯体感觉/空间）、颞叶（听觉/语言/记忆）、枕叶（视觉）。<br><br>新皮质（Neocortex）有6层细胞结构，是哺乳动物独有，灵长类尤其发达。皮层厚度与社会群体大小正相关（Dunbar数字的神经基础）。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 皮层结构 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🗺️</span>
+    <span class="sec-title">大脑皮层四叶功能图</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="lobe-grid">
+      <div class="lobe-card">
+        <div class="lobe-name" style="color:var(--blue)">额叶 Frontal</div>
+        <div class="lobe-func">执行功能、决策、工作记忆、自我控制（前额叶）；初级运动皮层（运动执行）；布罗卡区（语言产生）</div>
+      </div>
+      <div class="lobe-card">
+        <div class="lobe-name" style="color:var(--green)">顶叶 Parietal</div>
+        <div class="lobe-func">躯体感觉（初级感觉皮层）；空间导航；身体图式；数字处理；多模态整合</div>
+      </div>
+      <div class="lobe-card">
+        <div class="lobe-name" style="color:var(--yellow)">颞叶 Temporal</div>
+        <div class="lobe-func">初级听觉皮层；韦尼克区（语言理解）；面孔识别（梭状回）；海马体（藏于此叶内侧）</div>
+      </div>
+      <div class="lobe-card">
+        <div class="lobe-name" style="color:var(--red)">枕叶 Occipital</div>
+        <div class="lobe-func">初级视觉皮层（V1）及高级视觉区（V2-V5）；腹侧流（物体识别）；背侧流（空间/运动）</div>
+      </div>
+    </div>
+    <div class="highlight yellow">
+      <strong>皮层同侧控制的例外：</strong>小脑控制同侧肢体，而大脑皮层控制对侧肢体（交叉控制）。右半球控制左半身，负责整体模式识别；左半球控制右半身，负责语言和序列分析（大多数人）。
+    </div>
+  </div>
+</div>
+
+<!-- 神经通路 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🔄</span>
+    <span class="sec-title">互动：关键神经通路</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="pathway-demo">
+      <h3>选择一条通路追踪</h3>
+      <div class="pathway-selector">
+        <button class="pw-btn active" onclick="showPW(this,'fear')">恐惧回路</button>
+        <button class="pw-btn" onclick="showPW(this,'reward')">奖赏回路</button>
+        <button class="pw-btn" onclick="showPW(this,'memory')">记忆形成</button>
+        <button class="pw-btn" onclick="showPW(this,'stress')">压力轴</button>
+      </div>
+      <div class="pathway-result" id="pathwayResult">
+        <strong style="color:var(--red)">恐惧回路（低通路 vs. 高通路）</strong><br><br>
+        <div style="margin-bottom:8px">
+          <span style="color:var(--muted);font-size:.78rem">⚡ 低通路（快速，绕过皮层）：</span><br>
+          <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 8px;border-radius:4px;font-size:.78rem;font-weight:600">丘脑</span>
+          <span style="color:var(--muted);margin:0 4px">→</span>
+          <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 8px;border-radius:4px;font-size:.78rem;font-weight:600">杏仁核</span>
+          <span style="color:var(--muted);margin:0 4px">→</span>
+          <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 8px;border-radius:4px;font-size:.78rem;font-weight:600">战斗/逃跑反应</span>
+          <div style="font-size:.75rem;color:var(--muted);margin-top:4px">约12ms；粗糙但快速；LeDoux称之为「低通路」</div>
+        </div>
+        <div>
+          <span style="color:var(--muted);font-size:.78rem">🧠 高通路（慢速，经过皮层评估）：</span><br>
+          <span style="background:rgba(96,165,250,0.15);color:var(--blue);padding:2px 8px;border-radius:4px;font-size:.78rem;font-weight:600">丘脑</span>
+          <span style="color:var(--muted);margin:0 4px">→</span>
+          <span style="background:rgba(96,165,250,0.15);color:var(--blue);padding:2px 8px;border-radius:4px;font-size:.78rem;font-weight:600">感觉皮层</span>
+          <span style="color:var(--muted);margin:0 4px">→</span>
+          <span style="background:rgba(96,165,250,0.15);color:var(--blue);padding:2px 8px;border-radius:4px;font-size:.78rem;font-weight:600">前额叶皮层</span>
+          <span style="color:var(--muted);margin:0 4px">→</span>
+          <span style="background:rgba(96,165,250,0.15);color:var(--blue);padding:2px 8px;border-radius:4px;font-size:.78rem;font-weight:600">杏仁核调节</span>
+          <div style="font-size:.75rem;color:var(--muted);margin-top:4px">约200ms；精确评估；可抑制或增强杏仁核反应</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 大脑层级 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📐</span>
+    <span class="sec-title">大脑层级：从脑干到皮层</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="layer-stack">
+      <div class="layer" style="background:rgba(251,191,36,0.12);border-color:rgba(251,191,36,0.3)">
+        <div class="layer-label" style="color:var(--yellow)">新皮质 (Neocortex) — 最新</div>
+        <div class="layer-desc">抽象思维、语言、计划、道德推理；灵长类尤其发达；约25亿年前出现</div>
+      </div>
+      <div class="layer" style="background:rgba(96,165,250,0.12);border-color:rgba(96,165,250,0.3)">
+        <div class="layer-label" style="color:var(--blue)">边缘系统 (Limbic System) — 中层</div>
+        <div class="layer-desc">杏仁核（情绪）、海马体（记忆）、下丘脑（动机/激素）、扣带回（冲突监控）；哺乳动物共有</div>
+      </div>
+      <div class="layer" style="background:rgba(248,113,113,0.12);border-color:rgba(248,113,113,0.3)">
+        <div class="layer-label" style="color:var(--red)">脑干 (Brainstem) — 最古老</div>
+        <div class="layer-desc">延髓（呼吸/心跳/吞咽）、脑桥（睡眠/觉醒）、中脑（基本感觉运动反射）；所有脊椎动物共有</div>
+      </div>
+    </div>
+    <div class="highlight">
+      <strong>小脑的误解：</strong>小脑不仅做运动协调——它有约690亿个神经元（占全脑70%），近年研究发现它参与时序、预测误差、情绪处理，甚至某些认知任务。Sapolsky 提醒：「永远不要以为某个脑区只做一件事。」
+    </div>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title"><span>🪓</span>菲尼斯·盖吉 (Phineas Gage, 1848)</div>
+      <p style="font-size:.85rem">铁路工人盖吉在爆炸事故中，一根铁棒贯穿颅骨，损毁了腹内侧前额叶皮层（vmPFC）。他奇迹生还，但性格完全改变：从勤劳可靠变为粗鄙无礼、无法做长期计划。神经学家达马西奥（Damasio）重建了他的颅骨，确认损伤在vmPFC——这是社会决策和情绪整合的关键区域。</p>
+      <div class="quote">「盖吉不再是盖吉了。」— 他的朋友们</div>
+    </div>
+    <div class="case">
+      <div class="case-title"><span>🧩</span>H.M.——没有新记忆的男人</div>
+      <p style="font-size:.85rem">Henry Molaison（H.M.）为治疗癫痫，于1953年切除了双侧海马体。术后他的癫痫消失，但无法形成任何新的陈述性记忆（顺行性失忆）。他每天醒来都不记得前一天发生的事，却能学会新的运动技能（程序性记忆完好）。这证明了海马体对情景记忆形成的必要性，以及陈述性记忆和程序性记忆的神经分离。</p>
+    </div>
+    <div class="case">
+      <div class="case-title"><span>😱</span>杏仁核损伤与无恐惧症</div>
+      <p style="font-size:.85rem">Urbach-Wiethe病（一种罕见遗传病）导致双侧杏仁核钙化。患者SM无法感受恐惧：她可以抓蛇、直视蜘蛛、不怕持刀歹徒。然而她对恶心（岛叶介导）和其他情绪正常。关键发现：当向SM的血液中注入CO₂（诱发生理恐慌信号）时，她<em>能</em>感受到恐惧——说明杏仁核处理的是外部威胁信号，而不是所有恐惧的必要条件。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 前额叶皮层专论 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎓</span>
+    <span class="sec-title">前额叶皮层：Sapolsky 最钟爱的脑区</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <p>Sapolsky 在整门课中反复回到前额叶皮层（PFC），称其为「使我们成为人类的脑区」。PFC 是大脑中发育最晚的区域——完全成熟需要到25岁左右。</p>
+    <div class="highlight purple">
+      <strong>PFC 的核心功能：</strong>延迟满足（等待更大奖励）、冲动控制（抑制杏仁核的冲动反应）、道德推理、换位思考（他心理论）、规划未来。
+    </div>
+    <ul>
+      <li><strong>腹内侧PFC (vmPFC)：</strong>情绪整合到决策；损伤→无法利用情绪线索做社会决策（盖吉效应）</li>
+      <li><strong>背外侧PFC (dlPFC)：</strong>工作记忆、认知控制；精神分裂症患者dlPFC激活不足</li>
+      <li><strong>眶额皮层 (OFC)：</strong>奖赏评估、冲动抑制；OCD患者此区过度激活</li>
+    </ul>
+    <div class="highlight yellow">
+      <strong>青少年的神经学解释：</strong>青春期杏仁核已完全发育，PFC 仍在发育中。这解释了为什么青少年情绪强烈、冲动、难以预测风险——不是「态度问题」，而是硬件还没装好。
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l10-deep-dive.html" style="color:var(--muted);margin-right:16px">← L10 神经科学 I</a>
+  <a href="sapolsky-l12-deep-dive.html" style="color:var(--muted)">L12 内分泌学 I →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+const regionData={
+  cortex:{title:'大脑皮层 (Cerebral Cortex)',color:'var(--blue)',desc:'约2–4mm厚的灰质层，展开面积约2,500cm²。约160亿个神经元，6层细胞结构（新皮质）。分4叶：额叶（执行/运动）、顶叶（感觉/空间）、颞叶（听觉/语言）、枕叶（视觉）。灵长类皮层占全脑体积比例极高，沟回极多以塞进颅骨。'},
+  amygdala:{title:'杏仁核 (Amygdala)',color:'var(--red)',desc:'杏仁形，位于颞叶内侧，左右各一。快速处理威胁信号（12ms），在皮层分析之前触发战斗-逃跑反应。也参与恐惧条件化、情绪记忆增强（为什么创伤记忆如此鲜活）、社会信号处理（识别恐惧表情）。PTSD患者杏仁核过度激活且PFC控制减弱。'},
+  hippo:{title:'海马体 (Hippocampus)',color:'var(--green)',desc:'海马形，位于颞叶内侧。陈述性记忆（情景+语义）的门控：新记忆的编码必须经过海马体，之后通过睡眠中的记忆巩固（海马-皮层对话）转移到皮层长期储存。也参与空间导航（位置细胞，网格细胞）。伦敦出租车司机海马体后部体积显著增大（空间记忆的结构可塑性证据）。'},
+  basal:{title:'基底神经节 (Basal Ganglia)',color:'var(--yellow)',desc:'纹状体（尾状核+壳核）+苍白球+黑质的集合体。功能：习惯形成、运动序列自动化（骑车后你不再想每一步）、奖赏预测、行动选择。多巴胺通路的核心靶点：黑质-纹状体通路（运动），VTA-腹侧纹状体/伏隔核通路（奖赏）。帕金森症=黑质多巴胺神经元死亡→纹状体失控→运动障碍。'},
+  cereb:{title:'小脑 (Cerebellum)',color:'var(--accent)',desc:'约690亿个神经元（占全脑70%），高度折叠。经典功能：运动协调、时序、平衡，通过比较运动意图与实际结果来细化运动。现代发现：参与认知时序、预测误差学习、语言节律、甚至情绪处理。小脑损伤不会导致瘫痪，但会使运动笨拙（共济失调）、语言含糊（构音障碍）。'},
+  hypo:{title:'下丘脑 (Hypothalamus)',color:'var(--teal)',desc:'仅花生米大小，却是内分泌和自主神经的总指挥。控制：体温、饥饿/饱足、口渴、性行为、生物钟（视交叉上核/SCN）、情绪唤醒。通过垂体（CRH→ACTH→皮质醇 等轴）调控整个激素系统。攻击行为、亲社会行为、性别行为的关键调节节点——Sapolsky 在后续讲次会大量讨论。'},
+  brain_stem:{title:'脑干 (Brainstem)',color:'#fb923c',desc:'包含延髓（呼吸、心率、血压、呕吐中枢）、脑桥（睡眠-觉醒转换、眼球运动、面部感觉）、中脑（基本视听反射、多巴胺通路起点VTA和黑质）。脑干死亡=临床上的脑死亡（即使皮层保留）。蓝斑（去甲肾上腺素）、中缝核（血清素）均位于脑干，向全脑广播调节信号。'},
+  pfc:{title:'前额叶皮层 (Prefrontal Cortex)',color:'#818cf8',desc:'大脑最晚发育成熟的区域（约25岁）。功能：延迟满足、冲动控制、道德推理、工作记忆、他心理论（换位思考）、计划未来。分区：vmPFC（情绪决策）、dlPFC（认知控制/工作记忆）、OFC（奖赏评估/冲动抑制）、ACC（冲突监控）。PFC抑制杏仁核冲动反应——慢性压力下皮质醇损害PFC树突，导致冲动性增加。'}
+};
+
+function showRegion(btn,id){
+  document.querySelectorAll('.brain-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d=regionData[id];
+  document.getElementById('brainInfo').innerHTML=`<div class="brain-info-title" style="color:${d.color}">${d.title}</div>${d.desc}`;
+}
+
+const pathwayData={
+  fear:`<strong style="color:var(--red)">恐惧回路 (LeDoux, 1996)</strong><br><br>
+    <div style="margin-bottom:8px"><span style="color:var(--muted);font-size:.78rem">⚡ 低通路（~12ms，皮层下）：</span><br>
+    <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">感官输入</span> → <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">丘脑</span> → <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">杏仁核</span> → <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">应激反应</span><br>
+    <em style="color:var(--muted);font-size:.75rem">粗糙快速，宁可错杀；看到「蛇形」就先跳</em></div>
+    <div><span style="color:var(--muted);font-size:.78rem">🧠 高通路（~200ms，皮层参与）：</span><br>
+    <span style="background:rgba(96,165,250,0.15);color:var(--blue);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">丘脑</span> → <span style="background:rgba(96,165,250,0.15);color:var(--blue);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">感觉皮层</span> → <span style="background:rgba(96,165,250,0.15);color:var(--blue);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">PFC评估</span> → <span style="background:rgba(96,165,250,0.15);color:var(--blue);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">调节杏仁核</span><br>
+    <em style="color:var(--muted);font-size:.75rem">「哦，那是根树枝」——PFC抑制杏仁核反应</em></div>`,
+  reward:`<strong style="color:var(--yellow)">奖赏回路 (Mesolimbic Pathway)</strong><br><br>
+    <span style="background:rgba(251,191,36,0.15);color:var(--yellow);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">VTA（腹侧被盖区）</span> →
+    <span style="background:rgba(251,191,36,0.15);color:var(--yellow);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">伏隔核（奖赏预测误差）</span> →
+    <span style="background:rgba(251,191,36,0.15);color:var(--yellow);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">前额叶皮层</span><br><br>
+    VTA多巴胺神经元在「意外奖励」时大量发放；在「预期奖励未出现」时受抑制。这是强化学习的神经基础。上瘾物质（可卡因、海洛因）直接劫持此回路。<br>
+    <em style="color:var(--muted);font-size:.75rem">重要：多巴胺编码的是「期望误差」(RPE)，不是愉悦本身</em>`,
+  memory:`<strong style="color:var(--green)">记忆形成回路</strong><br><br>
+    <span style="background:rgba(52,211,153,0.15);color:var(--green);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">感官皮层</span> →
+    <span style="background:rgba(52,211,153,0.15);color:var(--green);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">内嗅皮层</span> →
+    <span style="background:rgba(52,211,153,0.15);color:var(--green);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">海马体（编码）</span> →
+    <span style="background:rgba(52,211,153,0.15);color:var(--green);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">皮层（长期储存）</span><br><br>
+    睡眠中的「记忆巩固」：海马体在慢波睡眠期重放当日记忆（sharp-wave ripples），与皮层形成对话，逐渐将记忆迁移到皮层长期储存。这是为什么熬夜不睡会严重损害记忆。<br>
+    <em style="color:var(--muted);font-size:.75rem">情绪显著性（杏仁核信号）→ 杏仁核→海马体投射增强编码 → 情绪记忆更鲜活</em>`,
+  stress:`<strong style="color:var(--accent)">HPA应激轴</strong><br><br>
+    <span style="background:rgba(167,139,250,0.15);color:var(--accent);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">应激感知（杏仁核/PFC）</span> →
+    <span style="background:rgba(167,139,250,0.15);color:var(--accent);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">下丘脑（CRH释放）</span> →
+    <span style="background:rgba(167,139,250,0.15);color:var(--accent);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">垂体前叶（ACTH释放）</span> →
+    <span style="background:rgba(167,139,250,0.15);color:var(--accent);padding:2px 6px;border-radius:4px;font-size:.77rem;font-weight:600">肾上腺皮质（皮质醇分泌）</span><br><br>
+    皮质醇反馈：海马体有大量糖皮质激素受体，正常情况下负反馈抑制HPA轴。慢性应激→皮质醇持续高水平→损害海马体神经元→负反馈减弱→更多皮质醇→恶性循环。这是Sapolsky「斑马为何不得溃疡」的核心机制。`
+};
+
+function showPW(btn,id){
+  document.querySelectorAll('.pw-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pathwayResult').innerHTML=pathwayData[id];
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L19 攻击性与共情 — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(52,211,153,0.1);border-left:3px solid var(--green);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+.highlight.purple{background:rgba(167,139,250,0.1);border-left-color:var(--accent)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Empathy types */
+.empathy-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.emp-tab{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.79rem;cursor:pointer;transition:all .2s}
+.emp-tab.active{border-color:var(--green);color:var(--green);background:rgba(52,211,153,0.1)}
+.emp-result{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.82rem;min-height:80px;margin-bottom:10px}
+/* Competition types */
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.comp-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.comp-title{font-size:.82rem;font-weight:700;margin-bottom:4px}
+.comp-desc{font-size:.76rem;color:var(--muted)}
+/* Violence decline */
+.decline-timeline{margin:10px 0}
+.timeline-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(46,46,63,0.4)}
+.timeline-item:last-child{border-bottom:none}
+.timeline-year{font-size:.78rem;font-weight:700;color:var(--accent);width:60px;flex-shrink:0}
+.timeline-text{font-size:.8rem;color:var(--muted)}
+/* Case */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(52,211,153,0.15);color:var(--green)">L19</span>
+  <span class="badge" style="background:rgba(52,211,153,0.15);color:var(--green)">攻击性·共情</span>
+  <h1>攻击性 III：共情、竞争与暴力的长期趋势</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L19 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      共情不是攻击性的对立面——它是一把双刃剑。对内群体的强烈共情，往往强化了对外群体的攻击性。真正减少暴力的，是扩展「我们」的边界，而这是文化和认知的产物，不是激素的产物。
+    </div>
+    <p>Sapolsky 在这讲收尾攻击性系列，引入了Steven Pinker 的《暴力的衰落》论点（人类历史上暴力的长期下降趋势），并与其他历史学家的反驳对话。他的结论：乐观主义有神经生物学基础，但不应自满。</p>
+  </div>
+</div>
+
+<!-- 共情的神经生物学 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🤗</span>
+    <span class="sec-title">互动：共情的多维度神经生物学</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="empathy-tabs">
+      <button class="emp-tab active" onclick="showEmp(this,'affective')">情感共情</button>
+      <button class="emp-tab" onclick="showEmp(this,'cognitive')">认知共情</button>
+      <button class="emp-tab" onclick="showEmp(this,'mirror')">镜像神经元</button>
+      <button class="emp-tab" onclick="showEmp(this,'ingroup')">内群体偏向</button>
+      <button class="emp-tab" onclick="showEmp(this,'fatigue')">共情疲劳</button>
+    </div>
+    <div class="emp-result" id="empResult">
+      <strong style="color:var(--green)">情感共情（Affective Empathy）</strong><br>
+      看到他人痛苦时，自动激活自身的疼痛矩阵（前扣带皮层ACC + 前岛叶insula）。Singer et al. (2004, Science) fMRI：受试者被电击时激活的脑区，在看到伴侣被电击时同样激活（减弱版）。这是「感同身受」的神经基础——不是比喻，是真实的共享神经状态。
+    </div>
+    <div class="highlight yellow">
+      <strong>共情的黑暗面：</strong>Paul Bloom《反对共情》：情感共情是「聚光灯」——强烈关注可识别的个体（一个溺水儿童）而忽视统计数字（每年100万死亡）。情感共情可能导致：① 内群体偏向（更心疼「像我们」的人）；② 决策质量下降（被情绪绑架）；③ 共情疲劳（消耗性）。Sapolsky 认为：我们需要认知共情 + 理性的慈悲，而不单靠情感共情。
+    </div>
+  </div>
+</div>
+
+<!-- 竞争 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🏆</span>
+    <span class="sec-title">竞争：非零和视角</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-title" style="color:var(--red)">零和竞争</div>
+        <div class="comp-desc">你的收益=我的损失；稀缺资源分配；地位等级（只有一个第一名）；激活外群体攻击性</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-title" style="color:var(--green)">非零和竞争</div>
+        <div class="comp-desc">共同利益；创新+贸易；通过合作双方都获益；进化上：互利共生比零和博弈更有效</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-title" style="color:var(--yellow)">内在竞争</div>
+        <div class="comp-desc">与昨天的自己比较；自我超越而非打败他人；减少嫉妒和社会比较压力</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-title" style="color:var(--blue)">间接互惠</div>
+        <div class="comp-desc">声誉机制；帮助他人因为第三方看到；大型匿名社会中的合作机制</div>
+      </div>
+    </div>
+    <p style="font-size:.85rem">Sapolsky 强调：人类有能力创造制度来把零和博弈转变为非零和博弈。这不是否认竞争本能，而是用文化架构重新定向竞争——这正是大脑前额叶皮层进化出的用途。</p>
+  </div>
+</div>
+
+<!-- 暴力的长期下降 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📉</span>
+    <span class="sec-title">暴力的历史性衰落（Pinker论点）</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <p>Steven Pinker 在《人性中的善良天使》中论证：以比率（非绝对数）衡量，人类历史上的暴力死亡率显著下降。</p>
+    <div class="decline-timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">史前</div>
+        <div class="timeline-text">考古骨骼证据：暴力死亡率约10–15%；部落战争持续性高</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">中世纪</div>
+        <div class="timeline-text">欧洲谋杀率约每10万人30–40人/年（今日约1–2人）</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">20世纪</div>
+        <div class="timeline-text">两次世界大战+大屠杀——绝对数字惊人，但人口比率低于中世纪</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1945后</div>
+        <div class="timeline-text">国家间战争显著减少；「长和平」（Gaddis）；国际机构约束</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">现代</div>
+        <div class="timeline-text">全球暴力犯罪率大多下降；酷刑、公开处决被视为不文明</div>
+      </div>
+    </div>
+    <div class="highlight red">
+      <strong>反驳与修正（Mann, Herman 等）：</strong>① 20世纪绝对死亡数字（~1.8亿）不容低估；② 殖民主义暴力被低估；③ 「和平」的选择性记录；④ 气候变化可能逆转趋势。Sapolsky 的立场：Pinker 的核心趋势可能是真实的，但不是不可逆的，也不是「我们天生越来越好」——而是制度、文化、识字率和互联互通改变了攻击性的表达环境。
+    </div>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">🐒 Forest Troop：可以改变的文化</div>
+      <p style="font-size:.85rem">Sapolsky 追踪研究30年的肯尼亚狒狒群「Forest Troop」：1980年代，群内最具攻击性的雄性（高等级者）因进食被结核病杀死（垃圾堆肉），仅存温顺型雄性。结果：整个群体文化改变——皮质醇水平下降、攻击行为减少、雄雌间理毛增加。20年后，新加入的雄性（来自高攻击性群体）也被「社会化」为更温和的行为模式。这证明：社会文化是可以改变的，即使在非人灵长类中，即使没有基因改变。</p>
+      <div class="quote">「如果狒狒可以改变文化，也许我们也可以。」— Sapolsky</div>
+    </div>
+    <div class="case">
+      <div class="case-title">🎮 暴力视频游戏研究的分歧</div>
+      <p style="font-size:.85rem">meta分析（Anderson, 2010）：暴力视频游戏 → 攻击性思维/行为↑，亲社会行为↓，共情↓。反驳（Ferguson, 2015）：选择性出版偏差，效应量被夸大；大量比较研究（跨国游戏使用率 vs 犯罪率）无相关甚至负相关（日本例外）。Sapolsky 的结论：效应可能存在但极小；关键在于预存的攻击性倾向（敏感化 vs 脱敏化的个体差异）和时间使用的机会成本，而非游戏内容本身。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">🤝 接触假说（Allport, 1954）</div>
+      <p style="font-size:.85rem">减少群际攻击性的最有效心理学干预之一：平等地位接触 + 共同目标 + 制度支持。Pettigrew & Tropp (2006) 元分析：200+研究，跨群体接触与偏见减少有可靠关联（r≈−0.22）。神经机制：接触→去人化的个人化化→杏仁核对外群体面孔的反应性↓（Phelps et al.）；想象接触也有类似效果（但较小）。这是改变攻击性最有证据支持的方法之一——不通过改变基因或激素，而是改变社会结构。</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l18-deep-dive.html" style="color:var(--muted);margin-right:16px">← L18 攻击性 II</a>
+  <a href="sapolsky-l20-deep-dive.html" style="color:var(--muted)">L20 混沌与还原论 →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+const empData={
+  affective:'<strong style="color:var(--green)">情感共情（Affective Empathy）</strong><br>自动化、快速、不需意图；看到他人痛苦→激活自身疼痛矩阵（ACC+前岛叶）。Singer et al. (2004) fMRI验证。是共情的「感受」部分。问题：消耗性（共情疲劳），内群体偏向强，容易被可识别的个体「绑架」。',
+  cognitive:'<strong style="color:var(--blue)">认知共情（Cognitive Empathy）</strong><br>有意识地理解他人的思维状态（他心理论, Theory of Mind）；需要前额叶参与（颞顶联合区TPJ, mPFC）；自闭症谱系认知共情减弱（但情感共情可能完整甚至增强）。Bloom 推荐：用认知共情 + 理性慈悲（rational compassion）补充情感共情的局限。',
+  mirror:'<strong style="color:var(--accent)">镜像神经元系统（MNS）</strong><br>Rizzolatti (1992) 在猴子F5区发现：执行动作时激活的神经元，在观察他人做同样动作时也激活。人类MNS：下额前回（Broca区附近）+ 下顶叶。最初被过度炒作（「同理心神经元」、「世界上最重要的神经元」）。修正：① 人类MNS直接功能更多是动作理解/预测；② 共情涉及的是分布式网络，不只是MNS；③ 情感共情的神经基础主要在前岛叶和ACC。',
+  ingroup:'<strong style="color:var(--yellow)">共情的内群体偏向</strong><br>Avenanti et al. (2010)：观看内群体成员被针刺时，运动皮层（镜像系统）抑制反应更强；外群体减弱。Bruneau & Saxe：以色列人对巴勒斯坦人的共情越少，支持对其使用暴力越强。神经水平：外群体面孔触发杏仁核激活 + 内侧前额叶去激活（「非人化」）。这是最重要的发现：共情本身携带了加剧群际冲突的机制。',
+  fatigue:'<strong style="color:var(--red)">共情疲劳（Compassion Fatigue）</strong><br>护士、救援工作者、社工的职业风险：过度情感共情→自主神经耗竭→职业倦怠、抑郁、继发性创伤。神经层面：持续激活岛叶和ACC而没有有效的调节系统。解决方案（Klimecki等）：培养「慈悲」（compassion，关心他人但不被情绪淹没）而非情感共情——神经上激活的是不同回路（内侧眶额皮层+纹状体），更可持续。'
+};
+
+function showEmp(btn,id){
+  document.querySelectorAll('.emp-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('empResult').innerHTML=empData[id];
+}
+</script>
+</body>
+</html>

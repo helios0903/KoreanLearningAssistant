@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L25 个体差异 — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(251,191,36,0.1);border-left:3px solid var(--yellow);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.green{background:rgba(52,211,153,0.1);border-left-color:var(--green)}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+.highlight.purple{background:rgba(167,139,250,0.1);border-left-color:var(--accent)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Big five demo */
+.bigfive-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.trait-rows{display:flex;flex-direction:column;gap:6px}
+.trait-row{display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 8px;border-radius:6px;transition:all .2s}
+.trait-row:hover,.trait-row.active{background:var(--bg)}
+.trait-label{width:100px;font-size:.8rem;font-weight:600;flex-shrink:0}
+.trait-bar-bg{flex:1;background:var(--card);border-radius:4px;height:14px;overflow:hidden;border:1px solid var(--border)}
+.trait-bar-fill{height:100%;border-radius:4px;transition:width .3s}
+.trait-pct{width:36px;font-size:.76rem;color:var(--muted);text-align:right}
+.trait-info{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.82rem;margin-top:8px;min-height:52px}
+/* IQ debate */
+.iq-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.iq-tab{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.79rem;cursor:pointer;transition:all .2s}
+.iq-tab.active{border-color:var(--yellow);color:var(--yellow);background:rgba(251,191,36,0.1)}
+.iq-result{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.82rem;min-height:80px}
+/* Final message */
+.final-box{background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(52,211,153,0.1));border:1px solid rgba(167,139,250,0.3);border-radius:12px;padding:20px;margin:10px 0;text-align:center}
+.final-title{font-size:1.1rem;font-weight:700;margin-bottom:10px;color:var(--accent)}
+.final-text{font-size:.88rem;line-height:1.8}
+/* Case */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(251,191,36,0.15);color:var(--yellow)">L25</span>
+  <span class="badge" style="background:rgba(251,191,36,0.15);color:var(--yellow)">个体差异</span>
+  <span class="badge" style="background:rgba(52,211,153,0.15);color:var(--green)">终讲</span>
+  <h1>个体差异与课程总结</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L25 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张（终讲）</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      人与人之间的差异——智力、人格、情绪反应性——来自遗传、发育、经历的复杂互作，没有单一决定因素，也没有固定不变的「本性」。整门课的核心信息：理解人类行为需要同时把握所有层次，并对简化论保持警惕。
+    </div>
+    <p>Sapolsky 的结语：这门课最重要的教训不是任何具体知识点，而是一种<strong>思维方式</strong>——看到任何行为时，同时问：「现在发生了什么？」「一小时前发生了什么？」「童年发生了什么？」「进化上发生了什么？」四个问题的答案都真实，都不完整。</p>
+  </div>
+</div>
+
+<!-- 大五人格 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎭</span>
+    <span class="sec-title">互动：大五人格特质的神经生物学</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="bigfive-demo">
+      <h3>点击特质了解其神经生物学基础</h3>
+      <div class="trait-rows">
+        <div class="trait-row" onclick="showTrait(this,'O')">
+          <div class="trait-label" style="color:var(--accent)">开放性 O</div>
+          <div class="trait-bar-bg"><div class="trait-bar-fill" style="width:72%;background:var(--accent)"></div></div>
+          <div class="trait-pct">72%</div>
+        </div>
+        <div class="trait-row" onclick="showTrait(this,'C')">
+          <div class="trait-label" style="color:var(--green)">尽责性 C</div>
+          <div class="trait-bar-bg"><div class="trait-bar-fill" style="width:60%;background:var(--green)"></div></div>
+          <div class="trait-pct">60%</div>
+        </div>
+        <div class="trait-row" onclick="showTrait(this,'E')">
+          <div class="trait-label" style="color:var(--yellow)">外向性 E</div>
+          <div class="trait-bar-bg"><div class="trait-bar-fill" style="width:55%;background:var(--yellow)"></div></div>
+          <div class="trait-pct">55%</div>
+        </div>
+        <div class="trait-row" onclick="showTrait(this,'A')">
+          <div class="trait-label" style="color:var(--teal)">宜人性 A</div>
+          <div class="trait-bar-bg"><div class="trait-bar-fill" style="width:42%;background:var(--teal)"></div></div>
+          <div class="trait-pct">42%</div>
+        </div>
+        <div class="trait-row" onclick="showTrait(this,'N')">
+          <div class="trait-label" style="color:var(--red)">神经质 N</div>
+          <div class="trait-bar-bg"><div class="trait-bar-fill" style="width:48%;background:var(--red)"></div></div>
+          <div class="trait-pct">48%</div>
+        </div>
+      </div>
+      <p style="font-size:.72rem;color:var(--muted);margin-top:6px">条形宽度=遗传度估计值（行为遗传学双胞胎研究）</p>
+      <div class="trait-info" id="traitInfo">点击任意特质查看其神经生物学基础和稳定性证据</div>
+    </div>
+  </div>
+</div>
+
+<!-- 智力 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧪</span>
+    <span class="sec-title">互动：智力差异——什么可以改变？</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="iq-tabs">
+      <button class="iq-tab active" onclick="showIQ(this,'herit')">遗传度</button>
+      <button class="iq-tab" onclick="showIQ(this,'environ')">环境因素</button>
+      <button class="iq-tab" onclick="showIQ(this,'malleability')">可塑性</button>
+      <button class="iq-tab" onclick="showIQ(this,'race')">种族差异争议</button>
+    </div>
+    <div class="iq-result" id="iqResult">
+      <strong style="color:var(--yellow)">智力的遗传度</strong><br>
+      儿童期IQ遗传度约40–50%；成年期升至60–80%（基因-环境相关：高智力基因型更容易获得好的教育环境）。遗传度是群体统计概念，不预测个体可塑性。遗传度高不等于无法改变——身高遗传度80%，但每代人平均身高随营养改善而变化。
+    </div>
+  </div>
+</div>
+
+<!-- 课程总结 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🏁</span>
+    <span class="sec-title">课程总体框架：Sapolsky的四维分析法</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <p>Sapolsky 的整个课程可以总结为：面对任何行为，同时在四个时间维度上追问原因：</p>
+    <div style="display:flex;flex-direction:column;gap:6px;margin:10px 0">
+      <div style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:10px">
+        <div style="font-weight:700;color:var(--red);font-size:.88rem">⚡ 秒级：当下神经科学</div>
+        <div style="font-size:.8rem;color:var(--muted);margin-top:3px">此刻杏仁核激活了吗？多巴胺水平如何？前额叶皮层在做什么？</div>
+      </div>
+      <div style="background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);border-radius:8px;padding:10px">
+        <div style="font-weight:700;color:var(--yellow);font-size:.88rem">🕐 小时到天：激素</div>
+        <div style="font-size:.8rem;color:var(--muted);margin-top:3px">皮质醇水平如何？睾酮昨天经历了什么？血糖状态？睡眠质量？</div>
+      </div>
+      <div style="background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.3);border-radius:8px;padding:10px">
+        <div style="font-weight:700;color:var(--blue);font-size:.88rem">🌱 数年到十数年：发育经历</div>
+        <div style="font-size:.8rem;color:var(--muted);margin-top:3px">童年创伤？安全依恋？早期激素暴露？语言学习？社会化环境？</div>
+      </div>
+      <div style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:8px;padding:10px">
+        <div style="font-weight:700;color:var(--green);font-size:.88rem">🦕 数百万年：进化</div>
+        <div style="font-size:.8rem;color:var(--muted);margin-top:3px">这个行为的适应性价值？在我们的进化环境（EEA）中有何功能？基因频率如何被选择？</div>
+      </div>
+    </div>
+    <div class="highlight purple">
+      <strong>Sapolsky 的最终立场：</strong>这四个层次的分析不会汇聚成一个整洁的答案——它们经常矛盾、经常不完整。但这就是人类行为的本质。寻找单一解释的人（「都是基因的错」或「都是文化的错」）将永远错过真相。这门课教给你的，是<em>学会忍受这种不整洁</em>，同时继续寻找每个层次上真实存在的模式。
+    </div>
+  </div>
+</div>
+
+<!-- 最终留言 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">💡</span>
+    <span class="sec-title">Sapolsky 的最终留言</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="final-box">
+      <div class="final-title">🌿 从理解到希望</div>
+      <div class="final-text">
+        理解行为的生物学基础，不是为了给人贴标签或免除责任，而是为了<strong>更有效地改变我们想改变的东西</strong>。<br><br>
+        了解铅中毒才能制定减铅政策；了解创伤的神经生物学才能设计有效干预；了解皮质醇系统才能认识不平等的身体代价；了解道德脱离机制才能设计抵抗它的制度。<br><br>
+        <em style="color:var(--muted)">「我们是非常特别的动物，我们知道我们的生物性，而这个知识让我们有机会超越它。」</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">最终案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">🐒 Sapolsky 的狒狒与人类的差别</div>
+      <p style="font-size:.85rem">经过30年的研究，Sapolsky 认为：狒狒受到激素和神经化学的高度驱动，在个体层面几乎没有调整的余地。人类也有这些生物学约束，但有一个关键区别：人类可以建立制度、文化和规范，把生物冲动「外包」给社会结构来管理。没有人能靠意志力永远压制愤怒，但一个社会可以建立法律让愤怒的人无法轻易获取武器。这就是为什么Sapolsky既是神经生物学决定论者，又是政治改革的积极支持者。</p>
+      <div class="quote">「我们是唯一能够想象不同世界并付诸行动的动物。我们受进化束缚，但不是进化的囚犯。」— Sapolsky</div>
+    </div>
+    <div class="case">
+      <div class="case-title">📊 Flynn效应：智商的历史性上升</div>
+      <p style="font-size:.85rem">1980年James Flynn发现：过去100年间，西方国家平均IQ分数每十年上升约3分（总计约30分）。这是纯粹的环境效应——基因不可能在100年内改变这么多。可能的原因：营养改善（碘缺乏症减少）、教育普及（抽象思维练习）、环境污染减少（铅暴露降低）、测试文化的普及（更习惯于「假设性」抽象问题）。Flynn效应是「智力可以通过环境改变」的最有力证据——无论遗传度有多高。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">🏅 成长型思维的神经生物学（Dweck + Sapolsky）</div>
+      <p style="font-size:.85rem">Carol Dweck 的成长型思维研究：相信智力可以发展（成长型）vs. 固定不变（固定型）的儿童，在面对挑战时表现出不同的行为模式和神经反应（EEG P300差异）。固定型思维激活「回避失败」动机系统；成长型思维激活「接近挑战」动机系统。Sapolsky 的补充：这两种思维模式本身有一定的遗传基础（气质），但也高度可塑——教育和经历可以改变它们，从而改变神经回路激活模式。这是本课的完美结尾：生物学设定了可能性的边界，而文化、教育和有意识的干预决定了我们在这个边界内走多远。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 整个课程回顾 -->
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px">
+  <h3 style="margin-bottom:12px">📖 所有25讲 · 完整深度拆解</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:.78rem">
+    <a href="sapolsky-l01-deep-dive.html" style="color:var(--muted);padding:4px 0">L01 行为进化基础</a>
+    <a href="sapolsky-l02-deep-dive.html" style="color:var(--muted);padding:4px 0">L02 行为遗传学 I</a>
+    <a href="sapolsky-l03-deep-dive.html" style="color:var(--muted);padding:4px 0">L03 行为遗传学 II</a>
+    <a href="sapolsky-l04-deep-dive.html" style="color:var(--muted);padding:4px 0">L04 进化博弈论</a>
+    <a href="sapolsky-l05-deep-dive.html" style="color:var(--muted);padding:4px 0">L05 分子遗传学</a>
+    <a href="sapolsky-l06-deep-dive.html" style="color:var(--muted);padding:4px 0">L06 行为遗传学 III</a>
+    <a href="sapolsky-l07-deep-dive.html" style="color:var(--muted);padding:4px 0">L07 行为遗传学 II</a>
+    <a href="sapolsky-l08-deep-dive.html" style="color:var(--muted);padding:4px 0">L08 亲属识别</a>
+    <a href="sapolsky-l09-deep-dive.html" style="color:var(--muted);padding:4px 0">L09 动物行为学</a>
+    <a href="sapolsky-l10-deep-dive.html" style="color:var(--muted);padding:4px 0">L10 神经科学 I</a>
+    <a href="sapolsky-l11-deep-dive.html" style="color:var(--muted);padding:4px 0">L11 神经科学 II</a>
+    <a href="sapolsky-l12-deep-dive.html" style="color:var(--muted);padding:4px 0">L12 内分泌学 I</a>
+    <a href="sapolsky-l13-deep-dive.html" style="color:var(--muted);padding:4px 0">L13 内分泌学 II</a>
+    <a href="sapolsky-l14-deep-dive.html" style="color:var(--muted);padding:4px 0">L14 边缘系统</a>
+    <a href="sapolsky-l15-deep-dive.html" style="color:var(--muted);padding:4px 0">L15 性行为 I</a>
+    <a href="sapolsky-l16-deep-dive.html" style="color:var(--muted);padding:4px 0">L16 性行为 II</a>
+    <a href="sapolsky-l17-deep-dive.html" style="color:var(--muted);padding:4px 0">L17 攻击性 I</a>
+    <a href="sapolsky-l18-deep-dive.html" style="color:var(--muted);padding:4px 0">L18 攻击性 II</a>
+    <a href="sapolsky-l19-deep-dive.html" style="color:var(--muted);padding:4px 0">L19 攻击性 III</a>
+    <a href="sapolsky-l20-deep-dive.html" style="color:var(--muted);padding:4px 0">L20 混沌与还原论</a>
+    <a href="sapolsky-l21-deep-dive.html" style="color:var(--muted);padding:4px 0">L21 涌现 I</a>
+    <a href="sapolsky-l22-deep-dive.html" style="color:var(--muted);padding:4px 0">L22 涌现 II</a>
+    <a href="sapolsky-l23-deep-dive.html" style="color:var(--muted);padding:4px 0">L23 语言</a>
+    <a href="sapolsky-l24-deep-dive.html" style="color:var(--muted);padding:4px 0">L24 精神分裂症</a>
+    <a href="sapolsky-l25-deep-dive.html" style="color:var(--accent);padding:4px 0;font-weight:600">L25 个体差异（当前）</a>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l24-deep-dive.html" style="color:var(--muted);margin-right:16px">← L24 精神分裂症</a>
+  <a href="index.html" style="color:var(--accent)">↑ 返回课程列表</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+const traitData={
+  O:'<strong style="color:var(--accent)">开放性（Openness）— 遗传度~72%</strong><br>神经生物学：多巴胺系统（尤其D4受体，DRD4 7R等位基因相关）；默认模式网络活跃度；前额叶-杏仁核连接强度。高开放性者：新奇刺激的多巴胺奖赏反应更强；默认模式网络更活跃（联想思维）。在黑猩猩中也发现类似好奇心个体差异，且有遗传基础。稳定性：成年后相对稳定，但可被重大生活事件和精神活性物质（如裸盖菇素，psilocybin）短期改变。',
+  C:'<strong style="color:var(--green)">尽责性（Conscientiousness）— 遗传度~60%</strong><br>神经生物学：前额叶皮层（冲动控制）；血清素系统（延迟满足）；背侧纹状体（习惯形成）。高尽责性者：PFC-杏仁核调控更强；行为激活/抑制系统（BAS/BIS）更偏向抑制。是健康行为（运动、饮食、不吸烟）的最强人格预测因子。随年龄增长略有上升（成熟效应）。',
+  E:'<strong style="color:var(--yellow)">外向性（Extraversion）— 遗传度~55%</strong><br>Eysenck假说：内向者皮层唤醒基线更高（优化刺激水平不同）。现代神经科学：外向性与多巴胺能奖赏敏感性正相关（BAS反应性强）；杏仁核对积极刺激的反应性高。外向者在社交互动中多巴胺/血清素释放更多，维持最优唤醒水平需要更多外部刺激。',
+  A:'<strong style="color:var(--teal)">宜人性（Agreeableness）— 遗传度~42%</strong><br>神经生物学：催产素/加压素系统；杏仁核对社会威胁的反应性（低宜人性→杏仁核反应↑）；前扣带回（冲突监控/共情）。低宜人性与黑暗三合会人格（自恋、马基雅维利主义、精神病态）相关，这些有遗传基础。高宜人性与COMT val/met多态性相关（影响前额叶DA代谢）。',
+  N:'<strong style="color:var(--red)">神经质（Neuroticism）— 遗传度~48%</strong><br>神经生物学：杏仁核对负面刺激的反应性；血清素转运体基因（5-HTTLPR，short等位基因→杏仁核过度反应）；HPA轴反应性。高神经质者：负面事件的杏仁核激活更强更持久；血清素系统调节情绪的效率更低。是抑郁、焦虑的最强人格风险因子。可通过认知行为疗法、SSRI和正念练习降低（但不会消失）。'
+};
+
+function showTrait(el,id){
+  document.querySelectorAll('.trait-row').forEach(r=>r.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('traitInfo').innerHTML=traitData[id];
+}
+
+const iqData={
+  herit:'<strong style="color:var(--yellow)">智力的遗传度</strong><br>儿童期~40–50%；成年期~60–80%（基因-环境相关效应：高智力基因型更容易获得好的学习环境，放大了基因效应）。遗传度是群体统计概念，不预测个体可塑性。身高遗传度~80%，但100年间平均身高增加约10cm（环境效应）。',
+  environ:'<strong style="color:var(--green)">环境对智力的影响</strong><br>铅中毒：血铅每升高10μg/dL，IQ下降约3–5分。碘缺乏：严重碘缺乏地区补碘后，平均IQ上升约10–20分。早期教育干预（Perry Preschool Project）：3岁前高质量教育→成年后IQ、学历、收入均显著提高。营养：孕期叶酸、omega-3。慢性压力（贫困）：长期皮质醇↑→海马体和PFC发育受损→认知功能下降。',
+  malleability:'<strong style="color:var(--teal)">智力的可塑性（乐观视角）</strong><br>Flynn效应（每10年+3分）是最有力的环境可塑性证据。双语经历：维护两套语言系统→执行控制能力↑（Bialystok研究，争议中）。工作记忆训练（n-back任务）：工作记忆可提升，但对流体智力的迁移效果有争议。睡眠优化：睡眠剥夺临时降低认知能力，规律睡眠恢复后改善。结论：IQ不是固定的——在有利环境下，任何人的认知能力都有提升空间。',
+  race:'<strong style="color:var(--red)">种族与IQ差异——政治雷区，科学共识清晰</strong><br>事实：某些测量中存在群体间平均分差异。但：① 群体间差异远小于群体内差异；② 差异会随环境改善消失（Flynn效应在所有群体中同等有效）；③ 差异的成因几乎可以完全由社会经济因素解释（种族主义压力、教育资源、铅暴露、医疗）；④ 没有遗传机制的直接证据；⑤ 「种族」本身是社会建构，遗传学上人类群体间遗传差异极小。Sapolsky 的立场：用遗传解释种族IQ差异，是最糟糕的科学：相关性被误读为因果，混淆变量未控制，意识形态先行。'
+};
+
+function showIQ(btn,id){
+  document.querySelectorAll('.iq-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('iqResult').innerHTML=iqData[id];
+}
+</script>
+</body>
+</html>

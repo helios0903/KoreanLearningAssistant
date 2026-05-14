@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L21 涌现与复杂性 I — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(52,211,153,0.1);border-left:3px solid var(--green);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+.highlight.purple{background:rgba(167,139,250,0.1);border-left-color:var(--accent)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Cellular automata demo */
+.ca-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.ca-canvas-wrap{width:100%;height:140px;background:#0a0a10;border-radius:8px;overflow:hidden;margin-bottom:10px}
+canvas#caCanvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+.ca-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ca-btn{padding:7px 14px;border-radius:7px;border:none;font-size:.8rem;font-weight:600;cursor:pointer}
+.ca-btn.primary{background:rgba(52,211,153,0.2);color:var(--green);border:1px solid rgba(52,211,153,0.4)}
+.ca-btn.secondary{background:rgba(136,136,168,0.1);color:var(--muted);border:1px solid var(--border)}
+.ca-rule-select{background:var(--card);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:6px;font-size:.78rem}
+/* Emergence examples */
+.emerge-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.emerge-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.emerge-title{font-size:.82rem;font-weight:700;margin-bottom:4px}
+.emerge-parts{font-size:.75rem;color:var(--muted);margin-bottom:4px}
+.emerge-property{font-size:.76rem;color:var(--green)}
+/* Case */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(52,211,153,0.15);color:var(--green)">L21</span>
+  <span class="badge" style="background:rgba(52,211,153,0.15);color:var(--green)">复杂性</span>
+  <h1>涌现与复杂性 I</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L21 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      「整体大于部分之和」——这不是诗意的比喻，而是科学事实。涌现性质（意识、语言、社会行为）无法从组成部分的属性中直接推导出来，需要在更高层次上描述和理解。
+    </div>
+    <p>Sapolsky 用这讲回应了还原论的局限：并不是说还原论是错的，而是说某些最重要的属性只在特定的组织层次上才「存在」。水的湿润性无法从单个H₂O分子描述，意识无法从单个神经元描述。</p>
+  </div>
+</div>
+
+<!-- 元胞自动机 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🔲</span>
+    <span class="sec-title">互动：元胞自动机——简单规则产生复杂行为</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="ca-demo">
+      <h3>一维元胞自动机（Wolfram）</h3>
+      <div class="ca-canvas-wrap">
+        <canvas id="caCanvas"></canvas>
+      </div>
+      <div class="ca-controls">
+        <button class="ca-btn primary" onclick="runCA()">▶ 生成</button>
+        <button class="ca-btn secondary" onclick="resetCA()">↺ 重置</button>
+        <select class="ca-rule-select" id="caRule" onchange="resetCA()">
+          <option value="110">规则110（图灵完备）</option>
+          <option value="30">规则30（混沌）</option>
+          <option value="90">规则90（分形）</option>
+          <option value="184">规则184（交通流）</option>
+        </select>
+      </div>
+      <p style="font-size:.76rem;color:var(--muted);margin-top:8px">每个细胞只看左邻、自身、右邻三个格的状态（3位=8种情况），得到一个8位规则——就这么简单的规则产生了以上复杂图案。</p>
+    </div>
+    <div class="highlight">
+      <strong>Conway 生命游戏（Game of Life）：</strong>四条规则（活细胞<2邻居死亡；2-3邻居存活；>3邻居死亡；死细胞=3邻居复活）→ 可以产生：稳定结构、振荡器、「滑翔机」（自我移动）、甚至图灵完备的计算机。这就是涌现：简单规则，无限复杂性。
+    </div>
+  </div>
+</div>
+
+<!-- 涌现例子 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">✨</span>
+    <span class="sec-title">涌现的层次：从粒子到意识</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="emerge-grid">
+      <div class="emerge-card">
+        <div class="emerge-title" style="color:var(--blue)">水的湿润性</div>
+        <div class="emerge-parts">组成：H₂O分子（单个无湿感）</div>
+        <div class="emerge-property">→ 涌现：液态流动性、表面张力、湿润感</div>
+      </div>
+      <div class="emerge-card">
+        <div class="emerge-title" style="color:var(--green)">蚁群智能</div>
+        <div class="emerge-parts">组成：单个蚂蚁（简单规则：跟随信息素）</div>
+        <div class="emerge-property">→ 涌现：最优路径发现、交通流自组织、分工体系</div>
+      </div>
+      <div class="emerge-card">
+        <div class="emerge-title" style="color:var(--yellow)">神经网络意识</div>
+        <div class="emerge-parts">组成：860亿个神经元（电化学脉冲）</div>
+        <div class="emerge-property">→ 涌现：主观体验、自我意识、语言（？）</div>
+      </div>
+      <div class="emerge-card">
+        <div class="emerge-title" style="color:var(--red)">市场价格</div>
+        <div class="emerge-parts">组成：数百万个体的买卖决策</div>
+        <div class="emerge-property">→ 涌现：价格信号、资源配置、经济周期</div>
+      </div>
+    </div>
+    <div class="highlight yellow">
+      <strong>强涌现 vs. 弱涌现：</strong>弱涌现（如蚁群）：原则上可以从微观规则推导，只是计算量极大。强涌现（如意识）：原则上也无法从物理描述推导——有些哲学家认为这才是真正的「硬问题」。Sapolsky 认为意识很可能是弱涌现，但承认这是悬而未决的问题。
+    </div>
+  </div>
+</div>
+
+<!-- 网络科学 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🕸️</span>
+    <span class="sec-title">复杂网络：小世界与无标度</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <p>Watts & Strogatz (1998) 发现「小世界网络」：高聚集度（邻居间相互连接）+ 短平均路径（六度分隔）。Barabási & Albert (1999) 发现「无标度网络」：节点度数遵循幂律分布（少数枢纽节点有极多连接）。</p>
+    <ul>
+      <li><strong>大脑的无标度特性：</strong>某些神经元（枢纽节点）连接数远多于平均，疾病（如阿尔茨海默症）优先攻击这些枢纽</li>
+      <li><strong>社会网络：</strong>弱连接的力量（Granovetter）——信息在「熟人」之间传播比在密友间更广泛</li>
+      <li><strong>流行病传播：</strong>无标度网络中，疾病传播速度取决于「超级传播者」（枢纽节点），而非平均传播率</li>
+    </ul>
+    <div class="highlight blue">
+      <strong>对行为科学的含义：</strong>把大脑理解为网络而非解剖学地图，改变了我们对精神疾病的认识：抑郁症不是「某个脑区坏了」，而是网络连接模式的改变（默认模式网络过度活跃，任务正激活网络不足）。
+    </div>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">🐦 椋鸟群的集体行为（murmuration）</div>
+      <p style="font-size:.85rem">数千只椋鸟在空中形成不断变化的流动形态（murmuration）——没有指挥者，没有全局规划。每只鸟只遵循三条局部规则：① 与最近7只邻居对齐方向；② 不要太近（避免碰撞）；③ 不要太远（保持群体）。从这三条简单规则涌现出看似有智慧的集体避险行为和令人叹为观止的视觉形态。Sapolsky 用此类比神经元集群：单个神经元不理解行为，但神经元集群产生了理解行为的大脑。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">🧠 默认模式网络（DMN）：安静时的活跃</div>
+      <p style="font-size:.85rem">1990s fMRI研究意外发现：受试者在「什么都不做」时，一个特定的脑区网络反而更活跃（DMN：内侧前额叶、后扣带、楔前叶、角回）。功能：自我参照思维、心理游荡（mind-wandering）、他心理论、回忆过去和想象未来。DMN在执行外部任务时被抑制。抑郁症：DMN过度活跃（反刍思维）；精神分裂症：DMN与任务网络去耦合异常。这是一个无法从单个神经元理解的涌现网络属性。</p>
+      <div class="quote">「大脑在什么都不做时忙得很——它在构建关于自己和世界的故事。」— Sapolsky</div>
+    </div>
+    <div class="case">
+      <div class="case-title">🌡️ 临界态与神经雪崩</div>
+      <p style="font-size:.85rem">Beggs & Plenz (2003) 发现：皮层神经元的自发活动呈现「神经雪崩」（neuronal avalanche）——活动级联的大小遵循幂律分布，这是复杂系统「临界态」（criticality）的标志。处于临界态的系统：既不过于沉默也不过于活跃，信息传递效率最高，动态范围最大，计算能力最强。癫痫（过于活跃）和麻醉（过于沉默）都偏离了临界态。大脑可能自组织到临界点——这是涌现出最优信息处理能力的机制。</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l20-deep-dive.html" style="color:var(--muted);margin-right:16px">← L20 混沌与还原论</a>
+  <a href="sapolsky-l22-deep-dive.html" style="color:var(--muted)">L22 涌现与复杂性 II →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+// Cellular Automata
+const caCanvas=document.getElementById('caCanvas');
+const caCtx=caCanvas.getContext('2d');
+let caRunning=false,caAnim=null;
+let grid=[];
+const cellSize=4;
+
+function getRuleSet(ruleNum){
+  const ruleset=[];
+  for(let i=7;i>=0;i--){ruleset.push((ruleNum>>i)&1);}
+  return ruleset;
+}
+
+function initCA(){
+  caCanvas.width=caCanvas.offsetWidth;caCanvas.height=caCanvas.offsetHeight;
+  const cols=Math.floor(caCanvas.width/cellSize);
+  grid=new Array(cols).fill(0);
+  grid[Math.floor(cols/2)]=1;
+  caCtx.fillStyle='#0a0a10';caCtx.fillRect(0,0,caCanvas.width,caCanvas.height);
+}
+
+function stepAndDrawCA(row){
+  const ruleNum=parseInt(document.getElementById('caRule').value);
+  const ruleset=getRuleSet(ruleNum);
+  const cols=grid.length;
+  const newGrid=new Array(cols).fill(0);
+  for(let i=0;i<cols;i++){
+    const l=grid[(i-1+cols)%cols],c=grid[i],r=grid[(i+1)%cols];
+    const idx=l*4+c*2+r;
+    newGrid[i]=ruleset[7-idx];
+    if(grid[i]){caCtx.fillStyle='#a78bfa';caCtx.fillRect(i*cellSize,row*cellSize,cellSize-1,cellSize-1);}
+  }
+  grid=[...newGrid];
+}
+
+let caRow=0;
+function runCA(){
+  if(caRunning)return;
+  caRunning=true;caRow=0;
+  initCA();
+  function step(){
+    if(caRow*cellSize>=caCanvas.height){caRunning=false;return;}
+    stepAndDrawCA(caRow);caRow++;
+    caAnim=requestAnimationFrame(step);
+  }
+  caAnim=requestAnimationFrame(step);
+}
+
+function resetCA(){
+  if(caAnim)cancelAnimationFrame(caAnim);
+  caRunning=false;caRow=0;
+  initCA();
+}
+
+initCA();
+</script>
+</body>
+</html>

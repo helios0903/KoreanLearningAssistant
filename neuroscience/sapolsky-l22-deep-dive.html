@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L22 涌现与复杂性 II — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(52,211,153,0.1);border-left:3px solid var(--green);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+.highlight.purple{background:rgba(167,139,250,0.1);border-left-color:var(--accent)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Game theory demo */
+.game-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.game-matrix{display:grid;grid-template-columns:auto 1fr 1fr;gap:4px;margin:10px 0;font-size:.8rem}
+.gm-header{background:var(--card);border-radius:4px;padding:8px;text-align:center;font-weight:600;color:var(--muted)}
+.gm-label{background:var(--card);border-radius:4px;padding:8px;font-weight:600;display:flex;align-items:center}
+.gm-cell{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:8px;text-align:center;cursor:pointer;transition:all .2s}
+.gm-cell:hover,.gm-cell.active{border-color:var(--accent);background:rgba(167,139,250,0.1)}
+.gm-cell .payoff1{color:var(--blue);font-weight:700}
+.gm-cell .payoff2{color:var(--red);font-weight:700}
+.game-result{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.82rem;min-height:52px;margin-top:8px}
+/* Tit-for-tat */
+.tft-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.strategy-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.strat-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.79rem;cursor:pointer;transition:all .2s}
+.strat-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(38,198,168,0.1)}
+.strat-result{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.82rem;min-height:70px}
+/* Case */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(52,211,153,0.15);color:var(--green)">L22</span>
+  <span class="badge" style="background:rgba(52,211,153,0.15);color:var(--green)">复杂性</span>
+  <h1>涌现与复杂性 II：合作的进化</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L22 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      合作不需要「善意」的个体，只需要正确的博弈结构。从自私的个体出发，通过迭代互动和适当的规则，合作可以作为稳定的涌现属性出现——这是人类大规模合作的理论基础。
+    </div>
+    <p>Sapolsky 用博弈论（尤其是重复囚徒困境和Axelrod的计算机锦标赛）来解释为什么合作在「自私基因」的世界里可以进化并稳定存在。</p>
+  </div>
+</div>
+
+<!-- 囚徒困境 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎲</span>
+    <span class="sec-title">互动：囚徒困境矩阵</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="game-demo">
+      <h3>囚徒困境（单次博弈）</h3>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:8px">点击格子查看该结果的含义（括号内：甲收益, 乙收益）</p>
+      <div class="game-matrix">
+        <div class="gm-header"></div>
+        <div class="gm-header">乙：合作</div>
+        <div class="gm-header">乙：背叛</div>
+        <div class="gm-label" style="color:var(--blue)">甲：合作</div>
+        <div class="gm-cell" onclick="showCell(this,'cc')"><span class="payoff1">3</span>, <span class="payoff2">3</span></div>
+        <div class="gm-cell" onclick="showCell(this,'cd')"><span class="payoff1">0</span>, <span class="payoff2">5</span></div>
+        <div class="gm-label" style="color:var(--red)">甲：背叛</div>
+        <div class="gm-cell" onclick="showCell(this,'dc')"><span class="payoff1">5</span>, <span class="payoff2">0</span></div>
+        <div class="gm-cell" onclick="showCell(this,'dd')"><span class="payoff1">1</span>, <span class="payoff2">1</span></div>
+      </div>
+      <div class="game-result" id="gameResult">点击矩阵中的任意格子查看该结果的博弈含义</div>
+    </div>
+    <div class="highlight red">
+      <strong>纳什均衡的悲剧：</strong>单次博弈中，无论对方做什么，「背叛」对自己更有利（5>3，1>0）——背叛是「占优策略」，纳什均衡在(背叛,背叛)=(1,1)。但双方合作(3,3)的总收益更高。这是「社会困境」的核心：个体理性导致集体次优。
+    </div>
+  </div>
+</div>
+
+<!-- 合作策略 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🤝</span>
+    <span class="sec-title">互动：重复博弈中的合作策略</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="tft-demo">
+      <h3>Axelrod 锦标赛（1980）策略比较</h3>
+      <div class="strategy-selector">
+        <button class="strat-btn active" onclick="showStrat(this,'tft')">以牙还牙 (TFT)</button>
+        <button class="strat-btn" onclick="showStrat(this,'alwaysd')">永远背叛</button>
+        <button class="strat-btn" onclick="showStrat(this,'alwaysc')">永远合作</button>
+        <button class="strat-btn" onclick="showStrat(this,'random')">随机策略</button>
+        <button class="strat-btn" onclick="showStrat(this,'tft2')">宽容TFT</button>
+      </div>
+      <div class="strat-result" id="stratResult">
+        <strong style="color:var(--teal)">以牙还牙 (Tit-for-Tat)</strong><br>
+        规则：第一轮合作，之后复制对方上一轮的行动。Axelrod 1980计算机锦标赛冠军（62个策略参与）。成功原因：① 善良（不先背叛）；② 可激怒（被背叛后立即报复）；③ 宽容（对方重新合作后原谅）；④ 清晰可识别（不混淆对手）。在进化模拟中，TFT 能从少数个体扩散并稳定存在。
+      </div>
+    </div>
+    <div class="highlight yellow">
+      <strong>为什么合作能进化？</strong>① 亲缘选择（Hamilton's rule）；② 互惠利他（重复博弈 + 记忆）；③ 间接互惠（声誉机制）；④ 群体选择（有争议）；⑤ 文化传承（人类独有的规模合作机制）。Axelrod 的实验显示：「影子长」（预期未来互动次数多）是合作进化的关键——这解释了为什么一次性匿名互动中背叛率高。
+    </div>
+  </div>
+</div>
+
+<!-- 公共物品困境 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🌍</span>
+    <span class="sec-title">公地悲剧与公共物品</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <p>Hardin（1968）「公地悲剧」：共享资源（草场、渔场、大气）在个体理性使用下会被过度消耗。每个个体的最优策略是「多用一点」，但所有人都这样做则导致资源崩溃。</p>
+    <div class="highlight blue">
+      <strong>Ostrom（2009诺贝尔奖）的反驳：</strong>实际上，很多社区成功管理了公共资源数百年，不需要私有化也不需要政府管制。关键条件：① 边界清晰；② 规则适应当地；③ 参与者可修改规则；④ 监督机制；⑤ 分级制裁；⑥ 冲突解决机制；⑦ 得到外部承认的自治权。涌现的教训：不是「人类天生贪婪」，而是「在正确的制度结构下，合作是自然涌现的」。
+    </div>
+    <p>Sapolsky 的延伸：这对气候变化、疫苗接种、抗生素耐药性等当代公共物品问题有直接启示。这些问题不是「人类太自私」，而是当前制度结构没有产生让合作涌现的条件。</p>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">🐜 蚂蚁的超个体</div>
+      <p style="font-size:.85rem">切叶蚁群落（Atta colombica）：100–300万个体，没有中央指挥，产生了：农业（培育真菌）、废物处理系统、多层级建筑（温控）、军事防御。每只蚂蚁的「神经元数量」不足以理解农业概念，但群落整体「知道」如何做农业。这是涌现的极端案例——群落的智能在任何单只蚂蚁中都不存在。Wilson 称蚁群为「超个体」（superorganism）。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">🎰 最后通牒博弈：人类不是纯粹理性人</div>
+      <p style="font-size:.85rem">最后通牒博弈：A有$10，提出分配方案；B接受则双方得到分配金额，拒绝则双方都得$0。纯理性预测：A提议$9/$1，B接受（因为$1>$0）。实际结果：约50%的人拒绝低于30%的提议（即使理性上应该接受）。跨文化研究（Henrich, 2001）：最后通牒博弈的提议和拒绝率在不同文化间差异显著，与市场整合程度和合作规范相关——不是「普遍人性」，而是文化涌现的合作规范。</p>
+      <div class="quote">「人类不是追求最大化个人利益的理性计算机——我们是寻求公平的社会动物。」— Sapolsky</div>
+    </div>
+    <div class="case">
+      <div class="case-title">🌐 互联网与超大规模合作</div>
+      <p style="font-size:.85rem">Wikipedia、Linux、Reddit等：数百万匿名个体在没有中央权威下合作生产公共知识和代码。这在进化史上是史无前例的大规模合作——远超任何动物的协作规模。可能的机制：① 间接互惠（声誉/声望动机）；② 身份认同（「我是维基人」）；③ 内在动机（创造和贡献的满足感）；④ 小额成本高效率（信息分享的边际成本几乎为零）。Sapolsky：这是文化涌现超越生物约束的最佳例证。</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l21-deep-dive.html" style="color:var(--muted);margin-right:16px">← L21 涌现 I</a>
+  <a href="sapolsky-l23-deep-dive.html" style="color:var(--muted)">L23 语言 →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+const cellData={
+  cc:'<strong style="color:var(--green)">双方合作 (3, 3) — 集体最优</strong><br>双方诚实合作，获得中等但稳定的收益。问题：个人有偏离动机（背叛可得5）。维持需要：重复互动、声誉机制、信任或强制。',
+  cd:'<strong style="color:var(--red)">甲合作，乙背叛 (0, 5) — 「傻瓜」结果</strong><br>乙背叛了合作的甲，乙获得最高收益，甲一无所有。一次性博弈中甲应避免此结果，但在重复博弈中，这种被背叛是TFT策略的触发点。',
+  dc:'<strong style="color:var(--red)">甲背叛，乙合作 (5, 0) — 「背叛者」结果</strong><br>与上相反。单次博弈理性建议甲选此，但在有声誉记录的重复博弈中，代价是失去乙未来的合作。',
+  dd:'<strong style="color:var(--yellow)">双方背叛 (1, 1) — 纳什均衡（双输）</strong><br>单次博弈的纳什均衡。双方均从背叛中无法通过单方面改变获益——但(1,1)远差于合作的(3,3)。这就是社会困境：个体理性导致集体次优。'
+};
+
+function showCell(el,id){
+  document.querySelectorAll('.gm-cell').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('gameResult').innerHTML=cellData[id];
+}
+
+const stratData={
+  tft:'<strong style="color:var(--teal)">以牙还牙 (Tit-for-Tat)</strong><br>第一轮合作，之后复制对方。Axelrod锦标赛冠军。优点：善良、可激怒、宽容、清晰。缺点：在噪声环境中（偶发背叛）会陷入报复循环。最重要发现：即使周围全是「自私」策略，一小群TFT个体也能侵入并扩散。',
+  alwaysd:'<strong style="color:var(--red)">永远背叛 (Always Defect)</strong><br>每轮都背叛。对付永远合作者最有效，但在TFT种群中得分低。只在一次性匿名互动中占优。在进化模拟中，永远背叛种群容易被TFT侵入（一旦TFT开始互相合作，得分迅速超过AD）。',
+  alwaysc:'<strong style="color:var(--green)">永远合作 (Always Cooperate)</strong><br>每轮都合作。对付TFT最有效，双方都得最高分。但极其脆弱——任何背叛者都能利用它。在混合种群中，会被逐渐淘汰。',
+  random:'<strong style="color:var(--muted)">随机策略</strong><br>随机50%合作50%背叛。无法建立信誉，无法被识别，无法形成稳定关系。得分接近平均，但不稳定。在现实中，「不可预测」有时是刻意策略（谈判中的战略模糊）。',
+  tft2:'<strong style="color:var(--yellow)">宽容TFT (Generous Tit-for-Tat)</strong><br>像TFT但有约10–30%概率在被背叛后原谅（仍然合作）。在有噪声的真实环境中比原版TFT更优——打破报复循环。进化模拟显示这是比TFT更稳定的策略。类比：人类社会的「宽恕」不是软弱，而是维持合作的进化上合理的策略。'
+};
+
+function showStrat(btn,id){
+  document.querySelectorAll('.strat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('stratResult').innerHTML=stratData[id];
+}
+</script>
+</body>
+</html>

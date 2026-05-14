@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L23 语言 — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-word:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(96,165,250,0.1);border-left:3px solid var(--blue);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.green{background:rgba(52,211,153,0.1);border-left-color:var(--green)}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.purple{background:rgba(167,139,250,0.1);border-left-color:var(--accent)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Critical period demo */
+.lang-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.lang-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.lang-tab{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.79rem;cursor:pointer;transition:all .2s}
+.lang-tab.active{border-color:var(--blue);color:var(--blue);background:rgba(96,165,250,0.1)}
+.lang-result{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.82rem;min-height:80px}
+/* Brain areas */
+.brain-lang{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.bl-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.bl-name{font-size:.82rem;font-weight:700;margin-bottom:4px}
+.bl-func{font-size:.75rem;color:var(--muted)}
+/* Whorfian spectrum */
+.whorf-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.whorf-examples{display:flex;flex-direction:column;gap:6px}
+.whorf-row{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;transition:all .2s}
+.whorf-row:hover{border-color:var(--accent)}
+.whorf-row.revealed{border-color:rgba(52,211,153,0.4)}
+.whorf-q{font-size:.83rem;font-weight:600}
+.whorf-a{display:none;font-size:.8rem;color:var(--muted);margin-top:6px;padding-top:6px;border-top:1px solid var(--border)}
+.whorf-row.revealed .whorf-a{display:block}
+/* Case */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(96,165,250,0.15);color:var(--blue)">L23</span>
+  <span class="badge" style="background:rgba(96,165,250,0.15);color:var(--blue)">语言</span>
+  <h1>语言：神经科学与进化</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L23 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      语言是人类最独特的能力，但它不是凭空出现的——它建立在更古老的运动控制、社会认知和声音学习能力之上，通过自然选择（和文化进化）被极度增强。同时，语言塑造了我们能「想到」的东西。
+    </div>
+    <p>Sapolsky 对两大问题感兴趣：① 语言是如何进化的（比较神经生物学视角）；② 语言如何影响思维（Sapir-Whorf假说的现代证据）。</p>
+  </div>
+</div>
+
+<!-- 语言脑区 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧠</span>
+    <span class="sec-title">语言的神经解剖学</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="brain-lang">
+      <div class="bl-card">
+        <div class="bl-name" style="color:var(--blue)">布罗卡区 (Broca's Area)</div>
+        <div class="bl-func">左下额前回（BA44/45）；语言产出、语法处理、言语规划；损伤→布罗卡失语（理解完好，说话费力、电报式）</div>
+      </div>
+      <div class="bl-card">
+        <div class="bl-name" style="color:var(--green)">韦尼克区 (Wernicke's Area)</div>
+        <div class="bl-func">左颞上回后部（BA22）；语义理解、词汇存储；损伤→韦尼克失语（流利但无意义的「字词沙拉」）</div>
+      </div>
+      <div class="bl-card">
+        <div class="bl-name" style="color:var(--yellow)">弓状束 (Arcuate Fasciculus)</div>
+        <div class="bl-func">连接布罗卡区和韦尼克区的白质通路；损伤→传导性失语（理解和产出均正常但无法重复）</div>
+      </div>
+      <div class="bl-card">
+        <div class="bl-name" style="color:var(--accent)">运动皮层/SMA</div>
+        <div class="bl-func">执行发音运动；补充运动区（SMA）参与言语启动；口部代表区在运动皮层高度夸大</div>
+      </div>
+    </div>
+    <div class="highlight">
+      <strong>语言的分布式本质：</strong>布罗卡-韦尼克-弓状束模型（Lichtheim, 1885）是历史上的好模型，但过度简化。现代神经影像：语言处理涉及双侧皮层的大型网络，额叶、颞叶、顶叶均有贡献；右半球处理语用（音调、情绪、隐喻）；语言甚至激活小脑（时序）。
+    </div>
+  </div>
+</div>
+
+<!-- 关键期 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">👶</span>
+    <span class="sec-title">互动：语言关键期</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="lang-demo">
+      <h3>选择语言发展的关键时期</h3>
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="showLang(this,'phoneme')">音素知觉（0–6月）</button>
+        <button class="lang-tab" onclick="showLang(this,'babble')">牙牙学语（6–12月）</button>
+        <button class="lang-tab" onclick="showLang(this,'word')">词汇爆发（18–24月）</button>
+        <button class="lang-tab" onclick="showLang(this,'grammar')">语法关键期（2–7岁）</button>
+        <button class="lang-tab" onclick="showLang(this,'second')">第二语言（8岁后）</button>
+      </div>
+      <div class="lang-result" id="langResult">
+        <strong style="color:var(--blue)">音素知觉关键期（0–6月）</strong><br>
+        新生儿能区分世界上所有语言的音素（约600个辅音，200个元音）。6–12月起，婴儿开始「修剪」——对母语音素的反应增强，对非母语音素的反应减弱。日本婴儿在6月龄时能区分/r/和/l/，12月龄时已失去此能力。这是「知觉窄化」——神经连接的修剪使母语处理更高效，代价是损失对非母语音素的敏感性。
+      </div>
+    </div>
+    <div class="highlight yellow">
+      <strong>Genie 案例（关键期证据）：</strong>Genie（1970年发现）从2岁到13岁被完全隔绝，从未接触语言。发现后经过大量语言训练：她学会了词汇，但始终无法掌握语法。这支持了语法获得存在关键期（约2–7岁）的假说。类似证据：晚期失聪者的手语习得、晚期移民的第二语言语法习得困难。
+    </div>
+  </div>
+</div>
+
+<!-- Sapir-Whorf -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🌈</span>
+    <span class="sec-title">互动：语言如何塑造思维（Sapir-Whorf假说）</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="whorf-demo">
+      <h3>点击探索跨语言认知差异的实证案例</h3>
+      <div class="whorf-examples">
+        <div class="whorf-row" onclick="this.classList.toggle('revealed')">
+          <div class="whorf-q">🎨 颜色词汇与颜色感知——Pirahã 和俄语</div>
+          <div class="whorf-a">俄语有两个独立的蓝色词（goluboy=浅蓝，siniy=深蓝）。Winawer(2007)：俄语母语者区分跨词边界颜色的速度比英语使用者快（语言标签加速了知觉范畴化）。但效应只在语言加工区（左视野→右半球外；非左半球语言区）测到，说明是语言标签影响了知觉后处理，而非感知本身。强Whorf（语言决定所想）错误，弱Whorf（语言影响认知效率）有证据支持。</div>
+        </div>
+        <div class="whorf-row" onclick="this.classList.toggle('revealed')">
+          <div class="whorf-q">🗺️ 空间参照系：绝对方向 vs. 相对方向</div>
+          <div class="whorf-a">Guugu Yimithirr（澳大利亚土著）语言只有绝对方向（东西南北），没有「左右」。使用者在任何情况下（室内、在车上旋转）都能精确指向北方。Levinson (1997)：语言空间框架影响空间记忆和推理——使用绝对框架语言的人在空间任务上表现与使用相对框架语言者不同。这是语言影响非语言认知的最有力证据之一。</div>
+        </div>
+        <div class="whorf-row" onclick="this.classList.toggle('revealed')">
+          <div class="whorf-q">⏰ 时间的隐喻：水平 vs. 垂直</div>
+          <div class="whorf-a">英语用水平隐喻描述时间（「前途」在前方，「过去」在后方）。汉语也使用垂直隐喻（「上个月」在上面，「下个月」在下面）。Boroditsky (2001)：让中文母语者通过语言练习激活垂直时间框架后，他们在时间推理任务中更快使用垂直隐喻。说明语言中的时间隐喻塑造了时间的心理表征。</div>
+        </div>
+        <div class="whorf-row" onclick="this.classList.toggle('revealed')">
+          <div class="whorf-q">🔢 Pirahã 语言：无数词语言与计数能力</div>
+          <div class="whorf-a">亚马逊Pirahã部落的语言没有精确数词（只有「少」「多」「更多」）。Frank et al. (2008)：Pirahã成年人在精确数量匹配任务上表现显著差于有数词语言的成年人，但在近似数量判断上无差异。这是语言影响认知能力的最强案例——缺乏数词，精确计数能力也相应受限。但Pirahã在其他方面（空间导航、识别危险）完全正常。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 动物语言 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🐒</span>
+    <span class="sec-title">动物语言：人类语言的进化起源</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <ul>
+      <li><strong>黑猩猩的手语（Washoe, 1967）：</strong>学会约150个手语词，可以组合，有泛化。但缺乏真正的语法（无递归、无位移性——无法谈论「过去明天的事」）</li>
+      <li><strong>Kanzi（倭黑猩猩）：</strong>通过符号键盘学习约400个词汇，理解复杂英语指令（「把球放进水里，然后把狗抱起来」），有有限的词序意识</li>
+      <li><strong>Alex（非洲灰鹦鹉）：</strong>能回答「这是什么颜色的球？」类问题，理解数量（1–8）、颜色、材质概念</li>
+    </ul>
+    <div class="highlight green">
+      <strong>FOXP2基因：</strong>FOXP2突变导致严重的语音/语法障碍（KE家族案例）。非人灵长类有类似FOXP2，但关键调控区域不同。小鼠的FOXP2人源化后：在超声发声和运动学习上有变化。FOXP2不是「语言基因」，而是控制运动序列学习的基因——语言只是其在人类演化中的最重要应用。
+    </div>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">🔇 失语症的双重解离</div>
+      <p style="font-size:.85rem">布罗卡失语（运动性失语）：理解正常，产出困难，说话费力、简短；典型："我...想...去...医院"。韦尼克失语（感觉性失语）：产出流利但无意义，理解严重受损；典型："是的，我在那里做了很多东西，然后他们给了我一个好的东西"。这种双重解离证明了产出和理解在神经上的相对独立性，并确立了布罗卡-韦尼克模型的解剖学基础。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">🤫 尼加拉瓜手语：语法的自发涌现</div>
+      <p style="font-size:.85rem">1980年代尼加拉瓜开设了首个聋哑学校，聚集了没有任何共同手语的儿童。第一代学生（~8岁以上）发展出了原始的手势系统（pidgin）；第二代年幼儿童（~4岁入学）接触这个系统后，自发丰富了其语法结构——加入了动词空间一致、时态标记等复杂语法特征。这是人类自发创造完整语言的唯一现代案例，证明了语言的语法结构是可以自发涌现的，特别是在关键期内的年幼儿童中。</p>
+      <div class="quote">「孩子们创造了一门完整的语言，他们没有上过任何语言学课。这证明了语法获得机制的先天性。」— Senghas & Coppola</div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l22-deep-dive.html" style="color:var(--muted);margin-right:16px">← L22 涌现 II</a>
+  <a href="sapolsky-l24-deep-dive.html" style="color:var(--muted)">L24 精神分裂症 →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+const langData={
+  phoneme:'<strong style="color:var(--blue)">音素知觉关键期（0–6月）</strong><br>新生儿能区分世界所有语言音素（~600辅音，200元音）。6–12月「知觉窄化」：非母语音素神经反应减弱，母语音素处理精度提升。日本婴儿6月区分/r//l/，12月失去此能力。EEG（MMN成分）可客观测量此过程。这是进化上保守的语音学习关键期。',
+  babble:'<strong style="color:var(--green)">牙牙学语期（6–12月）</strong><br>普遍于所有文化，包括聋哑婴儿（但聋哑婴儿的手语牙牙学语）。随时间，牙牙学语逐渐接近母语的音节结构（日语婴儿更多/ka/和/ta/，英语婴儿更多辅音+元音结构）。这表明牙牙学语不是随机发音练习，而是受语言输入塑造的发音系统调试。',
+  word:'<strong style="color:var(--yellow)">词汇爆发期（18–24月）</strong><br>18月前词汇增长缓慢（约50个词），18月后突然加速（有时每天新学数个词）。理论：整体约束（新词=新物体类别）、互斥假设（已知名称的物体不需要新词）。父母的「儿向语」（Child-Directed Speech，高音调、简化语法）在此期尤其重要。词汇量差异（3岁时）是后来学业成就的有力预测因子（Hart & Risley 3000万词研究）。',
+  grammar:'<strong style="color:var(--accent)">语法关键期（2–7岁）</strong><br>2–3岁：开始使用两词组合（「要水」）；3–5岁：掌握基本句法规则；5–7岁：复杂从句、被动语态。Genie案例（13岁前无语言输入）：即使大量训练，始终无法掌握语法。早期手语学习研究（Newport, 1990）：越早开始（0–3岁），语法能力越接近母语水平；越晚开始，语法能力越受限。关键期的神经机制：突触修剪和髓鞘化的时间窗。',
+  second:'<strong style="color:var(--muted)">第二语言习得（8岁后）</strong><br>青春期后（~15岁）第二语言的语法习得能力显著下降。Kim et al. (1997) fMRI：早期双语者两种语言在布罗卡区激活区域重叠；晚期双语者两种语言的激活区域分离。但：词汇习得能力没有严格关键期，成人仍可高效学习第二语言词汇；语音（口音）关键期约在青春期前。「学语言越早越好」——对语法和发音是的，对词汇相对不那么绝对。'
+};
+
+function showLang(btn,id){
+  document.querySelectorAll('.lang-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('langResult').innerHTML=langData[id];
+}
+</script>
+</body>
+</html>

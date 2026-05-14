@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L17 攻击性 I — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(248,113,113,0.1);border-left:3px solid var(--red);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.green{background:rgba(52,211,153,0.1);border-left-color:var(--green)}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+.highlight.purple{background:rgba(167,139,250,0.1);border-left-color:var(--accent)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Aggression types */
+.agg-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.agg-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.79rem;cursor:pointer;transition:all .2s}
+.agg-btn.active{border-color:var(--red);color:var(--red);background:rgba(248,113,113,0.1)}
+.agg-result{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.82rem;min-height:80px;margin-bottom:12px}
+/* Serotonin-aggression */
+.ser-demo{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.ser-slider-wrap{margin:10px 0}
+.ser-slider-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ser-slider-label{font-size:.8rem;color:var(--muted);width:100px;flex-shrink:0}
+.ser-slider{flex:1;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
+.ser-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--red);cursor:pointer}
+.ser-output{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.82rem;min-height:52px}
+/* Factor table */
+.factor-table{width:100%;border-collapse:collapse;font-size:.8rem;margin:10px 0}
+.factor-table th{background:var(--card2);padding:8px 10px;text-align:left;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border)}
+.factor-table td{padding:7px 10px;border-bottom:1px solid rgba(46,46,63,0.5);vertical-align:top}
+.factor-table tr:last-child td{border-bottom:none}
+/* Case */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(248,113,113,0.15);color:var(--red)">L17</span>
+  <span class="badge" style="background:rgba(248,113,113,0.15);color:var(--red)">攻击性</span>
+  <h1>攻击性 I：神经、激素与进化</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L17 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      「攻击性」不是一个单一的生物学实体——它是一堆不同行为的统称，有不同的神经基础、不同的触发因素和不同的功能。把所有「攻击性」混为一谈，就像把所有「吃东西」混为一谈一样荒唐。
+    </div>
+    <p>Sapolsky 将这三讲定位为对「攻击性是人类本性」这一论断的细致解剖。他的立场：攻击行为受到生物学因素的影响，但<em>不</em>是由其决定，而且人类有改变环境、从而改变攻击行为的能力。</p>
+    <div class="highlight blue">
+      <strong>攻击性的分类：</strong>捕食性攻击（猎食行为）、防御性攻击（被威胁时）、领地性攻击、母性攻击（保护后代）、竞争性攻击（地位/资源）、挫折性攻击（Frustration-Aggression）。这些涉及不同的神经回路，不能用同一模型解释。
+    </div>
+  </div>
+</div>
+
+<!-- 攻击类型 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">⚔️</span>
+    <span class="sec-title">互动：攻击性类型与神经回路</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="agg-selector">
+      <button class="agg-btn active" onclick="showAgg(this,'predatory')">捕食性攻击</button>
+      <button class="agg-btn" onclick="showAgg(this,'defensive')">防御性攻击</button>
+      <button class="agg-btn" onclick="showAgg(this,'competitive')">竞争性攻击</button>
+      <button class="agg-btn" onclick="showAgg(this,'frustration')">挫折诱发攻击</button>
+      <button class="agg-btn" onclick="showAgg(this,'maternal')">母性攻击</button>
+    </div>
+    <div class="agg-result" id="aggResult">
+      <strong style="color:var(--red)">捕食性攻击（Predatory Aggression）</strong><br>
+      「冷血」、目标导向、无情绪唤起（皮质醇/交感神经不激活）；神经基础：外侧下丘脑、中脑PAG腹外侧柱；猫的捕鼠行为——平静高效，与防御性攻击的杏仁核参与完全不同。这类攻击在猫科动物研究中被清晰解离，电刺激外侧下丘脑可在无食饥饿的情况下触发捕食行为。
+    </div>
+  </div>
+</div>
+
+<!-- 血清素与攻击性 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧪</span>
+    <span class="sec-title">互动：血清素水平与冲动攻击性</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="ser-demo">
+      <h3>调整脑内血清素水平</h3>
+      <div class="ser-slider-row">
+        <span class="ser-slider-label">血清素水平</span>
+        <input type="range" class="ser-slider" min="0" max="100" value="50" id="serSlider" oninput="updateSer()">
+        <span style="font-size:.8rem;color:var(--muted);width:40px" id="serVal">50%</span>
+      </div>
+      <div class="ser-output" id="serOutput">
+        <strong style="color:var(--yellow)">中等血清素水平（正常基线）</strong><br>
+        冲动控制正常；面对挫折时可以延迟反应；前额叶皮层对杏仁核的调控正常。
+      </div>
+    </div>
+    <p style="font-size:.85rem">证据来源：① 猴群中，低血清素代谢产物（5-HIAA）的个体攻击频率高、易冲动、寿命短（打架受伤）；② 用色氨酸耗竭（血清素前体）的实验使健康被试攻击性短暂增加；③ SSRI（提高血清素）可减少冲动性攻击，用于间歇性暴怒障碍的治疗。</p>
+    <div class="highlight yellow">
+      <strong>血清素-攻击性的细节：</strong>与总体攻击性无关，与「冲动性」有关。低血清素不让你「想打人」，而是削弱了PFC对杏仁核的抑制，使你在被激惹时更难「踩刹车」。这解释了为什么SSRI不让人变怂，只是降低了爆发的冲动阈值。
+    </div>
+  </div>
+</div>
+
+<!-- 影响因素 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📊</span>
+    <span class="sec-title">攻击性的多层次影响因素</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <table class="factor-table">
+      <thead><tr><th>因素</th><th>效应方向</th><th>证据强度</th></tr></thead>
+      <tbody>
+        <tr><td>血清素低</td><td style="color:var(--red)">↑ 冲动性攻击</td><td>★★★★☆</td></tr>
+        <tr><td>睾酮高</td><td style="color:var(--red)">↑ 地位性攻击（放大已有倾向）</td><td>★★★☆☆</td></tr>
+        <tr><td>皮质醇高（急性）</td><td style="color:var(--red)">↑ 防御性攻击</td><td>★★★☆☆</td></tr>
+        <tr><td>皮质醇高（慢性）</td><td style="color:var(--red)">↑ 冲动性（PFC损伤）</td><td>★★★★☆</td></tr>
+        <tr><td>血糖低（饥饿）</td><td style="color:var(--red)">↑ 短期攻击性（「饿怒」Hangry）</td><td>★★★☆☆</td></tr>
+        <tr><td>催产素</td><td style="color:var(--red)">↑ 外群体攻击性（内群体保护）</td><td>★★★☆☆</td></tr>
+        <tr><td>PFC激活</td><td style="color:var(--green)">↓ 冲动性攻击（抑制杏仁核）</td><td>★★★★★</td></tr>
+        <tr><td>社会支持/归属感</td><td style="color:var(--green)">↓ 总体攻击性</td><td>★★★★☆</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">🐒 Cayo Santiago 猴群的血清素研究</div>
+      <p style="font-size:.85rem">在波多黎各Cayo Santiago岛的自由放养恒河猴群中，研究者测量了脑脊液5-HIAA（血清素代谢产物）水平。发现：低5-HIAA的雄性猴子——攻击同群个体的频率是高5-HIAA猴的3倍；更频繁发起「自杀式」挑战高等级雄性；受伤致死率更高；社会地位更难稳定。高5-HIAA的雄性地位更稳定，更多使用「展示」行为（non-contact威胁）而非接触性攻击。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">🌡️ 高温与攻击性：「热效应」</div>
+      <p style="font-size:.85rem">Anderson (1989) 综述：环境温度与攻击性之间有稳健的正相关。美国棒球比赛数据：气温高时，击球手被故意触身球（报复性投球）的频率显著增加。城市骚乱数据：更多发生在炎热季节和城市热岛。机制：高温 → 皮质醇↑、血糖消耗↑ → 前额叶调控能力↓ → 冲动性↑。气候变化预测：全球温度每升高1°C，暴力犯罪率预测增加约4%。</p>
+      <div class="quote">「最便宜的降低犯罪率的方法可能是空调。」— Sapolsky（半开玩笑）</div>
+    </div>
+    <div class="case">
+      <div class="case-title">🧠 Charles Whitman：脑瘤案例（Sapolsky最常引用）</div>
+      <p style="font-size:.85rem">1966年，25岁的查尔斯·惠特曼在德克萨斯大学塔楼枪击了45人（14死）。他在遗书中写道感到无法控制的愤怒冲动，要求尸检。结果：发现颞叶杏仁核处一个核桃大小的星形细胞瘤，直接压迫杏仁核。Sapolsky 用此例讨论：这改变了对惠特曼的道德评判吗？如果某人大脑有生理病变导致暴力，我们如何看待责任？这不是给暴力开脱，而是强迫我们重新思考自由意志与神经决定论。</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l16-deep-dive.html" style="color:var(--muted);margin-right:16px">← L16 性行为 II</a>
+  <a href="sapolsky-l18-deep-dive.html" style="color:var(--muted)">L18 攻击性 II →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+const aggData={
+  predatory:'<strong style="color:var(--red)">捕食性攻击</strong><br>「冷血」、目标导向、无情绪唤起（皮质醇/交感神经不激活）；神经基础：外侧下丘脑、PAG腹外侧柱；猫的捕鼠——平静高效，与防御性攻击完全不同的神经回路。电刺激外侧下丘脑可在不饥饿时触发捕食行为。',
+  defensive:'<strong style="color:var(--yellow)">防御性攻击</strong><br>高度情绪唤起（皮质醇/交感神经激活）、杏仁核核心参与；感知威胁→杏仁核中央核→下丘脑背内侧（DMH）→PAG背侧柱→战斗反应。这是「被逼急了反击」的模式。电刺激杏仁核中央核或DMH即可触发防御性攻击姿态。',
+  competitive:'<strong style="color:var(--accent)">竞争性攻击（地位）</strong><br>与睾酮最相关的攻击类型；地位争夺、资源竞争；在社会等级中更多由情境（挑战/机会）触发；「赢了」会进一步升高睾酮（Mazur效应）。人类中：大多数是「目的性的工具性攻击」，而非冲动爆发。',
+  frustration:'<strong style="color:var(--blue)">挫折诱发攻击（Dollard等, 1939）</strong><br>挫折（目标被阻断）→ 攻击驱力增加。前额叶调控减弱（血清素低、皮质醇高、血糖低）时更容易发生。重要修订（Berkowitz, 1989）：挫折只是使人「为攻击做好准备」，还需要「攻击性线索」（武器在场、敌意归因）才触发行为。',
+  maternal:'<strong style="color:var(--green)">母性攻击</strong><br>保护后代时触发，通常是雌性在有仔期间的最强攻击形式（超过雄性间攻击）；催产素参与（母婴联结）；杏仁核外侧核参与；有趣的是：与繁殖后激素的直接效应无关，与「感知到威胁处于后代附近」的认知有关——可以通过操控感知情景来关闭或开启。'
+};
+
+function showAgg(btn,id){
+  document.querySelectorAll('.agg-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('aggResult').innerHTML=aggData[id];
+}
+
+function updateSer(){
+  const v=parseInt(document.getElementById('serSlider').value);
+  document.getElementById('serVal').textContent=v+'%';
+  let html='';
+  if(v<25){html='<strong style="color:var(--red)">极低血清素水平</strong><br>PFC对杏仁核的抑制严重减弱；面对轻微挫折时难以克制冲动反应；MAOA基因低表达+童年虐待经历交互作用在此范围风险最高。相关于：间歇性暴怒障碍、冲动性攻击犯罪。';}
+  else if(v<45){html='<strong style="color:var(--yellow)">低血清素水平</strong><br>冲动控制能力下降；易被激惹；对负面社会刺激过敏（Harmer et al., 色氨酸耗竭实验）；与反社会人格特质的冲动维度相关。不是「更想攻击」，而是「踩不住刹车」。';}
+  else if(v<70){html='<strong style="color:var(--green)">正常血清素水平（基线）</strong><br>冲动控制正常；可以延迟反应；前额叶皮层对杏仁核的调控正常。日间变化：早晨起床后血清素偏低（睡眠代谢消耗），随采光和活动逐步恢复。';}
+  else if(v<90){html='<strong style="color:var(--blue)">较高血清素水平（SSRI效果）</strong><br>SSRI服药后2–6周效果；冲动性攻击减少；用于间歇性暴怒障碍治疗。注意：高血清素本身不产生「平静」感，主要是增强PFC的冲动控制。';}
+  else{html='<strong style="color:var(--muted)">极高血清素水平</strong><br>血清素综合征风险（不当合并多种5-HT药物）：过度激活5-HT受体→肌肉震颤、高热、意识改变。生理极限：血清素受体有上限，超过后无更多益处。<em>注：正常生理/药理水平不会达到此区间。</em>';}
+  document.getElementById('serOutput').innerHTML=html;
+}
+</script>
+</body>
+</html>

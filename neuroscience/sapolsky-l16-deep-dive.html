@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L16 人类性行为 II — Sapolsky深度拆解</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:16px;max-width:720px;margin:0 auto}
+a{color:var(--accent);text-decoration:none}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:600;color:var(--accent);margin-bottom:8px}
+.meta{color:var(--muted);font-size:.82rem;margin-bottom:20px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:6px}
+.back{display:inline-block;margin-bottom:16px;color:var(--muted);font-size:.85rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sec-hdr{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.sec-hdr:hover{background:var(--card2)}
+.sec-icon{font-size:1.1rem}
+.sec-title{font-weight:600;font-size:.95rem;flex:1}
+.chevron{color:var(--muted);font-size:.8rem;transition:transform .2s}
+.sec-body{display:none;padding:0 16px 16px}
+.sec-body.open{display:block}
+.highlight{background:rgba(167,139,250,0.1);border-left:3px solid var(--accent);padding:10px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.88rem}
+.highlight.green{background:rgba(52,211,153,0.1);border-left-color:var(--green)}
+.highlight.yellow{background:rgba(251,191,36,0.1);border-left-color:var(--yellow)}
+.highlight.red{background:rgba(248,113,113,0.1);border-left-color:var(--red)}
+.highlight.blue{background:rgba(96,165,250,0.1);border-left-color:var(--blue)}
+p{margin-bottom:10px;font-size:.9rem}
+ul{padding-left:18px;margin-bottom:10px}
+li{font-size:.88rem;margin-bottom:4px}
+/* Evidence timeline */
+.evidence-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.ev-tab{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:.79rem;cursor:pointer;transition:all .2s}
+.ev-tab.active{border-color:var(--teal);color:var(--teal);background:rgba(38,198,168,0.1)}
+.ev-result{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.82rem;min-height:80px}
+/* Influence factors */
+.factor-grid{display:grid;grid-template-columns:1fr;gap:6px;margin:10px 0}
+.factor-row{display:flex;align-items:center;gap:10px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.factor-icon{font-size:1.2rem;flex-shrink:0}
+.factor-content{flex:1}
+.factor-name{font-size:.85rem;font-weight:600;margin-bottom:2px}
+.factor-desc{font-size:.78rem;color:var(--muted)}
+.factor-bar-bg{background:var(--card);border-radius:4px;height:8px;overflow:hidden;margin-top:4px;border:1px solid var(--border)}
+.factor-bar-fill{height:100%;border-radius:4px}
+/* Case study */
+.case{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.case-title{font-size:.88rem;font-weight:700;margin-bottom:6px}
+.quote{border-left:3px solid var(--accent);padding-left:12px;font-style:italic;color:var(--muted);font-size:.85rem;margin:10px 0}
+</style>
+</head>
+<body>
+<a href="index.html" class="back">← 返回课程列表</a>
+<div style="margin-bottom:20px">
+  <span class="badge" style="background:rgba(167,139,250,0.15);color:var(--accent)">L16</span>
+  <span class="badge" style="background:rgba(167,139,250,0.15);color:var(--accent)">性行为</span>
+  <h1>人类性行为 II：性取向的生物学</h1>
+  <div class="meta">Sapolsky · Human Behavioral Biology · Stanford · L16 · 约90分钟</div>
+</div>
+
+<!-- 核心主张 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🎯</span>
+    <span class="sec-title">核心主张</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="highlight">
+      性取向有显著的生物学基础——基因、产前激素环境、神经解剖结构都有贡献。但没有单一「同性恋基因」，也没有「纯生物决定论」。Sapolsky 明确：理解生物学基础不是要「解释」或「治疗」，而是要理解人类多样性。
+    </div>
+    <p>这是课程中最政治敏感的部分，Sapolsky 小心地区分描述性科学（性取向的生物学相关因素是什么）和规范性判断（性取向应该是什么）。他的立场是：「同性恋在自然界中广泛存在，生物学不支持任何道德评判方向。」</p>
+  </div>
+</div>
+
+<!-- 证据层次 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🔬</span>
+    <span class="sec-title">互动：性取向生物学证据层次</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div style="margin-bottom:10px">
+      <div class="evidence-tabs">
+        <button class="ev-tab active" onclick="showEv(this,'genetics')">遗传证据</button>
+        <button class="ev-tab" onclick="showEv(this,'prenatal')">产前激素</button>
+        <button class="ev-tab" onclick="showEv(this,'neuro')">神经解剖</button>
+        <button class="ev-tab" onclick="showEv(this,'culture')">跨文化</button>
+        <button class="ev-tab" onclick="showEv(this,'fraternal')">哥哥效应</button>
+      </div>
+      <div class="ev-result" id="evResult">
+        <strong style="color:var(--teal)">遗传证据</strong><br>
+        双胞胎研究（Bailey & Pillard, 1991）：同卵双胞胎同性恋一致率约52%（男）/48%（女），异卵双胞胎约22%/16%，非双胞胎兄弟约11%。结论：遗传有显著贡献，但不是100%决定（环境也有作用）。2019年大型GWAS（49万人）：发现5个SNP与同性行为相关，解释方差<1%，且效应方向不稳定——「没有同性恋基因」，是多基因+复杂环境的产物。
+      </div>
+    </div>
+    <div class="highlight yellow">
+      <strong>进化悖论的可能解答：</strong>如果同性恋有遗传基础，为什么自然选择没有淘汰它？可能原因：①携带相关等位基因的异性恋者生殖成功率更高（亲属选择）；②多效基因（同一基因在其他情境下有进化优势）；③基因-环境互作使遗传效果在不同情境下改变方向。
+    </div>
+  </div>
+</div>
+
+<!-- 影响因素 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">⚖️</span>
+    <span class="sec-title">多因素影响模型</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="factor-grid">
+      <div class="factor-row">
+        <div class="factor-icon">🧬</div>
+        <div class="factor-content">
+          <div class="factor-name">遗传因素</div>
+          <div class="factor-desc">双胞胎研究估计遗传度30–50%，无单一决定基因，多基因效应</div>
+          <div class="factor-bar-bg"><div class="factor-bar-fill" style="width:40%;background:var(--blue)"></div></div>
+        </div>
+      </div>
+      <div class="factor-row">
+        <div class="factor-icon">🤰</div>
+        <div class="factor-content">
+          <div class="factor-name">产前激素环境</div>
+          <div class="factor-desc">子宫内雄激素暴露（CAH研究）；哥哥效应（产前H-Y抗原）</div>
+          <div class="factor-bar-bg"><div class="factor-bar-fill" style="width:25%;background:var(--yellow)"></div></div>
+        </div>
+      </div>
+      <div class="factor-row">
+        <div class="factor-icon">🧠</div>
+        <div class="factor-content">
+          <div class="factor-name">神经解剖结构</div>
+          <div class="factor-desc">LeVay(1991)：INAH-3在同性恋男性中更小（争议较大）；SCN体积差异</div>
+          <div class="factor-bar-bg"><div class="factor-bar-fill" style="width:20%;background:var(--accent)"></div></div>
+        </div>
+      </div>
+      <div class="factor-row">
+        <div class="factor-icon">🌍</div>
+        <div class="factor-content">
+          <div class="factor-name">文化/经历</div>
+          <div class="factor-desc">跨文化同性恋率相近（约2–8%），但表达方式和身份认同有文化差异</div>
+          <div class="factor-bar-bg"><div class="factor-bar-fill" style="width:15%;background:var(--green)"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="highlight red">
+      <strong>「转化治疗」的科学反驳：</strong>美国心理学会（APA）等所有主流医学组织均声明：① 性取向无法通过治疗改变；② 试图改变会造成严重心理伤害（抑郁、自杀风险↑）；③ 无证据支持其有效性。这与生物学证据一致：如果性取向有稳定的神经生物学基础，「治疗」的企图不仅无效而且残忍。
+    </div>
+  </div>
+</div>
+
+<!-- 自然界中的同性行为 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🌿</span>
+    <span class="sec-title">自然界中的同性行为：极其普遍</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <p>同性性行为已在超过450种脊椎动物中观察到，包括：长颈鹿（雄性颈部摩擦+性行为）、海豚（同性联盟间性行为）、倭黑猩猩（所有性别组合）、大象（雄象年轻时的同性行为）、某些鸟类物种（约10%雌性信天翁对为同性对）。</p>
+    <div class="highlight green">
+      <strong>Sapolsky 的核心论点：</strong>「不自然」从来都不是有效的道德论证——① 从生物学角度，同性行为在自然界极其普遍；② 即使「不自然」，也不等于「不好」（很多人类特有行为都「不自然」）；③ 科学描述（是什么）永远无法直接推导道德规范（应该是什么）。
+    </div>
+  </div>
+</div>
+
+<!-- 案例研究 -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">案例研究</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="case">
+      <div class="case-title">👶 先天性肾上腺增生症（CAH）：产前雄激素过多</div>
+      <p style="font-size:.85rem">CAH是一种遗传性酶缺陷，导致肾上腺产生过量雄激素，从胎儿期开始。CAH女婴出生时外生殖器部分男性化，后经药物治疗。行为研究：CAH女性更倾向「男孩化」玩耍方式，空间能力略高，同性恋/双性恋比例略高于对照组（约30% vs 对照5%）。这提供了产前雄激素影响性取向的最直接人类证据，但效果并非决定性的。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">👨‍👦 哥哥效应（Fraternal Birth Order Effect）</div>
+      <p style="font-size:.85rem">Blanchard (1997)：男同性恋者拥有的哥哥数量显著多于异性恋男性，每多一个哥哥，后续男性同性恋概率增加33%。机制假说：母亲在妊娠男性胎儿时，对Y染色体上的NLGN4Y蛋白产生免疫记忆；多次妊娠男性胎儿后，母体产生的抗体可越过血脑屏障，影响胎儿下丘脑发育（Bogaert & Skorska, 2018确认了NLGN4Y抗体更高）。估计可解释约15–29%的男同性恋。</p>
+    </div>
+    <div class="case">
+      <div class="case-title">🔬 LeVay (1991) 的 INAH-3 研究与其争议</div>
+      <p style="font-size:.85rem">Simon LeVay（Salk Institute）解剖死于AIDS的男同性恋者、男异性恋者和女性的下丘脑INAH-3核团：同性恋男性的INAH-3体积约为异性恋男性的一半，接近女性。但巨大争议：① 样本全为AIDS死亡者；② 死前性取向基于病历，不精确；③ 个体差异重叠大；④ INAH-3的大小可能是性行为经历的结果而非原因（可塑性）。LeVay本人承认：这只是关联研究，不能确立因果。但它开启了性取向神经科学研究的先河。</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.78rem">
+  <a href="sapolsky-l15-deep-dive.html" style="color:var(--muted);margin-right:16px">← L15 人类性行为 I</a>
+  <a href="sapolsky-l17-deep-dive.html" style="color:var(--muted)">L17 攻击性 I →</a>
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+const evData={
+  genetics:'<strong style="color:var(--teal)">遗传证据</strong><br>双胞胎研究（Bailey & Pillard, 1991）：同卵52%（男）/48%（女）一致率，异卵22%/16%。2019年GWAS（49万人）：5个相关SNP，各解释&lt;1%方差。结论：多基因+环境，无单一决定基因。遗传度估计30–50%。',
+  prenatal:'<strong style="color:var(--yellow)">产前激素暴露</strong><br>CAH女性（产前雄激素过多）：同性恋/双性恋比例升至~30%（对照~5%）。指-比（2D:4D）：产前雄激素的代理指标，同性恋女性2D:4D比值更「男性化」（效应量小）。提示产前激素环境有影响，但不是决定性的。',
+  neuro:'<strong style="color:var(--accent)">神经解剖结构</strong><br>LeVay(1991)：同性恋男性INAH-3体积小于异性恋男性，接近女性平均值。Allen & Gorski(1992)：同性恋男性前连合（AC）更大。Savic et al.(2008)：同性恋男性大脑体积不对称性与女性相似（右>左消失）。所有研究均有方法学争议，因果方向不明。',
+  culture:'<strong style="color:var(--green)">跨文化数据</strong><br>不同文化中同性恋比例相近（2–8%），即使在对同性恋极端不友好的文化中。这暗示生物基础的稳定性（文化压制无法将其消除）。但：性取向的表达、身份认同、行为方式有极大文化差异（古希腊成年男性与男孩的性关系是另一维度的问题）。',
+  fraternal:'<strong style="color:var(--blue)">哥哥效应（出生顺序效应）</strong><br>每多一个哥哥→男性同性恋概率增加约33%（Blanchard, 1997）。只影响男性，不影响女性；与姐姐数量无关；在收养家庭中无效（说明是生物因素，非社会化）。机制：母体对NLGN4Y的免疫反应（已有直接抗体证据，2018）。估计解释约15–29%的男同性恋案例。'
+};
+
+function showEv(btn,id){
+  document.querySelectorAll('.ev-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('evResult').innerHTML=evData[id];
+}
+</script>
+</body>
+</html>
