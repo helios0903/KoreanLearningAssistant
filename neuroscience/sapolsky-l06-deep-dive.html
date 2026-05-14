@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>L06 行为遗传学 I · Sapolsky</title>
+<style>
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--orange:#fb923c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:60px}
+.hero{background:linear-gradient(135deg,#1a0a3a 0%,#0a2040 50%,#0f1a2e 100%);padding:32px 20px 28px;text-align:center;border-bottom:1px solid var(--border);position:relative}
+.back-link{position:absolute;top:16px;left:16px;font-size:13px;color:var(--muted);text-decoration:none}
+.badge{display:inline-block;font-size:11px;font-weight:700;background:rgba(167,139,250,0.12);color:var(--accent);padding:4px 12px;border-radius:99px;border:1px solid rgba(167,139,250,0.25);margin-bottom:12px}
+.hero h1{font-size:24px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:4px}
+.hero h1 span{font-size:16px;font-weight:400;color:var(--muted)}
+.meta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.meta span{font-size:12px;background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:99px;color:var(--muted)}
+.content{padding:20px 16px 0}
+.sec-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin:16px 0 10px 2px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden}
+.coll-head{padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;user-select:none}
+.coll-body{padding:0 16px 16px;display:none}
+.coll-body.open{display:block}
+.coll-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.chevron{font-size:18px;color:var(--muted);transition:transform 0.2s;flex-shrink:0}
+.body-text{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:10px}
+.hl{background:var(--card2);border-radius:10px;padding:12px;margin:10px 0;border-left:3px solid var(--accent)}
+.hl .lbl{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:4px}
+.hl p{font-size:13px;color:var(--text);line-height:1.6}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(167,139,250,0.1);color:var(--accent);border:1px solid rgba(167,139,250,0.2)}
+.tag.g{background:rgba(52,211,153,0.1);color:var(--green);border-color:rgba(52,211,153,0.2)}
+.tag.y{background:rgba(251,191,36,0.1);color:var(--yellow);border-color:rgba(251,191,36,0.2)}
+.tag.r{background:rgba(248,113,113,0.1);color:var(--red);border-color:rgba(248,113,113,0.2)}
+.ex-card{background:var(--card2);border-radius:12px;margin:8px 0;overflow:hidden}
+.ex-head{padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.ex-body{padding:0 14px 14px;display:none;font-size:13px;color:var(--muted);line-height:1.7}
+.ex-body.open{display:block}
+.gloss-item{border-bottom:1px solid var(--border);padding:12px 0}
+.gloss-item:last-child{border-bottom:none}
+.gloss-en{font-size:12px;font-weight:700;color:var(--accent)}
+.gloss-def{font-size:12px;color:var(--muted);line-height:1.5;margin-top:2px}
+.conn-item{background:var(--card2);border-radius:10px;padding:12px;margin:6px 0;display:flex;gap:10px}
+.conn-text{font-size:13px;color:var(--muted);line-height:1.5}
+.conn-text strong{color:var(--text)}
+.twin-row{margin:10px 0}
+.twin-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
+.twin-bars{display:flex;gap:8px;align-items:center}
+.twin-bar-wrap{flex:1}
+.twin-bar-label{font-size:11px;color:var(--muted);margin-bottom:3px}
+.twin-track{background:var(--border);border-radius:99px;height:10px;overflow:hidden}
+.twin-fill{height:100%;border-radius:99px;transition:width 1s ease}
+.twin-pct{font-size:12px;font-weight:700;min-width:32px;text-align:right}
+.warn-box{background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.3);border-radius:10px;padding:12px;margin:10px 0}
+.warn-box .wt{font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;margin-bottom:4px}
+.warn-box p{font-size:13px;color:var(--muted);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="hero">
+  <a href="index.html" class="back-link">← 神经科学中心</a>
+  <div class="badge">Sapolsky · Lecture 06</div>
+  <h1>行为遗传学 I<br><span>Behavioral Genetics I</span></h1>
+  <div class="meta">
+    <span>🕐 1h26m</span><span>👥 双胞胎研究</span><span>⭐⭐</span><span>🧬 遗传与行为</span>
+  </div>
+</div>
+
+<div class="content">
+
+<div class="card" style="border-color:rgba(167,139,250,0.3)">
+  <div style="padding:18px;text-align:center">
+    <div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">本讲核心警告</div>
+    <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:6px">遗传率≠基因决定</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.6">遗传率（Heritability）衡量的是<strong>该群体在该环境下</strong>表现型变异中遗传因素的贡献比例，不是"基因对该性状的控制程度"。最容易被误解的科学概念之一。</div>
+  </div>
+</div>
+
+<div class="sec-label">问题链 · Issue Tree</div>
+
+<div class="card" style="border-color:rgba(124,106,247,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(124,106,247,0.15)">🔍</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">如何研究基因对行为的影响？</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Research design in behavioral genetics</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">行为遗传学依赖"自然实验"：寻找遗传相似程度不同、但环境尽量相似（或反之）的人群进行比较。</div>
+    <div class="hl"><div class="lbl">三大研究设计</div><p>① <strong>双胞胎研究</strong>：同卵（MZ，r=1.0）vs 异卵（DZ，r=0.5）——控制环境，比较遗传影响<br>② <strong>领养研究</strong>：领养子女与亲生父母 vs 养父母的相似性比较<br>③ <strong>双胞胎+领养</strong>：分开抚养的同卵双胞胎——最强设计，环境遗传都控制</p></div>
+    <div class="tags"><span class="tag">同卵双胞胎</span><span class="tag">异卵双胞胎</span><span class="tag">领养研究</span></div>
+  </div>
+</div>
+
+<div class="card" style="border-color:rgba(251,191,36,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(251,191,36,0.12)">📊</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">遗传率：是什么？不是什么？</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Heritability: definition and misconceptions</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text"><strong>遗传率（h²）</strong>：在特定群体、特定环境下，表现型变异（variance）中归因于遗传差异的比例。范围 0–1。</div>
+    <div class="warn-box"><div class="wt">⚠️ 常见误解</div><p>
+      ✗ "IQ遗传率=0.8" ≠ "你80%的智力由基因决定"<br>
+      ✗ 遗传率高 ≠ 性状不可改变（身高遗传率0.9，但营养改善让平均身高100年升高10cm）<br>
+      ✗ 遗传率是<strong>群体统计量</strong>，不适用于描述个体<br>
+      ✗ 遗传率会随<strong>环境变化</strong>而改变
+    </p></div>
+    <div class="tags"><span class="tag y">群体统计量</span><span class="tag y">不等于决定论</span><span class="tag y">环境依赖</span></div>
+  </div>
+</div>
+
+<div class="card" style="border-color:rgba(96,165,250,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(96,165,250,0.12)">👥</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">双胞胎研究的发现</div><div style="font-size:12px;color:var(--muted);margin-top:2px">What twin studies actually show</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">双胞胎研究发现几乎所有行为特征都有遗传成分——但没有一种行为完全由遗传决定。</div>
+    <div class="hl"><div class="lbl">典型遗传率数据（MZ vs DZ一致率）</div><p>精神分裂症：MZ ~50%, DZ ~15%（遗传率约0.8）<br>抑郁症：MZ ~40%, DZ ~20%（遗传率约0.4）<br>智商（IQ）：MZ ~85%, DZ ~55%（遗传率约0.5-0.8）<br>外向性格：MZ ~50%, DZ ~25%（遗传率约0.5）<br>——注意：精神分裂MZ一致率仅50%，说明环境贡献巨大！</p></div>
+    <div class="tags"><span class="tag">一致率</span><span class="tag">遗传率估算</span><span class="tag">精神疾病</span></div>
+  </div>
+</div>
+
+<div class="card" style="border-color:rgba(52,211,153,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(52,211,153,0.12)">🧩</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">共享vs非共享环境</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Shared vs Non-shared environment</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">行为遗传学将环境分为：<strong>共享环境</strong>（兄弟姐妹共同经历，如家庭经济状况）和<strong>非共享环境</strong>（个体独特经历，如不同的朋友圈）。</div>
+    <div class="hl"><div class="lbl">令人惊讶的发现</div><p>多数研究发现，对人格和智力影响最大的是<strong>非共享环境</strong>，而非共享环境。两个在同一家庭成长的孩子，对家庭环境的主观感受截然不同——这才是塑造个体的"真实环境"。</p></div>
+    <div class="tags"><span class="tag g">非共享环境</span><span class="tag g">同伴影响</span><span class="tag g">个体独特性</span></div>
+  </div>
+</div>
+
+<div class="sec-label">互动：MZ vs DZ 一致率比较</div>
+<div class="card">
+  <div style="padding:16px">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:14px">同卵（MZ）和异卵（DZ）双胞胎一致率对比，差距越大说明遗传影响越强</div>
+
+    <div class="twin-row">
+      <div class="twin-label">精神分裂症 Schizophrenia</div>
+      <div class="twin-bars">
+        <div class="twin-bar-wrap"><div class="twin-bar-label">同卵 MZ</div><div class="twin-track"><div class="twin-fill" style="width:50%;background:var(--accent)"></div></div></div>
+        <div class="twin-pct" style="color:var(--accent)">50%</div>
+      </div>
+      <div class="twin-bars" style="margin-top:4px">
+        <div class="twin-bar-wrap"><div class="twin-bar-label">异卵 DZ</div><div class="twin-track"><div class="twin-fill" style="width:15%;background:var(--muted)"></div></div></div>
+        <div class="twin-pct" style="color:var(--muted)">15%</div>
+      </div>
+    </div>
+
+    <div class="twin-row">
+      <div class="twin-label">智商 IQ</div>
+      <div class="twin-bars">
+        <div class="twin-bar-wrap"><div class="twin-bar-label">同卵 MZ</div><div class="twin-track"><div class="twin-fill" style="width:86%;background:var(--yellow)"></div></div></div>
+        <div class="twin-pct" style="color:var(--yellow)">86%</div>
+      </div>
+      <div class="twin-bars" style="margin-top:4px">
+        <div class="twin-bar-wrap"><div class="twin-bar-label">异卵 DZ</div><div class="twin-track"><div class="twin-fill" style="width:60%;background:var(--muted)"></div></div></div>
+        <div class="twin-pct" style="color:var(--muted)">60%</div>
+      </div>
+    </div>
+
+    <div class="twin-row">
+      <div class="twin-label">外向性格 Extraversion</div>
+      <div class="twin-bars">
+        <div class="twin-bar-wrap"><div class="twin-bar-label">同卵 MZ</div><div class="twin-track"><div class="twin-fill" style="width:50%;background:var(--green)"></div></div></div>
+        <div class="twin-pct" style="color:var(--green)">50%</div>
+      </div>
+      <div class="twin-bars" style="margin-top:4px">
+        <div class="twin-bar-wrap"><div class="twin-bar-label">异卵 DZ</div><div class="twin-track"><div class="twin-fill" style="width:25%;background:var(--muted)"></div></div></div>
+        <div class="twin-pct" style="color:var(--muted)">25%</div>
+      </div>
+    </div>
+
+    <div style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.6;background:var(--card2);border-radius:8px;padding:10px">
+      📌 关键点：即使精神分裂症的遗传率高达~0.8，同卵双胞胎一致率也只有50%——另外50%的差异完全来自环境！
+    </div>
+  </div>
+</div>
+
+<div class="sec-label">三个真实案例</div>
+<div class="card">
+  <div style="padding:16px 16px 8px">
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">👯</div>
+        <div style="flex:1;font-size:14px;font-weight:600">Minnesota分离双胞胎研究</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">Thomas Bouchard（1979年起）的 Minnesota Twin Study：招募在不同家庭中分开成长的同卵双胞胎，评估200+项心理特征。惊人发现：分开成长的同卵双胞胎，在宗教信仰、政治倾向、咖啡饮用量、神经质程度上惊人相似。"Jim twins"：都叫Jim，都娶了叫Linda的妻子，后来都娶了叫Betty的妻子，都养了叫Toy的狗……争议：这些极端相似也可能是媒体渲染的幸存者偏差，但整体遗传影响方向是清晰的。</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">🌽</div>
+        <div style="flex:1;font-size:14px;font-weight:600">遗传率的环境依赖性：玉米种子实验</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">经典思想实验（Lewontin）：取遗传多样的玉米种子，一半种在肥沃土地，一半种在贫瘠土地。同一地块内：株高差异主要来自遗传（遗传率高）。两地块平均株高的差异：<strong>完全来自环境</strong>。应用于人类：即使两组各自遗传率都高，组间差异仍可完全来自<strong>系统性环境不平等</strong>（教育、营养、社会经济地位）。</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">📐</div>
+        <div style="flex:1;font-size:14px;font-weight:600">身高：高遗传率≠不可改变</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">身高遗传率约为0.8–0.9。然而：日本人平均身高在20世纪增加了约<strong>10厘米</strong>；朝鲜 vs 韩国同族人平均身高差距达<strong>8厘米</strong>。结论：高遗传率仅意味着"在当前环境变异下"遗传贡献大。改变环境（营养、医疗），结果就会改变。遗传率不是性状可塑性的上限。</div>
+    </div>
+  </div>
+</div>
+
+<div class="sec-label">术语表 · Glossary</div>
+<div class="card">
+  <div style="padding:16px">
+    <div class="gloss-item"><div class="gloss-en">Heritability (h²) / 遗传率</div><div class="gloss-def">特定群体特定环境下，表现型变异中归因于遗传差异的比例；是群体统计量，非个体属性</div></div>
+    <div class="gloss-item"><div class="gloss-en">MZ Twins / 同卵双胞胎</div><div class="gloss-def">单一受精卵分裂形成，遗传相同（r=1.0），是研究遗传贡献的理想自然实验</div></div>
+    <div class="gloss-item"><div class="gloss-en">DZ Twins / 异卵双胞胎</div><div class="gloss-def">两个独立受精卵同时发育，遗传相似度如普通兄弟姐妹（r≈0.5），共享相同孕期环境</div></div>
+    <div class="gloss-item"><div class="gloss-en">Concordance Rate / 一致率</div><div class="gloss-def">双胞胎对中两人都表现同一性状的比例；MZ>DZ说明遗传有贡献</div></div>
+    <div class="gloss-item"><div class="gloss-en">Shared Environment / 共享环境</div><div class="gloss-def">兄弟姐妹共同经历的环境因素，如家庭经济、父母教养；对人格影响往往小于预期</div></div>
+    <div class="gloss-item"><div class="gloss-en">Non-shared Environment / 非共享环境</div><div class="gloss-def">个体独特的环境经历，如不同朋友、随机事件；对人格发展影响往往大于共享环境</div></div>
+    <div class="gloss-item"><div class="gloss-en">Adoption Study / 领养研究</div><div class="gloss-def">比较领养子女与亲生父母vs养父母的相似性，分离遗传与环境效应</div></div>
+    <div class="gloss-item"><div class="gloss-en">GE Correlation / 基因-环境相关</div><div class="gloss-def">遗传倾向影响个体选择/遭遇的环境（如外向者寻求社交环境），使遗传与环境难以分离</div></div>
+  </div>
+</div>
+
+<div class="sec-label">课程联系</div>
+<div class="card">
+  <div style="padding:16px">
+    <div class="conn-item"><div style="font-size:16px">←</div><div class="conn-text"><strong>L04-05 分子遗传学</strong>：理解分子机制后，才能正确解读遗传率数据</div></div>
+    <div class="conn-item"><div style="font-size:16px;color:var(--accent)">→</div><div class="conn-text"><strong>L07 行为遗传学II</strong>：从双胞胎研究进入GWAS，寻找具体基因-行为联系</div></div>
+    <div class="conn-item"><div style="font-size:16px;color:var(--accent)">→</div><div class="conn-text"><strong>L24 精神分裂症</strong>：行为遗传学的重要应用——精神疾病遗传率和环境触发</div></div>
+    <div class="conn-item"><div style="font-size:16px;color:var(--yellow)">⚠️</div><div class="conn-text"><strong>社会政策警告</strong>：遗传率数据常被滥用于为社会不平等辩护，Sapolsky强调批判性阅读研究</div></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+function togEx(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+</script>
+</body>
+</html>
