@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L08 识别亲属 — Sapolsky 深度拆解</title>
+<style>
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding-bottom:60px;}
+.hero{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);padding:36px 20px 28px;text-align:center;border-bottom:1px solid var(--border);}
+.badge{display:inline-block;background:rgba(38,198,168,0.15);color:var(--teal);border:1px solid rgba(38,198,168,0.3);border-radius:20px;font-size:12px;padding:3px 12px;margin-bottom:12px;letter-spacing:1px;}
+.hero h1{font-size:22px;font-weight:700;margin-bottom:8px;line-height:1.3;}
+.hero p{color:var(--muted);font-size:13px;}
+.container{max-width:680px;margin:0 auto;padding:20px 16px;}
+.section{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:16px;overflow:hidden;}
+.sec-hdr{display:flex;align-items:center;gap:10px;padding:16px;cursor:pointer;user-select:none;transition:background .2s;}
+.sec-hdr:hover{background:var(--card2);}
+.sec-icon{font-size:20px;flex-shrink:0;}
+.sec-title{font-weight:600;font-size:15px;flex:1;}
+.chevron{color:var(--muted);transition:transform .25s;font-size:12px;}
+.sec-body{display:none;padding:0 16px 16px;}
+.sec-body.open{display:block;}
+.concept{background:var(--card2);border-radius:10px;padding:14px;margin-bottom:10px;}
+.concept h4{color:var(--teal);font-size:13px;font-weight:600;margin-bottom:6px;}
+.tag{display:inline-block;border-radius:6px;font-size:11px;padding:2px 8px;margin:2px;font-weight:600;}
+.tag-g{background:rgba(52,211,153,0.15);color:var(--green);}
+.tag-y{background:rgba(251,191,36,0.15);color:var(--yellow);}
+.tag-r{background:rgba(248,113,113,0.15);color:var(--red);}
+.tag-b{background:rgba(96,165,250,0.15);color:var(--blue);}
+.tag-t{background:rgba(38,198,168,0.15);color:var(--teal);}
+.tag-a{background:rgba(167,139,250,0.15);color:var(--accent);}
+.hl{background:rgba(167,139,250,0.1);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px;}
+.hl-g{background:rgba(52,211,153,0.08);border-left-color:var(--green);}
+.hl-y{background:rgba(251,191,36,0.08);border-left-color:var(--yellow);}
+.hl-r{background:rgba(248,113,113,0.08);border-left-color:var(--red);}
+.hl-t{background:rgba(38,198,168,0.08);border-left-color:var(--teal);}
+.mhc-demo{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.mhc-demo h4{color:var(--teal);font-size:13px;font-weight:600;margin-bottom:8px;}
+.smell-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.smell-card{background:#12121c;border-radius:8px;padding:12px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .25s;}
+.smell-card:hover{border-color:var(--teal);}
+.smell-card.selected{border-color:var(--teal);background:rgba(38,198,168,0.08);}
+.smell-card .emoji{font-size:28px;display:block;margin-bottom:4px;}
+.smell-card .label{font-size:12px;color:var(--muted);}
+.mhc-result{background:#12121c;border-radius:8px;padding:10px;margin-top:8px;font-size:13px;min-height:50px;}
+.west-demo{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.west-demo h4{color:var(--accent);font-size:13px;font-weight:600;margin-bottom:8px;}
+.west-row{display:flex;align-items:center;gap:10px;margin:8px 0;}
+.west-row label{font-size:12px;color:var(--muted);width:140px;flex-shrink:0;}
+.west-row select{flex:1;background:#12121c;border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;}
+.west-result{background:#12121c;border-radius:8px;padding:10px;margin-top:8px;font-size:13px;}
+.kin-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;}
+.kin-table th{color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;}
+.kin-table td{padding:7px 8px;border-bottom:1px solid rgba(46,46,63,0.5);}
+.kin-table tr:last-child td{border-bottom:none;}
+.r-bar-wrap{height:8px;background:#12121c;border-radius:4px;overflow:hidden;min-width:80px;}
+.r-bar{height:100%;border-radius:4px;background:var(--teal);}
+.hamilton{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.hamilton h4{color:var(--yellow);font-size:13px;font-weight:600;margin-bottom:10px;}
+.ham-eq{text-align:center;font-size:20px;color:var(--text);font-weight:700;letter-spacing:2px;margin:10px 0;}
+.ham-vars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px;}
+.ham-var{background:#12121c;border-radius:8px;padding:10px;text-align:center;}
+.ham-var .sym{font-size:20px;font-weight:700;}
+.ham-var .def{font-size:11px;color:var(--muted);margin-top:4px;}
+.ex-box{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.ex-box h4{font-size:13px;font-weight:600;margin-bottom:6px;}
+.quiz{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.quiz p{font-size:14px;margin-bottom:10px;}
+.q-btn{display:block;width:100%;text-align:left;background:#12121c;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 12px;margin:5px 0;cursor:pointer;font-size:13px;transition:all .2s;}
+.q-btn:hover{border-color:var(--accent);}
+.q-btn.correct{background:rgba(52,211,153,0.15);border-color:var(--green);color:var(--green);}
+.q-btn.wrong{background:rgba(248,113,113,0.1);border-color:var(--red);color:var(--red);}
+.q-explain{font-size:12px;color:var(--muted);margin-top:8px;padding:8px;background:#12121c;border-radius:6px;display:none;}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="badge">LECTURE 08</div>
+  <h1>识别亲属<br><span style="color:var(--teal);font-size:18px;">Recognizing Relatives</span></h1>
+  <p style="margin-top:8px;">汉密顿规则 · MHC嗅觉识别 · Westermarck效应 · 表型匹配</p>
+</div>
+<div class="container">
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧩</span><span class="sec-title">核心概念速览</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="concept"><h4>为什么需要识别亲属？</h4><p style="font-size:13px;color:var(--muted);">利他行为的进化依赖<strong style="color:var(--text);">亲缘选择（kin selection）</strong>：帮助亲属等于间接传递自己的基因。但前提是要能<em>识别</em>谁是亲属。动物（包括人类）进化出了多种亲属识别机制。</p></div>
+    <div class="concept"><h4>汉密顿规则 (Hamilton's Rule)</h4><p style="font-size:13px;color:var(--muted);">利他行为进化的条件：<strong style="color:var(--text);">rB &gt; C</strong>，其中 r = 亲缘系数，B = 受益方获益，C = 施益方成本。亲缘越近，利他越容易演化。</p></div>
+    <div class="concept"><h4>三种亲属识别机制</h4><p style="font-size:13px;color:var(--muted);"><strong style="color:var(--teal);">1. MHC嗅觉识别</strong>：通过体味判断 MHC 基因型相似性<br><strong style="color:var(--accent);">2. Westermarck效应</strong>：童年早期同住者成年后产生性厌恶<br><strong style="color:var(--blue);">3. 表型匹配</strong>：将他人外貌与自身或亲属比较</p></div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+      <span class="tag tag-t">亲缘选择</span><span class="tag tag-y">汉密顿规则</span><span class="tag tag-a">MHC</span><span class="tag tag-b">Westermarck效应</span><span class="tag tag-g">表型匹配</span>
+    </div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">⚖️</span><span class="sec-title">汉密顿规则详解</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="hamilton">
+      <h4>进化利他的充分条件</h4>
+      <div class="ham-eq">r × B &gt; C</div>
+      <div class="ham-vars">
+        <div class="ham-var"><div class="sym" style="color:var(--teal);">r</div><div class="def">亲缘系数<br>（共享基因比例）</div></div>
+        <div class="ham-var"><div class="sym" style="color:var(--green);">B</div><div class="def">受益方的<br>适应度获益</div></div>
+        <div class="ham-var"><div class="sym" style="color:var(--red);">C</div><div class="def">施益方的<br>适应度代价</div></div>
+      </div>
+    </div>
+    <table class="kin-table">
+      <thead><tr><th>亲属关系</th><th>亲缘系数 r</th><th>共享基因</th><th>利他阈值</th></tr></thead>
+      <tbody>
+        <tr><td>同卵双胞胎</td><td><strong style="color:var(--teal);">1.0</strong></td><td><div class="r-bar-wrap"><div class="r-bar" style="width:100%"></div></div></td><td>B &gt; C 即可</td></tr>
+        <tr><td>兄弟/姐妹</td><td><strong style="color:var(--green);">0.5</strong></td><td><div class="r-bar-wrap"><div class="r-bar" style="width:50%"></div></div></td><td>B &gt; 2C</td></tr>
+        <tr><td>半亲兄弟</td><td>0.25</td><td><div class="r-bar-wrap"><div class="r-bar" style="width:25%"></div></div></td><td>B &gt; 4C</td></tr>
+        <tr><td>表兄弟姐妹</td><td>0.125</td><td><div class="r-bar-wrap"><div class="r-bar" style="width:12.5%"></div></div></td><td>B &gt; 8C</td></tr>
+        <tr><td>无亲缘关系</td><td style="color:var(--red);">0</td><td><div class="r-bar-wrap"><div class="r-bar" style="width:2%"></div></div></td><td>永不进化（纯粹利他）</td></tr>
+      </tbody>
+    </table>
+    <div class="hl hl-y"><strong>Haldane 的名言：</strong>"我愿意为两个兄弟或八个表兄弟牺牲自己。" — 完美体现 r×B&gt;C 的数学。</div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">👃</span><span class="sec-title">MHC 嗅觉识别机制</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="concept"><h4>MHC 是什么？</h4><p style="font-size:13px;color:var(--muted);">主要组织相容性复合体 (Major Histocompatibility Complex)，人类中也叫 <strong style="color:var(--text);">HLA</strong>。MHC 蛋白负责向免疫细胞呈递病原体片段，多态性极高（数百个等位基因）。</p></div>
+    <div class="concept"><h4>MHC → 体味</h4><p style="font-size:13px;color:var(--muted);">MHC 基因型影响皮肤细菌组成，进而产生独特体味。动物（小鼠、鱼、人类）都能通过嗅觉感知 MHC 差异，<strong style="color:var(--text);">倾向于选择 MHC 不同的配偶</strong>（促进后代免疫多样性）并回避 MHC 相似者（避免近亲交配）。</p></div>
+    <div class="mhc-demo">
+      <h4>🧪 模拟："汗衫实验"——你更喜欢谁的气味？</h4>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Wedekind 1995年经典实验：女性闻陌生男性穿过的T恤，选出最吸引人的气味。</p>
+      <div class="smell-cards">
+        <div class="smell-card" onclick="selectSmell(this,'A')"><span class="emoji">👕</span><div class="label">男性A<br>MHC 与你差异大</div></div>
+        <div class="smell-card" onclick="selectSmell(this,'B')"><span class="emoji">👕</span><div class="label">男性B<br>MHC 与你相似</div></div>
+        <div class="smell-card" onclick="selectSmell(this,'C')"><span class="emoji">👕</span><div class="label">男性C<br>MHC 与你极不同</div></div>
+        <div class="smell-card" onclick="selectSmell(this,'D')"><span class="emoji">👕</span><div class="label">男性D<br>MHC 与你中等差异</div></div>
+      </div>
+      <div class="mhc-result" id="mhcResult"><span style="color:var(--muted)">👆 点击选择你认为气味最吸引人的T恤</span></div>
+    </div>
+    <div class="hl hl-r"><strong>重要例外：</strong>服用避孕药的女性偏好发生反转——更喜欢 MHC 相似者（类似亲属的气味）。避孕药模拟怀孕状态，怀孕时靠近亲属更安全。</div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🏠</span><span class="sec-title">Westermarck 效应</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="concept"><h4>核心机制</h4><p style="font-size:13px;color:var(--muted);">0–6岁之间与某人<strong style="color:var(--text);">亲密共同生活</strong>，会导致成年后对其产生性厌恶（性欲抑制）。这是避免近亲交配（乱伦）的进化适应机制，核心关键期约为生命前6年。</p></div>
+    <div class="west-demo">
+      <h4>🔍 Westermarck 效应判断器</h4>
+      <div class="west-row"><label>共同生活开始年龄</label><select id="westAge" onchange="calcWest()"><option value="0">出生时</option><option value="2">2岁</option><option value="4">4岁</option><option value="6">6岁</option><option value="10">10岁</option><option value="15">15岁</option></select></div>
+      <div class="west-row"><label>共同生活年数</label><select id="westDur" onchange="calcWest()"><option value="1">1年</option><option value="3">3年</option><option value="6">6年</option><option value="12">12年</option></select></div>
+      <div class="west-result" id="westResult"><span style="color:var(--muted)">选择参数后查看结果</span></div>
+    </div>
+    <div class="hl hl-t"><strong>以色列集体农庄 (Kibbutz) 证据：</strong>在同一育婴室长大的儿童，成年后极少相互婚配，即使他们在遗传上完全无关。Westermarck 效应对共同抚养环境敏感，而非血缘关系本身。</div>
+    <div class="hl"><strong>中国婚俗证据 (Shim-pua marriage)：</strong>女童幼年即被送到未来夫家同住（童养媳制度）。这类婚姻离婚率显著更高，子女数量更少，与 Westermarck 效应预测一致。</div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🪞</span><span class="sec-title">表型匹配与其他机制</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="concept"><h4>表型匹配 (Phenotypic Matching)</h4><p style="font-size:13px;color:var(--muted);">将他人的外貌、气味等表型与<strong style="color:var(--text);">自身或已知亲属</strong>的表型比较，来推断亲缘关系。例如：人类倾向于认为"长得像自己"的陌生人更值得信赖；女性判断婴儿父亲时倾向依赖面部相似性。</p></div>
+    <div class="concept"><h4>地点熟悉性 (Location Familiarity)</h4><p style="font-size:13px;color:var(--muted);">最简单的规则："和我一起出生/长大的就是亲属"。在正常环境下非常准确，但可被利用（布谷鸟寄生、人类收养），说明这是启发式而非绝对规则。</p></div>
+    <div class="concept"><h4>父亲不确定性问题</h4><p style="font-size:13px;color:var(--muted);">母亲对亲子关系100%确定，父亲存在不确定性。研究发现：<strong style="color:var(--text);">女性亲属更倾向声称婴儿像父亲</strong>（减少父亲抛弃动机）；母系亲属相对更多投入婴儿照料。</p></div>
+    <div class="hl hl-y"><strong>有趣发现：</strong>新生儿在出生后第一天外表更像父亲（某些研究显示）——进化压力下，让父亲更快确认亲子关系的选择压力？</div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span><span class="sec-title">经典案例深析</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="ex-box"><h4 style="color:var(--teal);">案例1：土拨鼠 (Belding Ground Squirrel) 亲属识别</h4><p style="font-size:13px;color:var(--muted);">Sherman研究发现，土拨鼠报警呼叫的发出率与旁观者的亲缘关系直接相关：亲缘越近，越多发出报警叫声。且这种判断通过<strong style="color:var(--text);">气味识别</strong>而非共同生活史，支持了 MHC 识别机制的普遍性。</p></div>
+    <div class="ex-box"><h4 style="color:var(--accent);">案例2：鱼类 MHC 择偶</h4><p style="font-size:13px;color:var(--muted);">三刺鱼雌性能通过水中化学物质感知雄性 MHC 型，偏向选择 MHC 互补的配偶。但存在上限：<strong style="color:var(--text);">MHC 差异太大也不好</strong>（无法协同识别）。最优为中等差异。</p></div>
+    <div class="ex-box"><h4 style="color:var(--blue);">案例3：人类收养研究</h4><p style="font-size:13px;color:var(--muted);">与养父母共同生活的孩子，成年后不会对养父/母产生性吸引（即使无血缘），说明性厌恶由<strong style="color:var(--text);">共同生活经历</strong>而非遗传关系触发。</p></div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧪</span><span class="sec-title">理解测验</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="quiz">
+      <p>按汉密顿规则，以下哪种情形的利他行为最容易进化？</p>
+      <button class="q-btn" onclick="ans(this,false)">A. 帮助表兄弟(r=0.125)，代价很小，收益很大</button>
+      <button class="q-btn" onclick="ans(this,true)">B. 帮助亲兄弟(r=0.5)，代价中等，收益很大</button>
+      <button class="q-btn" onclick="ans(this,false)">C. 帮助无关陌生人，代价极小，收益极大</button>
+      <div class="q-explain" id="qex1">注意：对陌生人利他（r=0）纯粹利他行为无法通过亲缘选择进化。r高时条件更容易达到。核心是r×B必须&gt;C。Sapolsky的强调是亲缘程度越高（r越大），利他越容易进化。</div>
+    </div>
+    <div class="quiz">
+      <p>Westermarck 效应的关键触发条件是？</p>
+      <button class="q-btn" onclick="ans2(this,false)">A. 与对方有血缘关系</button>
+      <button class="q-btn" onclick="ans2(this,true)">B. 幼年（0-6岁）与对方亲密共同生活</button>
+      <button class="q-btn" onclick="ans2(this,false)">C. 知道对方是自己的亲属</button>
+      <div class="q-explain" id="qex2">正确！Westermarck 效应是基于<strong>共同生活经历</strong>而非血缘知识。以色列 Kibbutz 实验和中国童养媳研究都证明，无血缘者若幼年同住，也会产生性厌恶。这是进化出的启发式规则（正常情况下幼年同住者=亲属）。</div>
+    </div>
+  </div>
+</div>
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">💡</span><span class="sec-title">核心要点 &amp; 考点</span><span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="hl hl-t">1. 亲缘选择需要识别亲属；汉密顿规则 rB&gt;C 是利他进化的核心逻辑</div>
+    <div class="hl">2. MHC 嗅觉识别：倾向于选 MHC 不同的配偶（免疫多样性优势）</div>
+    <div class="hl hl-y">3. Westermarck 效应：幼年共住 → 成年性厌恶（避免乱伦的先天机制）</div>
+    <div class="hl hl-r">4. 避孕药打乱 MHC 偏好，有实际影响</div>
+    <div class="hl">5. 父亲不确定性问题导致母系亲属/父系亲属在亲代投入上的不对称</div>
+  </div>
+</div>
+</div>
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+function selectSmell(el,id){
+  document.querySelectorAll('.smell-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');
+  const results={
+    'A':'<strong style="color:var(--teal)">你选了 MHC 差异大的男性A</strong><br><span style="color:var(--muted);font-size:12px">这与 Wedekind 实验结果一致！大多数女性倾向认为 MHC 差异大的气味"更好闻"或"更性感"。MHC 差异大 → 后代免疫系统更多样 → 生存优势。</span>',
+    'B':'<strong style="color:var(--yellow)">你选了 MHC 相似的男性B</strong><br><span style="color:var(--muted);font-size:12px">这是少数选择。Wedekind 研究发现，MHC 相似者的气味常被形容为"像家人"或"中性"，而非性感。但服用避孕药的女性偏好反转，更可能选择这类气味。</span>',
+    'C':'<strong style="color:var(--teal)">你选了 MHC 极不同的男性C</strong><br><span style="color:var(--muted);font-size:12px">与A类似，MHC 差异大通常气味更被认为有吸引力。但"极"不同是否优于"差异大"，研究结果有争议——可能存在最优 MHC 差异范围。</span>',
+    'D':'<strong style="color:var(--muted)">你选了 MHC 中等差异的男性D</strong><br><span style="color:var(--muted);font-size:12px">中等差异介于"太相似（像家人）"和"太不同"之间。部分研究（尤其是鱼类）支持"最优中间 MHC 差异"假说。</span>'
+  };
+  document.getElementById('mhcResult').innerHTML=results[id];
+}
+function calcWest(){
+  const age=parseInt(document.getElementById('westAge').value);const dur=parseInt(document.getElementById('westDur').value);const endAge=age+dur;let result='';
+  if(age<=2&&dur>=3){result=`<strong style="color:var(--red)">⚠️ Westermarck 效应极强</strong><br><span style="color:var(--muted);font-size:12px">从${age}岁开始、共同生活${dur}年（至${endAge}岁），完全覆盖关键期（0-6岁）且时间充足。根据研究预测，成年后对此人产生性厌恶的概率极高。</span>`;}
+  else if(age<=6&&endAge>=4){result=`<strong style="color:var(--yellow)">⚡ Westermarck 效应中等</strong><br><span style="color:var(--muted);font-size:12px">从${age}岁开始、共同生活${dur}年（至${endAge}岁），部分覆盖关键期。性厌恶效应可能存在但程度较弱，取决于共同生活质量和亲密程度。</span>`;}
+  else if(age>=10){result=`<strong style="color:var(--green)">✓ Westermarck 效应不适用</strong><br><span style="color:var(--muted);font-size:12px">从${age}岁才开始共同生活，已过0-6岁关键期。不会触发性厌恶机制。青春期或之后相识的人，亲密接触可能反而产生吸引力（正常社会化）。</span>`;}
+  else{result=`<strong style="color:var(--yellow)">⚡ Westermarck 效应较弱</strong><br><span style="color:var(--muted);font-size:12px">从${age}岁开始、共同生活${dur}年，覆盖部分关键期但不充分。效应可能较弱。</span>`;}
+  document.getElementById('westResult').innerHTML=result;
+}
+calcWest();
+function ans(btn,correct){const btns=btn.parentElement.querySelectorAll('.q-btn');btns.forEach(b=>b.disabled=true);btn.classList.add(correct?'correct':'wrong');document.getElementById('qex1').style.display='block';}
+function ans2(btn,correct){const btns=btn.parentElement.querySelectorAll('.q-btn');btns.forEach(b=>b.disabled=true);btn.classList.add(correct?'correct':'wrong');document.getElementById('qex2').style.display='block';}
+</script>
+</body>
+</html>
