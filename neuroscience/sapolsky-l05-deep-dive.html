@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>L05 分子遗传学 II · Sapolsky</title>
+<style>
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--teal:#26c6a8;--orange:#fb923c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:60px}
+.hero{background:linear-gradient(135deg,#1a0a3a 0%,#0a2040 50%,#0f1a2e 100%);padding:32px 20px 28px;text-align:center;border-bottom:1px solid var(--border);position:relative}
+.back-link{position:absolute;top:16px;left:16px;font-size:13px;color:var(--muted);text-decoration:none}
+.badge{display:inline-block;font-size:11px;font-weight:700;background:rgba(38,198,168,0.12);color:var(--teal);padding:4px 12px;border-radius:99px;border:1px solid rgba(38,198,168,0.25);margin-bottom:12px}
+.hero h1{font-size:24px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:4px}
+.hero h1 span{font-size:16px;font-weight:400;color:var(--muted)}
+.meta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.meta span{font-size:12px;background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:99px;color:var(--muted)}
+.content{padding:20px 16px 0}
+.sec-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin:16px 0 10px 2px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden}
+.coll-head{padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;user-select:none}
+.coll-body{padding:0 16px 16px;display:none}
+.coll-body.open{display:block}
+.coll-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.chevron{font-size:18px;color:var(--muted);transition:transform 0.2s;flex-shrink:0}
+.body-text{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:10px}
+.hl{background:var(--card2);border-radius:10px;padding:12px;margin:10px 0;border-left:3px solid var(--accent)}
+.hl .lbl{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:4px}
+.hl p{font-size:13px;color:var(--text);line-height:1.6}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(167,139,250,0.1);color:var(--accent);border:1px solid rgba(167,139,250,0.2)}
+.tag.t{background:rgba(38,198,168,0.1);color:var(--teal);border-color:rgba(38,198,168,0.2)}
+.tag.y{background:rgba(251,191,36,0.1);color:var(--yellow);border-color:rgba(251,191,36,0.2)}
+.tag.g{background:rgba(52,211,153,0.1);color:var(--green);border-color:rgba(52,211,153,0.2)}
+.ex-card{background:var(--card2);border-radius:12px;margin:8px 0;overflow:hidden}
+.ex-head{padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.ex-body{padding:0 14px 14px;display:none;font-size:13px;color:var(--muted);line-height:1.7}
+.ex-body.open{display:block}
+.gloss-item{border-bottom:1px solid var(--border);padding:12px 0}
+.gloss-item:last-child{border-bottom:none}
+.gloss-en{font-size:12px;font-weight:700;color:var(--teal)}
+.gloss-def{font-size:12px;color:var(--muted);line-height:1.5;margin-top:2px}
+.conn-item{background:var(--card2);border-radius:10px;padding:12px;margin:6px 0;display:flex;gap:10px}
+.conn-text{font-size:13px;color:var(--muted);line-height:1.5}
+.conn-text strong{color:var(--text)}
+.epi-row{display:flex;gap:8px;margin:8px 0;align-items:flex-start}
+.epi-label{background:var(--card2);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700;white-space:nowrap;min-width:80px}
+.epi-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.splice-box{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.s-exon{background:rgba(38,198,168,0.2);border:1px solid var(--teal);border-radius:6px;padding:6px 10px;font-size:12px;font-weight:700;color:var(--teal)}
+.s-intron{background:rgba(139,139,168,0.1);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--muted);font-style:italic}
+.s-arr{font-size:14px;color:var(--muted)}
+.gx-btn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:12px;cursor:pointer;transition:all 0.2s}
+.gx-btn.active{border-color:var(--accent);background:rgba(167,139,250,0.1);color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="hero">
+  <a href="index.html" class="back-link">← 神经科学中心</a>
+  <div class="badge">Sapolsky · Lecture 05</div>
+  <h1>分子遗传学 II<br><span>Molecular Genetics II</span></h1>
+  <div class="meta">
+    <span>🕐 1h25m</span><span>🧬 基因调控</span><span>⭐⭐⭐</span><span>🌿 表观遗传</span>
+  </div>
+</div>
+
+<div class="content">
+
+<div class="card" style="border-color:rgba(167,139,250,0.3)">
+  <div style="padding:18px;text-align:center">
+    <div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">本讲核心洞见</div>
+    <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:6px">基因不是命运——基因是工具书</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.6">同样的基因组，在不同环境/时机/细胞类型中产生完全不同的结果。决定行为的不只是"有什么基因"，更是"哪些基因何时表达"。</div>
+  </div>
+</div>
+
+<div class="sec-label">问题链 · Issue Tree</div>
+
+<div class="card" style="border-color:rgba(38,198,168,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(38,198,168,0.15)">🔍</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">相同基因组如何产生不同细胞？</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Gene regulation: why not every gene is expressed</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">你的神经元和肝细胞含有<strong>完全相同的DNA</strong>，却执行截然不同的功能。原因：基因调控——哪些基因在什么时候、什么地方被"读取"。</div>
+    <div class="hl"><div class="lbl">调控层次</div><p>① <strong>启动子（Promoter）</strong>：基因上游序列，转录因子识别并结合的位点<br>② <strong>增强子（Enhancer）</strong>：可在远距离激活基因转录<br>③ <strong>转录因子</strong>：识别特定DNA序列，开启或关闭基因表达<br>④ <strong>环境信号</strong>：激素、压力、经验→转录因子活性→基因表达</p></div>
+    <div class="tags"><span class="tag t">启动子</span><span class="tag t">转录因子</span><span class="tag">基因调控网络</span></div>
+  </div>
+</div>
+
+<div class="card" style="border-color:rgba(251,191,36,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(251,191,36,0.12)">✂️</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">选择性剪接：一个基因，多种蛋白</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Alternative Splicing</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">人类约 <strong>20,000个基因</strong>，却能产生 <strong>100,000+种蛋白质</strong>。秘密：选择性剪接——同一pre-mRNA的外显子以不同组合拼接，产生不同蛋白质变体。</div>
+    <div class="splice-box">
+      <div class="s-exon">E1</div><div class="s-arr">-</div>
+      <div class="s-intron">intron</div><div class="s-arr">-</div>
+      <div class="s-exon">E2</div><div class="s-arr">-</div>
+      <div class="s-intron">intron</div><div class="s-arr">-</div>
+      <div class="s-exon">E3</div>
+    </div>
+    <div class="hl"><div class="lbl">神经系统重要例子</div><p><strong>NMDA受体</strong>有多种剪接变体，在大脑不同区域和发育阶段分布不同。<strong>Neurexin</strong>基因可产生 >1000种蛋白变体，协助神经元识别突触伙伴。</p></div>
+    <div class="tags"><span class="tag y">选择性剪接</span><span class="tag">外显子跳跃</span><span class="tag">蛋白多样性</span></div>
+  </div>
+</div>
+
+<div class="card" style="border-color:rgba(167,139,250,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(167,139,250,0.15)">🌿</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">表观遗传：不改变DNA的遗传变化</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Epigenetics</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">表观遗传（Epigenetics）：DNA序列不变，但通过化学修饰改变基因表达，且这种改变可以稳定遗传给子代细胞（甚至后代个体）。</div>
+    <div style="margin:10px 0">
+      <div class="epi-row"><div class="epi-label" style="color:var(--accent)">DNA甲基化</div><div class="epi-desc">在胞嘧啶（C）上添加甲基（-CH₃）→ 通常<strong>沉默基因</strong>。是最稳定的表观遗传标记，可被压力、营养、环境改变。</div></div>
+      <div class="epi-row"><div class="epi-label" style="color:var(--teal)">组蛋白乙酰化</div><div class="epi-desc">组蛋白乙酰化 → DNA松开 → 基因<strong>激活</strong>。去乙酰化 → DNA压缩 → 基因沉默。</div></div>
+      <div class="epi-row"><div class="epi-label" style="color:var(--yellow)">组蛋白甲基化</div><div class="epi-desc">根据位点不同，可激活或沉默基因。表观遗传标记组合形成"组蛋白密码"。</div></div>
+    </div>
+    <div class="hl"><div class="lbl">跨代表观遗传</div><p>某些表观遗传标记可越过减数分裂传给后代——祖父母的生活经历可能影响孙辈的基因表达。</p></div>
+    <div class="tags"><span class="tag">DNA甲基化</span><span class="tag">组蛋白修饰</span><span class="tag g">跨代遗传</span></div>
+  </div>
+</div>
+
+<div class="card" style="border-color:rgba(52,211,153,0.3)">
+  <div class="coll-head" onclick="tog(this)">
+    <div class="coll-icon" style="background:rgba(52,211,153,0.12)">⚡</div>
+    <div style="flex:1"><div style="font-size:15px;font-weight:700">基因×环境：GxE交互</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Gene × Environment Interaction</div></div>
+    <div class="chevron">›</div>
+  </div>
+  <div class="coll-body">
+    <div class="body-text">GxE交互：同一基因型在不同环境下产生不同表现型；同一环境对不同基因型影响不同。这是理解"基因影响行为"的正确框架。</div>
+    <div class="hl"><div class="lbl">MAOA基因×童年创伤（Caspi 2002）</div><p>MAOA-L低活性等位基因本身不增加暴力风险。但有童年虐待经历者：MAOA-L → 成年后反社会行为风险<strong>显著升高</strong>。结论：基因在特定环境中才发挥作用。</p></div>
+    <div class="tags"><span class="tag g">GxE交互</span><span class="tag g">MAOA基因</span><span class="tag g">非决定论</span></div>
+  </div>
+</div>
+
+<div class="sec-label">互动：基因×环境交互演示</div>
+<div class="card">
+  <div style="padding:16px">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px">选择基因型和环境，查看行为结果预测 →</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">基因型</div>
+        <div style="display:flex;gap:6px">
+          <button class="gx-btn active" id="g1" onclick="calcGxE('L',null)">MAOA-L（低活性）</button>
+          <button class="gx-btn" id="g2" onclick="calcGxE('H',null)">MAOA-H（高活性）</button>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">童年环境</div>
+        <div style="display:flex;gap:6px">
+          <button class="gx-btn active" id="e1" onclick="calcGxE(null,'good')">正常/良好</button>
+          <button class="gx-btn" id="e2" onclick="calcGxE(null,'bad')">虐待/忽视</button>
+        </div>
+      </div>
+    </div>
+    <div id="gxeResult" style="background:var(--card2);border-radius:10px;padding:14px;font-size:13px;color:var(--muted);line-height:1.7">正在计算结果...</div>
+  </div>
+</div>
+
+<div class="sec-label">三个真实案例</div>
+<div class="card">
+  <div style="padding:16px 16px 8px">
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">🐭</div>
+        <div style="flex:1;font-size:14px;font-weight:600">母鼠舔舐与HPA轴编程</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">Michael Meaney等人研究：出生后被高舔舐母亲养育的小鼠，成年后应激反应更平静，学习能力更强。机制：母亲舔舐行为→增加海马糖皮质激素受体（GR）基因启动子的乙酰化/去甲基化→基因表达增加→更好的应激负反馈调控。<strong>这种表观遗传标记在成年后仍然存在，甚至影响下一代。</strong></div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">🍯</div>
+        <div style="flex:1;font-size:14px;font-weight:600">蜜蜂蜂王与工蜂：相同基因组的分化</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">蜂王和工蜂遗传上几乎完全相同，但形态、行为、寿命天壤之别。原因：蜂王幼虫被喂食<strong>蜂王浆</strong>。机制：royalactin蛋白→激活发育信号→差异基因表达→表观遗传差异。食物 = 环境信号 → 表观遗传重编程 → 命运分化。</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-head" onclick="togEx(this)">
+        <div style="font-size:22px">🍽️</div>
+        <div style="flex:1;font-size:14px;font-weight:600">荷兰饥荒与代际表观遗传</div>
+        <div class="chevron" style="color:var(--muted)">›</div>
+      </div>
+      <div class="ex-body">1944-45年，荷兰纳粹饥荒（Dutch Hunger Winter）：数百万人严重营养不良。研究发现：饥荒期间受孕的胎儿，数十年后（甚至其子女）代谢疾病、精神疾病风险更高。<strong>祖母经历的饥荒，影响了孙辈的代谢表观遗传组——跨代表观遗传的人类证据。</strong></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec-label">术语表 · Glossary</div>
+<div class="card">
+  <div style="padding:16px">
+    <div class="gloss-item"><div class="gloss-en">Gene Regulation / 基因调控</div><div class="gloss-def">控制基因何时、何处、以何种程度表达的分子机制，包括转录因子、增强子等</div></div>
+    <div class="gloss-item"><div class="gloss-en">Alternative Splicing / 选择性剪接</div><div class="gloss-def">同一pre-mRNA的外显子以不同组合拼接，产生多种蛋白质变体，极大扩展蛋白多样性</div></div>
+    <div class="gloss-item"><div class="gloss-en">Epigenetics / 表观遗传学</div><div class="gloss-def">不改变DNA序列的可遗传基因表达变化，通过甲基化、组蛋白修饰等机制实现</div></div>
+    <div class="gloss-item"><div class="gloss-en">DNA Methylation / DNA甲基化</div><div class="gloss-def">在胞嘧啶碱基添加甲基，通常导致基因沉默，是最稳定的表观遗传标记</div></div>
+    <div class="gloss-item"><div class="gloss-en">Transcription Factor / 转录因子</div><div class="gloss-def">识别并结合特定DNA序列，激活或抑制基因转录的蛋白质</div></div>
+    <div class="gloss-item"><div class="gloss-en">GxE Interaction / 基因×环境交互</div><div class="gloss-def">同一基因型在不同环境下产生不同表现型；行为是基因与环境共同作用的结果</div></div>
+    <div class="gloss-item"><div class="gloss-en">Glucocorticoid / 糖皮质激素</div><div class="gloss-def">肾上腺皮质分泌的压力激素（如皮质醇），可进入细胞核直接影响基因表达</div></div>
+    <div class="gloss-item"><div class="gloss-en">Histone / 组蛋白</div><div class="gloss-def">DNA缠绕的蛋白质，其修饰状态（乙酰化/甲基化等）影响DNA可及性和基因表达</div></div>
+  </div>
+</div>
+
+<div class="sec-label">课程联系</div>
+<div class="card">
+  <div style="padding:16px">
+    <div class="conn-item"><div style="font-size:16px">←</div><div class="conn-text"><strong>L04 分子遗传学I</strong>：DNA→RNA→蛋白质的基础；本讲深入调控层面</div></div>
+    <div class="conn-item"><div style="font-size:16px;color:var(--accent)">→</div><div class="conn-text"><strong>L06-07 行为遗传学</strong>：基因如何通过上述机制影响行为——双胞胎和GWAS研究</div></div>
+    <div class="conn-item"><div style="font-size:16px;color:var(--accent)">→</div><div class="conn-text"><strong>L12 内分泌学I</strong>：皮质醇通过GR受体直接影响基因表达——压力的分子机制</div></div>
+    <div class="conn-item"><div style="font-size:16px;color:var(--yellow)">🔑</div><div class="conn-text"><strong>Sapolsky核心论点</strong>：理解表观遗传后，"基因决定论"彻底破产。同样的基因，不同环境 = 不同人生。</div></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+function togEx(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+let gene='L',env='good';
+const results={
+  'L-good':'<strong style="color:var(--green)">风险：正常</strong><br>MAOA-L基因型 + 良好童年环境 → 与MAOA-H无显著差异。这证明：基因型不决定命运，环境是关键调节因素。',
+  'L-bad':'<strong style="color:var(--red)">风险：显著升高 ⬆️</strong><br>MAOA-L + 童年虐待/忽视 → 成年反社会行为风险显著升高（Caspi 2002）。机制：早期压力→杏仁核过度激活→甲基化模式改变→MAOA表达持续低 → 单胺堆积 → 冲动攻击性。',
+  'H-good':'<strong style="color:var(--green)">风险：正常</strong><br>MAOA-H + 良好环境 → 行为表现正常。高活性MAOA充分代谢单胺，正常神经发育。',
+  'H-bad':'<strong style="color:var(--yellow)">风险：轻度升高</strong><br>MAOA-H + 童年创伤 → 仍有影响，但程度远低于MAOA-L组。即使"保护性"基因型，严重童年逆境也会留下痕迹。'
+};
+function calcGxE(g,e){
+  if(g){gene=g;document.getElementById('g1').className='gx-btn'+(g==='L'?' active':'');document.getElementById('g2').className='gx-btn'+(g==='H'?' active':'');}
+  if(e){env=e;document.getElementById('e1').className='gx-btn'+(e==='good'?' active':'');document.getElementById('e2').className='gx-btn'+(e==='bad'?' active':'');}
+  document.getElementById('gxeResult').innerHTML=results[gene+'-'+env];
+}
+calcGxE('L','good');
+</script>
+</body>
+</html>
