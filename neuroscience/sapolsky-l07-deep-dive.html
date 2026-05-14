@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L07 行为遗传学 II — Sapolsky 深度拆解</title>
+<style>
+:root{--bg:#0f0f13;--card:#1a1a24;--card2:#22222f;--border:#2e2e3f;--text:#e8e8f0;--muted:#8888a8;--accent:#a78bfa;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--teal:#26c6a8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding-bottom:60px;}
+.hero{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);padding:36px 20px 28px;text-align:center;border-bottom:1px solid var(--border);}
+.badge{display:inline-block;background:rgba(167,139,250,0.15);color:var(--accent);border:1px solid rgba(167,139,250,0.3);border-radius:20px;font-size:12px;padding:3px 12px;margin-bottom:12px;letter-spacing:1px;}
+.hero h1{font-size:22px;font-weight:700;margin-bottom:8px;line-height:1.3;}
+.hero p{color:var(--muted);font-size:13px;}
+.container{max-width:680px;margin:0 auto;padding:20px 16px;}
+.section{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:16px;overflow:hidden;}
+.sec-hdr{display:flex;align-items:center;gap:10px;padding:16px;cursor:pointer;user-select:none;transition:background .2s;}
+.sec-hdr:hover{background:var(--card2);}
+.sec-icon{font-size:20px;flex-shrink:0;}
+.sec-title{font-weight:600;font-size:15px;flex:1;}
+.chevron{color:var(--muted);transition:transform .25s;font-size:12px;}
+.sec-body{display:none;padding:0 16px 16px;}
+.sec-body.open{display:block;}
+.concept{background:var(--card2);border-radius:10px;padding:14px;margin-bottom:10px;}
+.concept h4{color:var(--accent);font-size:13px;font-weight:600;margin-bottom:6px;}
+.tag{display:inline-block;border-radius:6px;font-size:11px;padding:2px 8px;margin:2px;font-weight:600;}
+.tag-g{background:rgba(52,211,153,0.15);color:var(--green);}
+.tag-y{background:rgba(251,191,36,0.15);color:var(--yellow);}
+.tag-r{background:rgba(248,113,113,0.15);color:var(--red);}
+.tag-b{background:rgba(96,165,250,0.15);color:var(--blue);}
+.tag-a{background:rgba(167,139,250,0.15);color:var(--accent);}
+.hl{background:rgba(167,139,250,0.1);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px;}
+.hl-g{background:rgba(52,211,153,0.08);border-left-color:var(--green);}
+.hl-y{background:rgba(251,191,36,0.08);border-left-color:var(--yellow);}
+.hl-r{background:rgba(248,113,113,0.08);border-left-color:var(--red);}
+
+/* GWAS interactive */
+.gwas-container{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.gwas-container h4{color:var(--blue);font-size:13px;font-weight:600;margin-bottom:10px;}
+.manhattan-wrap{position:relative;height:160px;background:#12121c;border-radius:8px;overflow:hidden;padding:10px;}
+.chrom-bar{display:flex;gap:2px;align-items:flex-end;height:100%;}
+.chrom{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px;cursor:pointer;}
+.snp-dot{width:100%;min-height:3px;border-radius:1px;transition:opacity .2s;}
+.threshold-line{position:absolute;top:30px;left:10px;right:10px;height:1px;background:rgba(248,113,113,0.5);z-index:2;}
+.threshold-label{position:absolute;top:22px;right:14px;font-size:10px;color:var(--red);}
+.gwas-legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.gwas-item{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px;}
+.gwas-dot{width:8px;height:8px;border-radius:50%;}
+.gwas-result{background:#12121c;border-radius:8px;padding:10px;margin-top:8px;font-size:13px;min-height:40px;color:var(--muted);}
+
+/* Candidate gene table */
+.gene-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;}
+.gene-table th{color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;}
+.gene-table td{padding:7px 8px;border-bottom:1px solid rgba(46,46,63,0.5);}
+.gene-table tr:last-child td{border-bottom:none;}
+.gene-name{color:var(--accent);font-family:monospace;font-weight:700;}
+.effect-bar-wrap{height:8px;background:#12121c;border-radius:4px;overflow:hidden;min-width:80px;}
+.effect-bar{height:100%;border-radius:4px;transition:width .5s;}
+
+/* Polygenic score */
+.pgs-demo{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.pgs-demo h4{color:var(--yellow);font-size:13px;font-weight:600;margin-bottom:8px;}
+.pgs-slider-row{display:flex;align-items:center;gap:10px;margin:6px 0;}
+.pgs-slider-row label{font-size:12px;color:var(--muted);width:120px;flex-shrink:0;}
+.pgs-slider-row input{flex:1;}
+.pgs-meter{height:20px;background:#12121c;border-radius:10px;overflow:hidden;margin-top:10px;}
+.pgs-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));transition:width .3s;}
+.pgs-label{text-align:center;font-size:12px;color:var(--muted);margin-top:4px;}
+
+.ex-box{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.ex-box h4{font-size:13px;font-weight:600;margin-bottom:6px;}
+.quiz{background:var(--card2);border-radius:10px;padding:14px;margin:10px 0;}
+.quiz p{font-size:14px;margin-bottom:10px;}
+.q-btn{display:block;width:100%;text-align:left;background:#12121c;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 12px;margin:5px 0;cursor:pointer;font-size:13px;transition:all .2s;}
+.q-btn:hover{border-color:var(--accent);}
+.q-btn.correct{background:rgba(52,211,153,0.15);border-color:var(--green);color:var(--green);}
+.q-btn.wrong{background:rgba(248,113,113,0.1);border-color:var(--red);color:var(--red);}
+.q-explain{font-size:12px;color:var(--muted);margin-top:8px;padding:8px;background:#12121c;border-radius:6px;display:none;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">LECTURE 07</div>
+  <h1>行为遗传学 II<br><span style="color:var(--blue);font-size:18px;">Behavioral Genetics II</span></h1>
+  <p style="margin-top:8px;">GWAS · 候选基因 · 多基因评分 · 基因与环境的复杂性</p>
+</div>
+
+<div class="container">
+
+<!-- Core concepts -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧩</span>
+    <span class="sec-title">核心概念速览</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="concept">
+      <h4>从双生子研究到具体基因</h4>
+      <p style="font-size:13px;color:var(--muted);">L06 告诉我们"行为有遗传性"，L07 问的是：<strong style="color:var(--text);">哪些具体基因？</strong>主要有两条路径：候选基因方法和全基因组关联研究（GWAS）。</p>
+    </div>
+    <div class="concept">
+      <h4>候选基因方法 (Candidate Gene)</h4>
+      <p style="font-size:13px;color:var(--muted);">先有假说，再找基因。例：MAOA → 攻击性；5-HTT → 抑郁症。<span style="color:var(--red);">问题</span>：大量候选基因研究无法重复（样本量小，多重比较，发表偏倚）。</p>
+    </div>
+    <div class="concept">
+      <h4>GWAS — 全基因组关联研究</h4>
+      <p style="font-size:13px;color:var(--muted);">无假设地扫描全基因组数百万个 SNP，找与表型相关的位点。需要<strong style="color:var(--text);">超大样本</strong>（N>100,000），设置严格显著性阈值（p<5×10⁻⁸）。</p>
+    </div>
+    <div class="concept">
+      <h4>多基因评分 (Polygenic Score, PGS)</h4>
+      <p style="font-size:13px;color:var(--muted);">把 GWAS 找到的所有相关 SNP 的效应累加，得到个体的遗传风险分数。单个 SNP 效应极小（OR≈1.01），但叠加后有一定预测力。</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+      <span class="tag tag-a">GWAS</span>
+      <span class="tag tag-b">SNP</span>
+      <span class="tag tag-g">多基因评分</span>
+      <span class="tag tag-y">候选基因</span>
+      <span class="tag tag-r">重复危机</span>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive GWAS -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🔬</span>
+    <span class="sec-title">互动：曼哈顿图解读</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body open">
+    <div class="gwas-container">
+      <h4>📊 GWAS 曼哈顿图（模拟）— 点击染色体查看热点</h4>
+      <div class="manhattan-wrap" id="manhattan">
+        <div class="threshold-line"></div>
+        <div class="threshold-label">p=5×10⁻⁸</div>
+        <div class="chrom-bar" id="chromBar"></div>
+      </div>
+      <div class="gwas-legend" id="gwasLegend"></div>
+      <div class="gwas-result" id="gwasResult">👆 点击上方染色体色块，查看该区域相关基因信息</div>
+    </div>
+    <div class="hl hl-y">
+      <strong>关键理解：</strong>每个显著位点的 OR（比值比）通常只有 1.01–1.10，单独解释极少的表型变异。行为特征几乎都是<strong>高度多基因性</strong>的。
+    </div>
+  </div>
+</div>
+
+<!-- Candidate genes table -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧬</span>
+    <span class="sec-title">经典候选基因一览</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <table class="gene-table">
+      <thead>
+        <tr>
+          <th>基因</th>
+          <th>表型</th>
+          <th>机制</th>
+          <th>可重复性</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="gene-name">MAOA</span></td>
+          <td>攻击性/反社会</td>
+          <td>单胺氧化酶，降解5-HT/DA</td>
+          <td><span class="tag tag-y">有争议</span></td>
+        </tr>
+        <tr>
+          <td><span class="gene-name">5-HTTLPR</span></td>
+          <td>抑郁/应激反应</td>
+          <td>血清素转运体启动子多态性</td>
+          <td><span class="tag tag-r">大样本未重复</span></td>
+        </tr>
+        <tr>
+          <td><span class="gene-name">DRD4</span></td>
+          <td>新奇寻求/ADHD</td>
+          <td>多巴胺D4受体7R等位基因</td>
+          <td><span class="tag tag-y">部分支持</span></td>
+        </tr>
+        <tr>
+          <td><span class="gene-name">COMT</span></td>
+          <td>执行功能/精神病</td>
+          <td>儿茶酚-O-甲基转移酶Val/Met</td>
+          <td><span class="tag tag-g">部分重复</span></td>
+        </tr>
+        <tr>
+          <td><span class="gene-name">BDNF</span></td>
+          <td>学习/记忆/抑郁</td>
+          <td>脑源性神经营养因子Val66Met</td>
+          <td><span class="tag tag-y">有争议</span></td>
+        </tr>
+        <tr>
+          <td><span class="gene-name">APOE ε4</span></td>
+          <td>阿尔茨海默症风险</td>
+          <td>脂蛋白代谢，β-淀粉样清除</td>
+          <td><span class="tag tag-g">强复制</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="hl hl-r" style="margin-top:12px;">
+      <strong>重复危机教训：</strong>MAOA"勇士基因"、5-HTTLPR GxE 效应在大样本 GWAS 中均无法重现，说明候选基因研究的局限性。
+    </div>
+  </div>
+</div>
+
+<!-- Polygenic Score Demo -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📈</span>
+    <span class="sec-title">互动：多基因评分模拟器</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="pgs-demo">
+      <h4>🧪 假设性多基因风险评分（以身高为例，行为特征类似）</h4>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">每个滑块代表一组 SNP 的累计效应（完全虚构，仅演示原理）</p>
+      <div class="pgs-slider-row">
+        <label>生长激素相关 SNPs</label>
+        <input type="range" min="0" max="100" value="60" oninput="updatePGS()">
+      </div>
+      <div class="pgs-slider-row">
+        <label>骨骼发育相关 SNPs</label>
+        <input type="range" min="0" max="100" value="45" oninput="updatePGS()">
+      </div>
+      <div class="pgs-slider-row">
+        <label>营养吸收相关 SNPs</label>
+        <input type="range" min="0" max="100" value="70" oninput="updatePGS()">
+      </div>
+      <div class="pgs-meter"><div class="pgs-fill" id="pgsFill" style="width:58%"></div></div>
+      <div class="pgs-label" id="pgsLabel">多基因评分：58 / 100（中等风险区间）</div>
+    </div>
+    <div class="hl hl-g">
+      <strong>重要限制：</strong>PGS 在相同种族背景下预测效果最好，跨人群迁移性差。且 PGS 是群体统计量，<strong>无法精确预测个体命运</strong>。
+    </div>
+  </div>
+</div>
+
+<!-- Missing heritability -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">❓</span>
+    <span class="sec-title">遗失的遗传力问题</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="concept">
+      <h4>遗失的遗传力 (Missing Heritability)</h4>
+      <p style="font-size:13px;color:var(--muted);">双生子研究估计身高遗传力 ~80%，但 GWAS 找到的所有 SNP 只能解释约 20%。差距在哪里？</p>
+    </div>
+    <div class="hl">可能解释：稀有变异（GWAS 漏检）· 基因-基因互作（上位性）· 基因-环境互作 · 表观遗传 · 结构变异（CNV）</div>
+    <div class="concept">
+      <h4>常见变异 vs 稀有变异</h4>
+      <p style="font-size:13px;color:var(--muted);">常见变异（MAF>1%）效应小；稀有变异效应大但个体少，GWAS 功效不足。两者共同构成遗传架构。</p>
+    </div>
+    <div class="hl hl-y">
+      <strong>Sapolsky 的强调：</strong>"没有行为的基因，只有影响行为倾向的基因。" 基因是概率性的，不是命运性的。
+    </div>
+  </div>
+</div>
+
+<!-- Examples -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">📚</span>
+    <span class="sec-title">经典案例深析</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="ex-box">
+      <h4 style="color:var(--accent);">案例1：苯丙酮尿症 (PKU) — 基因决定论的反例</h4>
+      <p style="font-size:13px;color:var(--muted);">PKU 是单基因疾病（PAH 基因），若不干预会导致智力障碍。但通过低苯丙氨酸饮食干预，携带者可正常发育。说明<strong style="color:var(--text);">即使高遗传性疾病，环境干预也可改变结果</strong>。遗传力≠不可改变性。</p>
+    </div>
+    <div class="ex-box">
+      <h4 style="color:var(--blue);">案例2：华兰那人 (Warao) — DRD4 7R 等位基因</h4>
+      <p style="font-size:13px;color:var(--muted);">DRD4 7R 等位基因与新奇寻求/冒险行为有关，在迁徙人群中频率更高（进化正选择？）。但在稳定农耕社会中，同样的基因型预测了注意力问题。<strong style="color:var(--text);">同一基因，不同文化背景，不同表现</strong>。</p>
+    </div>
+    <div class="ex-box">
+      <h4 style="color:var(--green);">案例3：精神分裂症 GWAS</h4>
+      <p style="font-size:13px;color:var(--muted);">2014年 PGC 发现 108 个显著位点，涉及突触功能、神经发育、免疫系统基因（如 MHC 区域的 C4A/C4B — 补体基因与突触修剪）。遗传力约 80% 但极端多基因性，PGS 预测 AUC 只有约 0.70。</p>
+    </div>
+  </div>
+</div>
+
+<!-- Quiz -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">🧪</span>
+    <span class="sec-title">理解测验</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="quiz">
+      <p>GWAS 需要非常大的样本量，主要原因是？</p>
+      <button class="q-btn" onclick="ans(this,false)">A. 行为特征遗传力很低</button>
+      <button class="q-btn" onclick="ans(this,true)">B. 单个 SNP 效应极小，需要足够统计功效</button>
+      <button class="q-btn" onclick="ans(this,false)">C. 基因组太大无法全部测序</button>
+      <div class="q-explain" id="qex1">正确！单个 SNP 对行为特征的效应通常 OR≈1.01-1.05，极小的效应值需要数万到数十万的样本量才能达到统计显著性（p<5×10⁻⁸ 这一经多重比较校正后的阈值）。</div>
+    </div>
+    <div class="quiz">
+      <p>"遗失的遗传力"是指什么现象？</p>
+      <button class="q-btn" onclick="ans2(this,false)">A. 双生子研究高估了遗传力</button>
+      <button class="q-btn" onclick="ans2(this,false)">B. 部分遗传变异因伦理原因无法研究</button>
+      <button class="q-btn" onclick="ans2(this,true)">C. GWAS 发现的 SNP 只能解释双生子遗传力的一小部分</button>
+      <div class="q-explain" id="qex2">正确！例如身高遗传力 ~80%，GWAS SNP 只解释 ~20%，剩余的"遗失"部分可能来自稀有变异、基因互作、结构变异等 GWAS 难以捕捉的因素。</div>
+    </div>
+  </div>
+</div>
+
+<!-- Key takeaways -->
+<div class="section">
+  <div class="sec-hdr" onclick="tog(this)">
+    <span class="sec-icon">💡</span>
+    <span class="sec-title">核心要点 &amp; 考点</span>
+    <span class="chevron">▶</span>
+  </div>
+  <div class="sec-body">
+    <div class="hl hl-g">1. 候选基因研究大多无法重复，GWAS + 大样本是更可靠的方法</div>
+    <div class="hl">2. 多基因评分有预测力但有限，跨人群迁移性差</div>
+    <div class="hl hl-y">3. "遗失的遗传力"表明我们还未找到行为特征的全部遗传基础</div>
+    <div class="hl hl-r">4. 遗传力高 ≠ 不可改变（PKU 是经典反例）</div>
+    <div class="hl">5. 没有单个"行为基因"，几乎所有行为特征都是高度多基因性的</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function tog(el){const b=el.nextElementSibling;const o=b.classList.toggle('open');el.querySelector('.chevron').style.transform=o?'rotate(90deg)':'';}
+
+// GWAS manhattan plot
+const chromData=[
+  {label:'Chr1',color:'#60a5fa',hits:[{h:140,gene:'NEGR1',trait:'BMI/认知'}]},
+  {label:'Chr2',color:'#a78bfa',hits:[{h:80,gene:'无显著'}]},
+  {label:'Chr3',color:'#34d399',hits:[{h:60,gene:'无显著'}]},
+  {label:'Chr4',color:'#fbbf24',hits:[{h:90,gene:'无显著'}]},
+  {label:'Chr5',color:'#f87171',hits:[{h:70,gene:'无显著'}]},
+  {label:'Chr6',color:'#60a5fa',hits:[{h:155,gene:'MHC/C4A',trait:'精神分裂症'}]},
+  {label:'Chr7',color:'#a78bfa',hits:[{h:75,gene:'无显著'}]},
+  {label:'Chr8',color:'#34d399',hits:[{h:65,gene:'无显著'}]},
+  {label:'Chr9',color:'#fbbf24',hits:[{h:120,gene:'CACNA1C',trait:'双相/精神分裂'}]},
+  {label:'Chr10',color:'#f87171',hits:[{h:55,gene:'无显著'}]},
+  {label:'Chr11',color:'#26c6a8',hits:[{h:145,gene:'DRD2/ANKK1',trait:'精神分裂/成瘾'}]},
+  {label:'Chr12',color:'#60a5fa',hits:[{h:50,gene:'无显著'}]},
+  {label:'Chr13',color:'#a78bfa',hits:[{h:85,gene:'无显著'}]},
+  {label:'Chr14',color:'#34d399',hits:[{h:60,gene:'无显著'}]},
+  {label:'Chr15',color:'#fbbf24',hits:[{h:110,gene:'NRXN1',trait:'自闭症/精神分裂'}]},
+  {label:'Chr16',color:'#f87171',hits:[{h:130,gene:'FTO',trait:'BMI/肥胖'}]},
+  {label:'Chr17',color:'#26c6a8',hits:[{h:95,gene:'TCF4',trait:'精神分裂'}]},
+  {label:'Chr18',color:'#60a5fa',hits:[{h:55,gene:'无显著'}]},
+  {label:'Chr19',color:'#a78bfa',hits:[{h:160,gene:'APOE',trait:'阿尔茨海默症'}]},
+  {label:'ChrX',color:'#fbbf24',hits:[{h:70,gene:'无显著'}]},
+];
+
+const bar=document.getElementById('chromBar');
+const result=document.getElementById('gwasResult');
+const legend=document.getElementById('gwasLegend');
+const SIG_H=30; // threshold at 30px from top = significant
+
+chromData.forEach((c,i)=>{
+  const div=document.createElement('div');
+  div.className='chrom';
+  const h=c.hits[0].h;
+  const isHit=h>100;
+  const dot=document.createElement('div');
+  dot.className='snp-dot';
+  dot.style.height=Math.round(h*0.7)+'px';
+  dot.style.background=isHit?c.color:'rgba('+hexToRgb(c.color)+',0.35)';
+  dot.style.opacity=isHit?'1':'0.5';
+  div.appendChild(dot);
+  div.title=c.label;
+  div.onclick=()=>{
+    const g=c.hits[0];
+    if(g.gene==='无显著'){
+      result.innerHTML=`<span style="color:var(--muted)">${c.label}：本区域未达到全基因组显著阈值（p<5×10⁻⁸），可能存在亚阈值信号但需更大样本验证。</span>`;
+    } else {
+      result.innerHTML=`<strong style="color:${c.color}">${c.label} 热点 — ${g.gene}</strong><br><span style="color:var(--muted);font-size:12px;">关联表型：${g.trait} | 超越全基因组显著阈值，在多个独立研究中复制</span>`;
+    }
+  };
+  bar.appendChild(div);
+  if(isHit){
+    const li=document.createElement('div');
+    li.className='gwas-item';
+    li.innerHTML=`<div class="gwas-dot" style="background:${c.color}"></div>${c.hits[0].gene}`;
+    legend.appendChild(li);
+  }
+});
+
+function hexToRgb(hex){
+  const r=parseInt(hex.slice(1,3),16);
+  const g=parseInt(hex.slice(3,5),16);
+  const b=parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+// PGS
+function updatePGS(){
+  const sliders=document.querySelectorAll('.pgs-slider-row input');
+  let total=0;
+  sliders.forEach(s=>total+=parseInt(s.value));
+  const score=Math.round(total/3);
+  document.getElementById('pgsFill').style.width=score+'%';
+  let risk=score<40?'低风险区间':score<70?'中等风险区间':'高风险区间';
+  document.getElementById('pgsLabel').textContent=`多基因评分：${score} / 100（${risk}）`;
+}
+updatePGS();
+
+// Quiz
+function ans(btn,correct){
+  const btns=btn.parentElement.querySelectorAll('.q-btn');
+  btns.forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  document.getElementById('qex1').style.display='block';
+}
+function ans2(btn,correct){
+  const btns=btn.parentElement.querySelectorAll('.q-btn');
+  btns.forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  document.getElementById('qex2').style.display='block';
+}
+</script>
+</body>
+</html>
